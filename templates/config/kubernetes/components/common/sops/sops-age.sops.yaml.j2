@@ -1,7 +1,0 @@
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: sops-age
-stringData:
-  age.agekey: "#{ age_key('private') }#"
