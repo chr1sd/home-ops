@@ -19,3 +19,4 @@ talosconfig
 .venv/
 .DS_Store
 Thumbs.db
+/known_hosts
