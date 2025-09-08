@@ -1,0 +1,7 @@
+machine:
+  network:
+    disableSearchDomain: true
+    nameservers:
+      #% for item in node_dns_servers %#
+      - #{ item }#
+      #% endfor %#
