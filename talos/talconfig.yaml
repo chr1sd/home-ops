@@ -1,0 +1,144 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/budimanjojo/talhelper/master/pkg/config/schemas/talconfig.json
+---
+clusterName: kubernetes
+
+talosVersion: "${talosVersion}"
+kubernetesVersion: "${kubernetesVersion}"
+
+endpoint: https://10.13.17.17:6443
+additionalApiServerCertSans: &sans
+  - "127.0.0.1"
+  - "10.13.17.17"
+additionalMachineCertSans: *sans
+
+clusterPodNets: ["10.244.0.0/16"]
+clusterSvcNets: ["10.96.0.0/12"]
+
+# Disable built-in CNI to use Cilium
+cniConfig:
+  name: none
+
+nodes:
+  - hostname: "troll-1"
+    ipAddress: "10.13.17.22"
+    installDisk: "/dev/disk/by-id/nvme-Acer_FA100_256GB_ASBD24310200195"
+    machineSpec:
+      secureboot: false
+    talosImageURL: factory.talos.dev/installer/7361710113bd943edd751852342b1ccaa283d00a7257476a53eb4f10dcae8b02
+    controlPlane: true
+    networkInterfaces:
+      - deviceSelector:
+          hardwareAddr: "10:e7:c6:16:63:6c"
+        dhcp: false
+        addresses:
+          - "10.13.17.22/24"
+        routes:
+          - network: "0.0.0.0/0"
+            gateway: "10.13.17.1"
+        mtu: 1500
+        vip:
+          ip: "10.13.17.17"
+  - hostname: "troll-2"
+    ipAddress: "10.13.17.23"
+    installDisk: "/dev/disk/by-id/nvme-Acer_FA100_256GB_ASBD24310200013"
+    machineSpec:
+      secureboot: false
+    talosImageURL: factory.talos.dev/installer/7361710113bd943edd751852342b1ccaa283d00a7257476a53eb4f10dcae8b02
+    controlPlane: true
+    networkInterfaces:
+      - deviceSelector:
+          hardwareAddr: "10:e7:c6:16:60:e7"
+        dhcp: false
+        addresses:
+          - "10.13.17.23/24"
+        routes:
+          - network: "0.0.0.0/0"
+            gateway: "10.13.17.1"
+        mtu: 1500
+        vip:
+          ip: "10.13.17.17"
+  - hostname: "troll-3"
+    ipAddress: "10.13.17.24"
+    installDisk: "/dev/disk/by-id/nvme-Acer_FA100_256GB_ASBD24310200322"
+    machineSpec:
+      secureboot: false
+    talosImageURL: factory.talos.dev/installer/7361710113bd943edd751852342b1ccaa283d00a7257476a53eb4f10dcae8b02
+    controlPlane: true
+    networkInterfaces:
+      - deviceSelector:
+          hardwareAddr: "10:e7:c6:14:ac:5e"
+        dhcp: false
+        addresses:
+          - "10.13.17.24/24"
+        routes:
+          - network: "0.0.0.0/0"
+            gateway: "10.13.17.1"
+        mtu: 1500
+        vip:
+          ip: "10.13.17.17"
+  - hostname: "duwerk-1"
+    ipAddress: "10.13.17.19"
+    installDisk: "/dev/disk/by-id/ata-Acer_SSD_RE100_2.5_512G_ASBB34310200208"
+    machineSpec:
+      secureboot: false
+    talosImageURL: factory.talos.dev/installer/7361710113bd943edd751852342b1ccaa283d00a7257476a53eb4f10dcae8b02
+    controlPlane: false
+    networkInterfaces:
+      - deviceSelector:
+          hardwareAddr: "10:e7:c6:16:4d:95"
+        dhcp: false
+        addresses:
+          - "10.13.17.19/24"
+        routes:
+          - network: "0.0.0.0/0"
+            gateway: "10.13.17.1"
+        mtu: 1500
+  - hostname: "duwerk-2"
+    ipAddress: "10.13.17.20"
+    installDisk: "/dev/disk/by-id/ata-Acer_SSD_RE100_2.5_512G_ASBB34310200151"
+    machineSpec:
+      secureboot: false
+    talosImageURL: factory.talos.dev/installer/7361710113bd943edd751852342b1ccaa283d00a7257476a53eb4f10dcae8b02
+    controlPlane: false
+    networkInterfaces:
+      - deviceSelector:
+          hardwareAddr: "10:e7:c6:16:4c:db"
+        dhcp: false
+        addresses:
+          - "10.13.17.20/24"
+        routes:
+          - network: "0.0.0.0/0"
+            gateway: "10.13.17.1"
+        mtu: 1500
+  - hostname: "duwerk-3"
+    ipAddress: "10.13.17.21"
+    installDisk: "/dev/disk/by-id/ata-Acer_SSD_RE100_2.5_512G_ASBB34310200094"
+    machineSpec:
+      secureboot: false
+    talosImageURL: factory.talos.dev/installer/7361710113bd943edd751852342b1ccaa283d00a7257476a53eb4f10dcae8b02
+    controlPlane: false
+    networkInterfaces:
+      - deviceSelector:
+          hardwareAddr: "10:e7:c6:16:63:21"
+        dhcp: false
+        addresses:
+          - "10.13.17.21/24"
+        routes:
+          - network: "0.0.0.0/0"
+            gateway: "10.13.17.1"
+        mtu: 1500
+
+# Global patches
+patches:
+  - "@./patches/global/machine-files.yaml"
+  - "@./patches/global/machine-kubelet.yaml"
+  - "@./patches/global/machine-network.yaml"
+  - "@./patches/global/machine-sysctls.yaml"
+  - "@./patches/global/machine-time.yaml"
+
+# Controller patches
+controlPlane:
+  patches:
+    - "@./patches/controller/admission-controller-patch.yaml"
+    - "@./patches/controller/cluster.yaml"
+
