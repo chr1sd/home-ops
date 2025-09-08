@@ -1,0 +1,44 @@
+---
+# yaml-language-server: $schema=https://homelab-schemas-epg.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: rook-ceph-operator
+spec:
+  interval: 1h
+  timeout: 15m
+  chartRef:
+    kind: OCIRepository
+    name: rook-ceph
+  maxHistory: 3
+  install:
+    createNamespace: true
+    crds: CreateReplace
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    crds: CreateReplace
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    image:
+      repository: ghcr.io/rook/ceph
+    csi:
+      # NOTE: Enable the driver and shapshotter if you want to use CephFS
+      # enableCephfsDriver: false
+      # enableCephfsSnapshotter: false
+      enableVolumeGroupSnapshot: false # TODO: enable this when v1beta1 CRDs are available
+      enableLiveness: true
+      serviceMonitor:
+        enabled: true
+    monitoring:
+      enabled: true
+    pspEnable: false
+    resources:
+      requests:
+        memory: 128Mi # unchangable
+        cpu: 100m # unchangable
+      limits: {}
