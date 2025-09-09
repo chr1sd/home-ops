@@ -12,3 +12,4 @@ resources:
   - ./reloader/ks.yaml
   - ./spegel/ks.yaml
   - ./snapshot-controller/ks.yaml
+  - ./intel-device-plugin-operator/ks.yaml
