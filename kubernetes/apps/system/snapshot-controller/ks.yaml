@@ -10,7 +10,7 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./kubernetes/main/apps/system/snapshot-controller/app
+  path: ./kubernetes/apps/system/snapshot-controller/app
   sourceRef:
     kind: GitRepository
     name: flux-system
