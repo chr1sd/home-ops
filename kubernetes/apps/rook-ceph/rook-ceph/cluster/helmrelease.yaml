@@ -94,7 +94,7 @@ spec:
             memory: 2Gi
         osd:
           requests:
-            cpu: 500m
+            cpu: 200m
             memory: 2Gi
           limits:
             memory: 6Gi
@@ -102,6 +102,18 @@ spec:
           requests:
             cpu: 50m
             memory: 128Mi
+          limits:
+            memory: 256Mi
+        log-collector:
+          requests:
+            cpu: 10m
+            memory: 64Mi
+          limits:
+            memory: 256Mi
+        watch-active:
+          requests:
+            cpu: 10m
+            memory: 64Mi
           limits:
             memory: 256Mi
 
