@@ -104,13 +104,13 @@ spec:
             memory: 128Mi
           limits:
             memory: 256Mi
-        log-collector:
+        logcollector:
           requests:
             cpu: 10m
             memory: 64Mi
           limits:
             memory: 256Mi
-        watch-active:
+        crashcollector:
           requests:
             cpu: 10m
             memory: 64Mi
