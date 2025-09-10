@@ -27,6 +27,28 @@ spec:
     image:
       repository: ghcr.io/rook/ceph
     csi:
+      csiCephFSPluginResource: |
+        - name : driver-registrar
+          resource:
+            requests:
+              memory: 128Mi
+              cpu: 10m
+            limits:
+              memory: 256Mi
+        - name : csi-cephfsplugin
+          resource:
+            requests:
+              memory: 512Mi
+              cpu: 100m
+            limits:
+              memory: 1Gi
+        - name : liveness-prometheus
+          resource:
+            requests:
+              memory: 128Mi
+              cpu: 25m
+            limits:
+              memory: 256Mi
       # NOTE: Enable the driver and shapshotter if you want to use CephFS
       # enableCephfsDriver: false
       # enableCephfsSnapshotter: false
