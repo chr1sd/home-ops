@@ -29,6 +29,22 @@ spec:
       enabled: true
       createPrometheusRules: false
 
+    route:
+      dashboard:
+        host:
+          name: rook.dovis.me
+          path: /
+          pathType: PathPrefix
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: rook-ceph-mgr-dashboard
+                namespace: rook-ceph
+                port: 7000
+
     cephClusterSpec:
       cephVersion:
         image: quay.io/ceph/ceph:v19.2.3@sha256:af0c5903e901e329adabe219dfc8d0c3efc1f05102a753902f33ee16c26b6cee
@@ -52,22 +68,6 @@ spec:
         ssl: false
         prometheusEndpoint: http://prometheus-operated.observability.svc.cluster.local:9090
 
-    route:
-      dashboard:
-        host:
-          name: rook.dovis.me
-          path: /
-          pathType: PathPrefix
-        parentRefs:
-          - name: internal
-            namespace: kube-system
-            sectionName: https
-        rules:
-          - backendRefs:
-              - name: rook-ceph-mgr-dashboard
-                namespace: rook-ceph
-                port: 7000
-
       mgr:
         modules:
           - name: diskprediction_local
@@ -78,11 +78,6 @@ spec:
             enabled: true
           - name: rook
             enabled: true
-
-      # network:
-      #   provider: host
-      #   connections:
-      #     requireMsgr2: true
 
       resources:
         mgr:
@@ -182,6 +177,13 @@ spec:
                     matchLabels:
                       app.kubernetes.io/name: ceph-mds
                       app.kubernetes.io/part-of: *cephFileSystemName
+          resources:
+            requests:
+              cpu: 100m
+              memory: 1Gi
+            limits:
+              memory: 4Gi
+
         storageClass:
           enabled: true
           isDefault: false
