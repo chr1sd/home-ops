@@ -1,0 +1,32 @@
+---
+connectivity:
+  checker:
+    target: 1.1.1.1:53
+    interval: 1m
+
+endpoints:
+  - name: flux-webhook
+    group: external
+    url: https://flux-webhook.dovis.me
+    interval: 1m
+    client:
+      dns-resolver: tcp://1.1.1.1:53
+    conditions:
+      - "[STATUS] == 404"
+
+metrics: true
+
+ui:
+  title: Status | Gatus
+  header: Status
+  # logo: add this URL later
+  link: https://github.com/chr1sd
+  buttons:
+    - name: Github
+      link: https://github.com/chr1sd
+
+    - name: Homelab
+      link: https://github.com/chr1sd/home-ops
+
+web:
+  port: ${GATUS_WEB_PORT}

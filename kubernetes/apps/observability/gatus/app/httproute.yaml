@@ -1,0 +1,37 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: gatus-external
+  namespace: observability
+spec:
+  parentRefs:
+    - name: external
+      namespace: kube-system
+      sectionName: https
+  hostnames:
+    - "{{ .Release.Name }}.dovis.me"
+    - gatus.dovis.me
+  rules:
+    - backendRefs:
+        - name: gatus
+          port: 80
+
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: gatus-internal
+  namespace: observability
+spec:
+  parentRefs:
+    - name: internal
+      namespace: kube-system
+      sectionName: https
+  hostnames:
+    - "{{ .Release.Name }}.dovis.me"
+    - gatus.dovis.me
+  rules:
+    - backendRefs:
+        - name: gatus
+          port: 80

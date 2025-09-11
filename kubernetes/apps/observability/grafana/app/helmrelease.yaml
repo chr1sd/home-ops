@@ -86,32 +86,32 @@ spec:
         #   gnetId: 12340
         #   revision: 1
         #   datasource: Prometheus
-        # ceph-cluster:
-        #   # renovate: depName="Ceph Cluster"
-        #   gnetId: 2842
-        #   revision: 18
-        #   datasource: Prometheus
-        # ceph-osd:
-        #   # renovate: depName="Ceph - OSD (Single)"
-        #   gnetId: 5336
-        #   revision: 9
-        #   datasource: Prometheus
-        # ceph-pools:
-        #   # renovate: depName="Ceph - Pools"
-        #   gnetId: 5342
-        #   revision: 9
-        #   datasource: Prometheus
-        # cert-manager:
-        #   # renovate: depName="Cert-manager-Kubernetes"
-        #   gnetId: 20842
-        #   revision: 3
-        #   datasource: Prometheus
-        # cloudflared:
-        #   # renovate: depName="Cloudflare Tunnels (cloudflared)"
-        #   gnetId: 17457
-        #   revision: 6
-        #   datasource:
-        #     - {name: DS_PROMETHEUS, value: Prometheus}
+        ceph-cluster:
+          # renovate: depName="Ceph Cluster"
+          gnetId: 2842
+          revision: 18
+          datasource: Prometheus
+        ceph-osd:
+          # renovate: depName="Ceph - OSD (Single)"
+          gnetId: 5336
+          revision: 9
+          datasource: Prometheus
+        ceph-pools:
+          # renovate: depName="Ceph - Pools"
+          gnetId: 5342
+          revision: 9
+          datasource: Prometheus
+        cert-manager:
+          # renovate: depName="Cert-manager-Kubernetes"
+          gnetId: 20842
+          revision: 3
+          datasource: Prometheus
+        cloudflared:
+          # renovate: depName="Cloudflare Tunnels (cloudflared)"
+          gnetId: 17457
+          revision: 6
+          datasource:
+            - {name: DS_PROMETHEUS, value: Prometheus}
         # envoy-gateway:
         #   url: https://raw.githubusercontent.com/envoyproxy/gateway/refs/heads/main/charts/gateway-addons-helm/dashboards/envoy-gateway-global.json
         #   datasource: Prometheus
