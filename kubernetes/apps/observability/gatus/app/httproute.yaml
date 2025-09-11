@@ -10,7 +10,7 @@ spec:
       namespace: kube-system
       sectionName: https
   hostnames:
-    - "{{ .Release.Name }}.dovis.me"
+    - status.dovis.me
     - gatus.dovis.me
   rules:
     - backendRefs:
@@ -29,7 +29,7 @@ spec:
       namespace: kube-system
       sectionName: https
   hostnames:
-    - "{{ .Release.Name }}.dovis.me"
+    - status.dovis.me
     - gatus.dovis.me
   rules:
     - backendRefs:
