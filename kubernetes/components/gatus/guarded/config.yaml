@@ -11,4 +11,5 @@ endpoints:
       query-name: "${GATUS_SUBDOMAIN:=${APP}}.dovis.me"
       query-type: A
     conditions:
-      - len([BODY]) == 0
+      - "[STATUS] == ${GATUS_STATUS:=200}"
+      # - len([BODY]) == 0 #onedr0p how did you get grafana to work with this condition?
