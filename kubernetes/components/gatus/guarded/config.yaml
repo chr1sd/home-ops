@@ -2,7 +2,7 @@
 endpoints:
   - name: "${APP}"
     group: guarded
-    url: "dns://1.1.1.1:53"
+    url: "1.1.1.1"
     interval: 1m
     ui:
       hide-hostname: true
