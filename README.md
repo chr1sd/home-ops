@@ -1,4 +1,4 @@
-# k8s[adventure]time
+# :globe_with_meridians: --- k8s[adventure]time --- o()xxxx[{::::::::::::::::::::::::>
 
 The quest to learn Kubernetes and the GitOps mindset.
 
