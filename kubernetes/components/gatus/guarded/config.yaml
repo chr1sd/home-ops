@@ -2,7 +2,7 @@
 endpoints:
   - name: "${APP}"
     group: guarded
-    url: 1.1.1.1
+    url: "dns://1.1.1.1:53"
     interval: 1m
     ui:
       hide-hostname: true
@@ -11,5 +11,4 @@ endpoints:
       query-name: "${GATUS_SUBDOMAIN:=${APP}}.dovis.me"
       query-type: A
     conditions:
-      - "[STATUS] == ${GATUS_STATUS:=200}"
-      # - len([BODY]) == 0 #onedr0p how did you get grafana to work with this condition?
+      - len([BODY]) == 0
