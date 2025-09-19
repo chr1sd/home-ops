@@ -8,5 +8,5 @@ components:
 resources:
   - ./cloudflare-dns/ks.yaml
   - ./cloudflare-tunnel/ks.yaml
-  # - ./k8s-gateway/ks.yaml
+  - ./k8s-gateway/ks.yaml
   - ./unifi-dns/ks.yaml
