@@ -66,11 +66,10 @@ spec:
         requiredDuringSchedulingIgnoredDuringExecution:
           nodeSelectorTerms:
             - matchExpressions:
-                - key: node-role.kubernetes.io/control-plane
-                  operator: Exists
+              - key: node-role.kubernetes.io/control-plane
+                operator: DoesNotExist
+              - key: node-role.kubernetes.io/master
+                operator: DoesNotExist
     tolerations:
       - key: CriticalAddonsOnly
         operator: Exists
-      - key: node-role.kubernetes.io/control-plane
-        operator: Exists
-        effect: NoSchedule
