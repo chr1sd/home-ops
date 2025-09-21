@@ -18,6 +18,8 @@ spec:
   interval: 1h
   path: ./kubernetes/apps/default/echo/app
   postBuild:
+    substitute:
+      APP: *app
     substituteFrom:
       - name: cluster-secrets
         kind: Secret
