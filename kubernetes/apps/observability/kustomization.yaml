@@ -10,3 +10,4 @@ resources:
   - ./kube-prometheus-stack/ks.yaml
   - ./gatus/ks.yaml
   - ./loki/ks.yaml
+  - ./fluent-bit/ks.yaml
