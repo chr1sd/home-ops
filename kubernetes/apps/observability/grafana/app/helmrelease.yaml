@@ -53,13 +53,13 @@ spec:
             access: proxy
             url: http://prometheus-operated.observability.svc.cluster.local:9090
             isDefault: true
-          # - name: Loki
-          #   type: loki
-          #   uid: loki
-          #   access: proxy
-          #   url: http://loki-headless.observability.svc.cluster.local:3100
-          #   jsonData:
-          #     maxLines: 250
+          - name: Loki
+            type: loki
+            uid: loki
+            access: proxy
+            url: http://loki-headless.observability.svc.cluster.local:3100
+            jsonData:
+              maxLines: 250
           - name: Alertmanager
             type: alertmanager
             uid: alertmanager
@@ -118,11 +118,11 @@ spec:
         # envoy-proxy:
         #   url: https://raw.githubusercontent.com/envoyproxy/gateway/refs/heads/main/charts/gateway-addons-helm/dashboards/envoy-proxy-global.json
         #   datasource: Prometheus
-        # external-dns:
-        #   # renovate: depName="External-dns"
-        #   gnetId: 15038
-        #   revision: 3
-        #   datasource: Prometheus
+        external-dns:
+          # renovate: depName="External-dns"
+          gnetId: 15038
+          revision: 3
+          datasource: Prometheus
         kubernetes-api-server:
           # renovate: depName="Kubernetes / System / API Server"
           gnetId: 15761
@@ -158,12 +158,12 @@ spec:
           gnetId: 11454
           revision: 14
           datasource: Prometheus
-        # node-exporter-full:
-        #   # renovate: depName="Node Exporter Full"
-        #   gnetId: 1860
-        #   revision: 41
-        #   datasource:
-        #     - {name: DS_PROMETHEUS, value: Prometheus}
+        node-exporter-full:
+          # renovate: depName="Node Exporter Full"
+          gnetId: 1860
+          revision: 41
+          datasource:
+            - {name: DS_PROMETHEUS, value: Prometheus}
         prometheus:
           # renovate: depName="Prometheus"
           gnetId: 19105
