@@ -36,7 +36,7 @@ My homelab is powered by **6 HP EliteDesk 800 G3 Mini PCs**.
 | Control Plane  | 3     | Intel i5-6500T     | 16GB  | 256GB SSD   | —              |
 | Worker Node    | 3     | Intel i5-6500T     | 64GB  | 512GB SSD   | 1TB NVMe       |
 
----
+
 
 >🐧 Talos Linux: Immutable + Secure
 
@@ -44,13 +44,11 @@ All nodes run **[Talos Linux](https://www.talos.dev/)** — a modern, immutable 
 
 Provisioning is done declaratively via **machine configurations**, and interaction is handled through `talosctl`.
 
----
 
 >🌐 Cilium: eBPF-Powered Networking
 
 Networking in my cluster is handled by **[Cilium](https://cilium.io/)**.
 
----
 
 >📈 Observability Stack
 
@@ -62,8 +60,6 @@ To keep a pulse on the cluster, these are the obvervability apps I'm currently u
 - **Alertmanager** for alert routing
 - **Gatus** for blackbox monitoring and uptime checks
 
----
-
 >🪵 Rook + Ceph: Distributed Storage
 
 Persistent storage is provided by **Rook-Ceph**, utilizing the 1TB NVMe drives on each worker:
@@ -71,17 +67,13 @@ Persistent storage is provided by **Rook-Ceph**, utilizing the 1TB NVMe drives o
 - 🧠 Self-healing and highly available
 - 💾 Shared block, object, and file storage (CephBlock, CephFS)
 
-I've learned how to inspect OSD health, monitor IOPS, reduce CPU requests, and ensure that Ceph remains in quorum across nodes.
-
----
-
 >⚙️ GitOps with Flux
 
 The backbone of this cluster is **[Flux CD](https://fluxcd.io/)** — a GitOps controller that reconciles my entire Kubernetes state from a Git repository.
 
 My ultimate goal is to have Flux and Renovate handle most of the deployments and updates to the cluster.
 
-
+---
 ## 📌 Foundation: onedr0p's Cluster Template
 
 Special thanks to the most excellent [onedr0p/cluster-template](https://github.com/onedr0p/cluster-template). It provided a clean, modern foundation for Talos + Flux-based clusters — and taught me how to organize manifests properly, use SOPS, and implement GitOps the right way.
