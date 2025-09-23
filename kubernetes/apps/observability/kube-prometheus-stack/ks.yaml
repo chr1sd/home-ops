@@ -9,9 +9,8 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  # gatus not implemented. future release.
-  # components:
-  #   - ../../../../components/gatus/guarded
+  components:
+    - ../../../../components/gatus/guarded
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
@@ -19,7 +18,7 @@ spec:
   path: ./kubernetes/apps/observability/kube-prometheus-stack/app
   postBuild:
     substitute:
-      APP: kube-prometheus-stack
+      APP: *app
       GATUS_SUBDOMAIN: prometheus
   prune: true
   retryInterval: 2m
