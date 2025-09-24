@@ -54,18 +54,15 @@ Networking in my cluster is handled by **[Cilium](https://cilium.io/)**.
 
 To keep a pulse on the cluster, these are the obvervability apps I'm currently using:
 
-- **Prometheus** for metrics scraping
-- **Grafana** for beautiful dashboards (with gnet ID support)
-- **Loki** for logs
-- **Alertmanager** for alert routing
-- **Gatus** for blackbox monitoring and uptime checks
+- **Prometheus**
+- **Grafana**
+- **Loki**
+- **Alertmanager**
+- **Gatus**
 
 >🪵 Rook + Ceph: Distributed Storage
 
-Persistent storage is provided by **Rook-Ceph**, utilizing the 1TB NVMe drives on each worker:
-
-- 🧠 Self-healing and highly available
-- 💾 Shared block, object, and file storage (CephBlock, CephFS)
+Persistent storage is provided by **Rook-Ceph**, utilizing the 1TB NVMe drives on each worker.
 
 >⚙️ GitOps with Flux
 
@@ -82,7 +79,7 @@ Special thanks to the most excellent [onedr0p/cluster-template](https://github.c
 
 ## 🛠️ Coming Soon
 
-- ✅ Add ingress with Envoy Gateway or Cilium Gateway
+- ✅ More observability and start deploying apps once I get my NAS re-configured.
 - 🔜 Documentation for the things I learned and challenges I faced
 
 ---
