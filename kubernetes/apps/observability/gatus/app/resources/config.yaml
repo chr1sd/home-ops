@@ -19,7 +19,7 @@ metrics: true
 ui:
   title: Status | Gatus
   header: Status
-  # logo: add this URL later
+  logo: https://avatars.githubusercontent.com/u/9352860?v=4
   link: https://github.com/chr1sd
   buttons:
     - name: Github
