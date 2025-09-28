@@ -45,7 +45,8 @@ spec:
       app:
         ports:
           http:
-            port: &port 8080
+            port: 80
+            targetPort: 8080
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
@@ -57,15 +58,15 @@ spec:
           - port: http
     route:
       app:
-        hostnames: ["{{ .Release.Name }}.${SECRET_DOMAIN}"]
+        hostnames: ["pdf.${SECRET_DOMAIN}"]
         parentRefs:
           - name: external
             namespace: kube-system
             sectionName: https
         rules:
           - backendRefs:
-              - identifier: app
-                port: *port
+              - identifier: stirling-pdf
+                port: 80
     persistence:
       configs:
         type: emptyDir
