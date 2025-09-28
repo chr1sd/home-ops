@@ -43,6 +43,7 @@ spec:
                 memory: 500Mi
     service:
       app:
+        controller: stirling-pdf
         ports:
           http:
             port: 80
@@ -65,7 +66,7 @@ spec:
             sectionName: https
         rules:
           - backendRefs:
-              - identifier: stirling-pdf
+              - identifier: app
                 port: 80
     persistence:
       configs:
