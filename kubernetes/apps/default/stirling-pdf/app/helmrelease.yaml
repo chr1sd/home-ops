@@ -46,13 +46,7 @@ spec:
         controller: stirling-pdf
         ports:
           http:
-            port: 80
-            targetPort: 8080
-    defaultPodOptions:
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 65534
-        runAsGroup: 65534
+            port: 8080
     serviceMonitor:
       app:
         endpoints:
