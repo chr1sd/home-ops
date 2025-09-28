@@ -7,4 +7,4 @@ components:
   - ../../components/common
 resources:
   - ./echo/ks.yaml
-  - ./sterling-pdf/ks.yaml
+  - ./stirling-pdf/ks.yaml
