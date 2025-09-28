@@ -22,7 +22,7 @@ spec:
       namespace: network
   values:
     controllers:
-      stirling-pdf:
+      sterling-pdf:
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
