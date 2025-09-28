@@ -35,6 +35,10 @@ spec:
               TZ: ${TIMEZONE}
               DOCKER_ENABLE_SECURITY: false
               SECURITY_ENABLE_LOGIN: false
+            ports:
+              - name: http
+                containerPort: 8080
+                protocol: TCP
             resources:
               requests:
                 cpu: 10m
@@ -46,7 +50,8 @@ spec:
         controller: stirling-pdf
         ports:
           http:
-            port: 8080
+            port: 80
+            targetPort: http
     serviceMonitor:
       app:
         endpoints:
