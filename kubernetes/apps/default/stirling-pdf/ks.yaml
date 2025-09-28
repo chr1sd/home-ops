@@ -3,7 +3,7 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app sterling-pdf
+  name: &app stirling-pdf
   namespace: &namespace default
 spec:
   commonMetadata:
@@ -16,7 +16,7 @@ spec:
     secretRef:
       name: sops-age
   interval: 1h
-  path: ./kubernetes/apps/default/sterling-pdf/app
+  path: ./kubernetes/apps/default/stirling-pdf/app
   postBuild:
     substitute:
       APP: *app

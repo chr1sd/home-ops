@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: sterling-pdf
+  name: stirling-pdf
 spec:
   interval: 1h
   chartRef:
@@ -22,7 +22,7 @@ spec:
       namespace: network
   values:
     controllers:
-      sterling-pdf:
+      stirling-pdf:
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
