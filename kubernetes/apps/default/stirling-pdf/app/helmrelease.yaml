@@ -8,7 +8,7 @@ spec:
   interval: 1h
   chartRef:
     kind: OCIRepository
-    name: stirling-pdf
+    name: app-template
   maxHistory: 3
   install:
     createNamespace: true
@@ -17,14 +17,9 @@ spec:
   upgrade:
     remediation:
       retries: 3
-  dependsOn:
-    - name: cloudflare-tunnel
-      namespace: network
   values:
     controllers:
       stirling-pdf:
-        annotations:
-          reloader.stakater.com/auto: "true"
         containers:
           app:
             image:
@@ -35,10 +30,6 @@ spec:
               TZ: ${TIMEZONE}
               DOCKER_ENABLE_SECURITY: false
               SECURITY_ENABLE_LOGIN: false
-            ports:
-              - name: http
-                containerPort: 8080
-                protocol: TCP
             resources:
               requests:
                 cpu: 10m
@@ -47,33 +38,24 @@ spec:
                 memory: 500Mi
     service:
       app:
-        controller: stirling-pdf
         ports:
           http:
             port: 8080
     serviceMonitor:
       app:
-        enabled: true
         endpoints:
           - port: http
     route:
       app:
-        enabled: true
-        hostnames: ["pdf.${SECRET_DOMAIN}"]
-        parentRefs:
-          - name: external
-            namespace: kube-system
-            sectionName: https
-        rules:
-          - backendRefs:
-              - identifier: app
-                port: 80
+        enabled: false
     persistence:
-      configs:
+      config:
+        enabled: true
         type: emptyDir
-      logs:
-        type: emptyDir
+        globalMounts:
+          - path: /configs
       tessdata:
+        enabled: true
         type: emptyDir
         globalMounts:
           - path: /usr/share/tessdata
