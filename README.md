@@ -1,54 +1,23 @@
 # 🌐 --- k8s[adventure]time --- o()xxxx[{::::::::::::::::::::::::>
+Welcome to the humble home lab. This repo is the meat and potatoes of my bare metal **Kubernetes** cluster running on **Talos Linux**. The goal here is to deepen my understanding of k8s and become the **GitOps** mindset.
 
-> This repository is a living journal of my journey to mastering **Kubernetes**, **Talos Linux**, and the **GitOps mindset** — through trial, error, and persistent volume claims.
+### 🧱 Architecture
 
----
+| System                   | Role           | Nodes | CPU                | RAM   | Graphics | Disk (boot) | Disk (storage) |
+|--------------------------|----------------|-------|--------------------|-------|-------------|----------|------|
+| HP EliteDesk 800 G3 Mini | Control Plane  | 3     | Intel i5-6500T     | 16GB DDR4| Intel HD 530 |256GB SSD   | —              |
+| HP EliteDesk 800 G3 Mini | Worker         | 3     | Intel i5-6500T     | 64GB DDR4  | Intel HD 530 |512GB SSD   | 1TB NVMe       |
+| Cutom Built NZXT Server  | AI Workloads + NAS | 1 | Intel i7-6700K     | 64GB DDR4 | nVidia RTX3090 |256GB SSD | 12TB Mirrored ZFS Pool |
 
-## 🧠 Learning by Building
-> There is no substitute for hands-on learning.
+All of this is connected to a Ubiquiti network with VLANS configured for IoT, Management, DMZ, and Cameras.
 
-I believe the best way to learn is to *jump in the deep end* and *build* — even if that means failing over and over until something clicks.
+## ☸️ Kubernetes
 
-Years ago, I wanted to learn Linux. So I wiped an old gaming PC and installed Ubuntu Server. I broke it, fixed it, rebuilt it… over 10 times. Each iteration helped me gain a little more skill and confidence.
+I want to have my own mini data center at the house. This infrastructure should be easy to redeploy if anything fails. That's why I chose to go the GitOps route. K8s allows me to scale and provide useful, locally hosted applications for my family.
 
-Then came the containerize everythin phase. It was *confusing* at first — port mappings, volumes, docker-compose files — but I kept at it. Today, I’m running over 25 containers at home, including:
-
-- 🔮 Ollama + Open WebUI (local AI)
-- 🔁 n8n (workflow orchestration)
-- 🧠 Qdrant (vector database)
-- 🎮 Minecraft servers
-- 🎙️ TeamSpeak
-- 🛠️ Media stack (Radarr, Sonarr, Plex, etc.)
-
----
-
-## ☸️ Enter: Kubernetes
-
-After containers came **Kubernetes**. I figured the best way to learn it was to create my own mini production-grade data center using bare metal hardware and modern GitOps principles.
-
-My homelab is powered by **6 HP EliteDesk 800 G3 Mini PCs**.
-
-### 🧱 Cluster Architecture
->Node System Specs
-
-| Role           | Nodes | CPU                | RAM   | Disk (boot) | Disk (storage) |
-|----------------|-------|--------------------|-------|-------------|----------------|
-| Control Plane  | 3     | Intel i5-6500T     | 16GB  | 256GB SSD   | —              |
-| Worker Node    | 3     | Intel i5-6500T     | 64GB  | 512GB SSD   | 1TB NVMe       |
-
-
-
->🐧 Talos Linux: Immutable + Secure
-
-All nodes run **[Talos Linux](https://www.talos.dev/)** — a modern, immutable Linux distribution built specifically for Kubernetes. There’s no shell, no package manager, and minimal surface area for attack.
-
-Provisioning is done declaratively via **machine configurations**, and interaction is handled through `talosctl`.
-
-
->🌐 Cilium: eBPF-Powered Networking
+>🌐 Networking: Cilium
 
 Networking in my cluster is handled by **[Cilium](https://cilium.io/)**.
-
 
 >📈 Observability Stack
 
@@ -60,7 +29,7 @@ To keep a pulse on the cluster, these are the obvervability apps I'm currently u
 - **Alertmanager**
 - **Gatus**
 
->🪵 Rook + Ceph: Distributed Storage
+>🪵 Storage: Rook + Ceph
 
 Persistent storage is provided by **Rook-Ceph**, utilizing the 1TB NVMe drives on each worker.
 
@@ -76,14 +45,7 @@ My ultimate goal is to have Flux and Renovate handle most of the deployments and
 Special thanks to the most excellent [onedr0p/cluster-template](https://github.com/onedr0p/cluster-template). It provided a clean, modern foundation for Talos + Flux-based clusters — and taught me how to organize manifests properly, use SOPS, and implement GitOps the right way.
 
 ---
-
-## 🛠️ Coming Soon
-
-- ✅ More observability and start deploying apps once I get my NAS re-configured.
-- 🔜 Documentation for the things I learned and challenges I faced
-
----
-### 🤯 Wow, You're Still Reading
+## 🤯 Start This Journey Today
 If you're interested in this type of thing, I encourage you to build your own home lab. Embrace the process. It will be infuriating at times, blissful at others.
 
 You'll build some really cool stuff along the way. And your brain waves will expand.
