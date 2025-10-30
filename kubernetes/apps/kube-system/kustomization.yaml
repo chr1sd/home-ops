@@ -13,3 +13,4 @@ resources:
   - ./spegel/ks.yaml
   - ./snapshot-controller/ks.yaml
   - ./intel-device-plugin-operator/ks.yaml
+  - ./csi-driver-nfs/ks.yaml
