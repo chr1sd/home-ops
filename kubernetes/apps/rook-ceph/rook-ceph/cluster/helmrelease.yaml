@@ -28,8 +28,6 @@ spec:
     monitoring:
       enabled: true
       createPrometheusRules: false
-      serviceMonitor:
-        enabled: true
 
     route:
       dashboard:
