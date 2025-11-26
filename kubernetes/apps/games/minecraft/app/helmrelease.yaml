@@ -1,0 +1,61 @@
+---
+# yaml-language-server: $schema=https://kube-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app minecraft
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: minecraft
+  dependsOn: []
+  values:
+    fullnameOverride: *app
+    image:
+      repository: ghcr.io/itzg/minecraft-server
+      tag: java17@sha256:88c448bc347794e514e0e43702b54213ff21a7e74c4774bf90d130e567a383f3
+    resources:
+      requests:
+        cpu: 200m
+      limits:
+        cpu: 2000m
+        memory: 8Gi
+    securityContext:
+      runAsUser: 1000
+      fsGroup: 1000
+    persistence:
+      dataDir:
+        enabled: true
+        existingClaim: minecraft-java
+    livenessProbe:
+      initialDelaySeconds: 30
+    readinessProbe:
+      initialDelaySeconds: 30
+    startupProbe:
+      enabled: true
+    extraEnv:
+      TZ: America/New_York
+      ENABLE_ROLLING_LOGS: true
+      MEMORY: ""
+    serviceAnnotations:
+      lbipam.cilium.io/ips: "10.13.17.50"
+      external-dns.alpha.kubernetes.io/hostname: "minecraft.${SECRET_DOMAIN}"
+    minecraftServer:
+      eula: true
+      difficulty: normal
+      type: VANILLA
+      mode: survival
+      motd: "coopernettis super cluster mega block world simulator"
+      jvmXXOpts: "-XX:MaxRAMPercentage=75"
+      serverName: "jingleJANGLE"
+      serviceType: LoadBalancer
+      servicePort: 25565
+      rcon:
+        enabled: true
+        serviceType: ClusterIP
+  valuesFrom:
+    - kind: Secret
+      name: minecraft-java-rcon
+      valuesKey: RCON_PASSWORD
+      targetPath: minecraftServer.rcon.password

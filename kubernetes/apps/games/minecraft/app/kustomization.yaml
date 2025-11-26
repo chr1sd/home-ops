@@ -1,0 +1,12 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ./namespace.yaml
+  # Commenting these out temporarily while I migrate the data from the old server to the new. I only want flux to create the namespace, pvc, and helper pod to migrate data.
+  # - ./secret.sops.yaml
+  # - ./helmrelease.yaml
+  # - ./ocirepository.yaml
+  - ./pvc.yaml
+  - ./helper-pod.yaml
