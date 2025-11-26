@@ -4,9 +4,17 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ./namespace.yaml
-  # Commenting these out temporarily while I migrate the data from the old server to the new. I only want flux to create the namespace, pvc, and helper pod to migrate data.
-  # - ./secret.sops.yaml
-  # - ./helmrelease.yaml
-  # - ./ocirepository.yaml
+  - ./secret.sops.yaml
+  - ./helmrelease.yaml
+  - ./ocirepository.yaml
   - ./pvc.yaml
-  - ./helper-pod.yaml
+  # Used for world transfer. Moved world data from old server to k8s.
+  # Once namespace and pvc are created, deploy helper-pod.
+  # Copy world data to volume - kubectl cp /Users/chr1s/Downloads/minecraft-world.tar.gz games/minecraft-java-migrate:/minecraft-world.tar.gz
+  # Get shell access - kubectl -n games exec -it minecraft-java-migrate -- sh
+  # Change directories to data folder - cd /data
+  # Make world folder - mkdir world
+  # Change directories to world folder - cd world
+  # Exract world data that was copied to volume - tar xzf /minecraft-world.tar.gz
+  # Set permissions just in case (match what you specified in helmrelease) - chown -R 1000:1000 /data
+  # - ./helper-pod.yaml

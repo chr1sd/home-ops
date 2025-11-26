@@ -46,6 +46,7 @@ spec:
       difficulty: normal
       type: VANILLA
       mode: survival
+      pvp: true
       motd: "coopernettis super cluster mega block world simulator"
       jvmXXOpts: "-XX:MaxRAMPercentage=75"
       serverName: "jingleJANGLE"
