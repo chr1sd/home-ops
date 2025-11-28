@@ -15,3 +15,4 @@ resources:
   - ./intel-device-plugin-operator/ks.yaml
   - ./csi-driver-nfs/ks.yaml
   - ./descheduler/ks.yaml
+  - ./multus/ks.yaml

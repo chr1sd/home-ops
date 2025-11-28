@@ -1,5 +1,18 @@
 machine:
   network:
+    interfaces:
+    - interface: bond0
+      bond:
+        deviceSelectors:
+          - hardwareAddr: 10:e7:c6:16:*
+        mode: active-backup
+      dhcp: false
+      mtu: 1500
+      vlans:
+        - # VPN
+          vlanId: 87
+          dhcp: false
+          mtu: 1500
     disableSearchDomain: true
     nameservers:
       - 1.1.1.1
