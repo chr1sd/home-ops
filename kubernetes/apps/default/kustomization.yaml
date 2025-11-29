@@ -10,3 +10,4 @@ resources:
   - ./stirling-pdf/ks.yaml
   - ./vpn-test/ks.yaml
   - ./qbittorrent/ks.yaml
+  - ./qui/ks.yaml
