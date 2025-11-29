@@ -80,7 +80,7 @@ spec:
             addr = "http://localhost:80"
     persistence:
       config:
-        existingClaim: "{{ .Release.Name }}"
+        existingClaim: qbittorrent-config
       config-file:
         type: configMap
         identifier: config
