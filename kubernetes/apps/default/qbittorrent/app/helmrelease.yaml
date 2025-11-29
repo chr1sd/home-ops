@@ -21,7 +21,7 @@ spec:
               tag: 5.1.4@sha256:25fc7caf22101f85276ede9b1f76a46b7a93971bb6b70b6c58d14d6ab7f51415
             env:
               TZ: America/New_York
-              QBT_WEBUI_PORT: &port 80
+              QBT_WEBUI_PORT: &port 8080
               QBT_TORRENTING_PORT: 50469
             probes:
               liveness: &probes
@@ -72,21 +72,12 @@ spec:
     route:
       app:
         enabled: false
-    configMaps:
-      config:
-        data:
-          .qbt.toml: |-
-            [qbittorrent]
-            addr = "http://localhost:80"
     persistence:
       config:
         existingClaim: qbittorrent-config
       config-file:
         type: configMap
         identifier: config
-        globalMounts:
-          - path: /config/.qbt.toml
-            subPath: .qbt.toml
       # media:
       # not ready for this yet. just want to try and deploy the app without it.
         # type: nfs
