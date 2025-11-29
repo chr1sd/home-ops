@@ -14,4 +14,4 @@ spec:
   rules:
     - backendRefs:
         - name: qbittorrent
-          port: 8080
+          port: 80
