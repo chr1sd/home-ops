@@ -68,6 +68,11 @@ spec:
         parentRefs:
           - name: internal
             namespace: kube-system
+            sectionName: https
+        rules:
+        - backendRefs:
+            - name: qui
+              port: 80
     persistence:
       config:
         existingClaim: "{{ .Release.Name }}"
