@@ -12,7 +12,14 @@ spec:
       namespace: rook-ceph
   interval: 1h
   path: ./kubernetes/apps/default/radarr/app
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
   postBuild:
+    substituteFrom:
+      - name: cluster-secrets
+        kind: Secret
     substitute:
       APP: radarr
   prune: true
