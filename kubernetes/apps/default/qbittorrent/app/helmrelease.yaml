@@ -79,12 +79,12 @@ spec:
       config-file:
         type: configMap
         identifier: config
-    media:
-      type: nfs
-      server: com-plex-ity.dovis.me
-      path: /seagate-data
-      globalMounts:
-        - path: /data/torrents
-          subPath: torrents
+      media:
+        type: nfs
+        server: com-plex-ity.dovis.me
+        path: /seagate-data
+        globalMounts:
+          - path: /data/torrents
+            subPath: torrents
       tmp:
         type: emptyDir
