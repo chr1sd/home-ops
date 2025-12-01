@@ -79,13 +79,11 @@ spec:
       config-file:
         type: configMap
         identifier: config
-      # media:
-      # not ready for this yet. just want to try and deploy the app without it.
-        # type: nfs
-        # server: com-plex-ity.dovis.me
-        # path: #fill in later
-        # globalMounts:
-        #   - path: /media/Downloads/qbittorrent
-        #     subPath: Downloads/qbittorrent
+      media:
+        type: nfs
+        server: com-plex-ity.dovis.me
+        path: /seagate-data/torrents
+        globalMounts:
+          - path: /data/torrents
       tmp:
         type: emptyDir
