@@ -10,8 +10,71 @@ sonarr:
       - template: sonarr-quality-definition-series
       - template: sonarr-v4-quality-profile-web-1080p
       - template: sonarr-v4-custom-formats-web-1080p
+      # - template: sonarr-v4-quality-profile-web-2160p-alternative
+      # - template: sonarr-v4-custom-formats-web-2160p
+      - template: sonarr-quality-definition-anime
+      - template: sonarr-v4-quality-profile-anime
+      - template: sonarr-v4-custom-formats-anime
     quality_profiles:
       - name: WEB-1080p
+        reset_unmatched_scores:
+          enabled: true
+        qualities:
+          - name: Bluray-1080p
+          - name: WEB 1080p
+            qualities:
+              - WEBDL-1080p
+              - WEBRip-1080p
+          - name: HDTV-1080p
+          - name: Bluray-720p
+          - name: WEB 720p
+            qualities:
+              - WEBDL-720p
+              - WEBRip-720p
+          - name: HDTV-720p
+          - name: Bluray-480p
+          - name: DVD
+          - name: WEB 480p
+            qualities:
+              - WEBDL-480p
+              - WEBRip-480p
+          - name: SDTV
+
+      # - name: WEB-2160p # Saving for future use.
+      #   reset_unmatched_scores:
+      #     enabled: true
+      #   qualities:
+      #     - name: Bluray-2160p
+      #     - name: WEB 2160p
+      #       qualities:
+      #         - WEBDL-2160p
+      #         - WEBRip-2160p
+      #     - name: HDTV-2160p
+      #     - name: Bluray-1080p
+      #     - name: WEB 1080p
+      #       qualities:
+      #         - WEBDL-1080p
+      #         - WEBRip-1080p
+      #     - name: HDTV-1080p
+      #     - name: Bluray-720p
+      #     - name: WEB 720p
+      #       qualities:
+      #         - WEBDL-720p
+      #         - WEBRip-720p
+      #     - name: HDTV-720p
+      #     - name: Bluray-480p
+      #     - name: DVD
+      #     - name: WEB 480p
+      #       qualities:
+      #         - WEBDL-480p
+      #         - WEBRip-480p
+      #     - name: SDTV
+
+      - name: Remux-1080p - Anime
+        min_format_score: 0
+        reset_unmatched_scores:
+          enabled: true
+
     custom_formats:
       - trash_ids:
           - 32b367365729d530ca1c124a0b180c64 # Bad Dual Groups
@@ -21,6 +84,24 @@ sonarr:
           - 1b3994c551cbb92a2c781af061f4ab44 # Scene
         assign_scores_to:
           - name: WEB-1080p
+      - trash_ids:
+          - 418f50b10f1907201b6cfdf881f467b7 # Anime Dual Audio
+        assign_scores_to:
+          - name: Remux-1080p - Anime
+      - trash_ids:
+          - 9c14d194486c4014d422adc64092d794 # Dubs Only
+        assign_scores_to:
+          - name: Remux-1080p - Anime
+            score: 0
+      - trash_ids:
+          - 47435ece6b99a0b477caf360e79ba0bb # x265
+        assign_scores_to:
+          - name: WEB-1080p
+            score: 0
+          # - name: WEB-2160p
+          #   score: 0
+          - name: Remux-1080p - Anime
+            score: 0
 
 radarr:
   radarr:
