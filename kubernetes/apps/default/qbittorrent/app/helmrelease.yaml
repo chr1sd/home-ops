@@ -76,9 +76,6 @@ spec:
     persistence:
       config:
         existingClaim: qbittorrent-config
-      config-file:
-        type: configMap
-        identifier: config
       media:
         type: nfs
         server: com-plex-ity.dovis.me
