@@ -84,7 +84,7 @@ spec:
         server: com-plex-ity.dovis.me
         path: /seagate-data
         globalMounts:
-          - path: /data #troubleshooting nfs
-            # subPath: torrents
+          - path: /data/torrents
+            subPath: torrents
       tmp:
         type: emptyDir
