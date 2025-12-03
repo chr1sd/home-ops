@@ -56,9 +56,9 @@ spec:
             namespace: kube-system
             sectionName: https
         rules:
-        - backendRefs:
-            - name: thelounge
-              port: *port
+          - backendRefs:
+              - name: thelounge
+                port: *port
     persistence:
       config:
         existingClaim: "{{ .Release.Name }}"
