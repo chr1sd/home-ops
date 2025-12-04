@@ -18,3 +18,4 @@ resources:
   - ./seerr/ks.yaml
   - ./thelounge/ks.yaml
   - ./autobrr/ks.yaml
+  - ./prowlarr/ks.yaml
