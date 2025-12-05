@@ -5,8 +5,6 @@ kind: Kustomization
 metadata:
   name: sonarr
 spec:
-  components:
-    - ../../../../components/common
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph

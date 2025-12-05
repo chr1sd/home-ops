@@ -6,8 +6,6 @@ metadata:
   name: &app prowlarr
   namespace: &namespace default
 spec:
-  components:
-    - ../../../../components/common
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
