@@ -20,3 +20,4 @@ resources:
   - ./autobrr/ks.yaml
   - ./prowlarr/ks.yaml
   - ./flaresolverr/ks.yaml
+  - ./cross-seed.yaml
