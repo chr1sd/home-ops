@@ -56,6 +56,12 @@ spec:
                 cpu: 10m
               limits:
                 memory: 512Mi
+        statefulset:
+          volumeClaimTemplates:
+            - name: config
+              storageClass: ceph-block
+              accessMode: ReadWriteOnce
+              size: 5Gi
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
@@ -69,13 +75,6 @@ spec:
           http:
             port: *port
     persistence:
-      config:
-        type: persistentVolumeClaim
-        storageClass: ceph-block
-        accessMode: ReadWriteOnce
-        size: 5Gi
-        globalMounts:
-          - path: /config
       secret-file:
         type: secret
         name: "{{ .Release.Name }}-secret"
