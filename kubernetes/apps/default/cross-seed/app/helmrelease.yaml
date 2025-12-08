@@ -75,9 +75,9 @@ spec:
           http:
             port: *port
     persistence:
-      secret-file:
-        type: secret
-        name: "{{ .Release.Name }}-secret"
+      config-file:
+        type: configMap
+        name: cross-seed-config
         globalMounts:
           - path: /config/config.js
             subPath: config.js
