@@ -22,7 +22,7 @@ spec:
             env:
               TZ: America/New_York
               QBT_WEBUI_PORT: &port 8080
-              QBT_TORRENTING_PORT: 50469
+              QBT_TORRENTING_PORT: 48234
             probes:
               liveness: &probes
                 enabled: true
