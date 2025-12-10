@@ -91,3 +91,6 @@ spec:
       rules:
         searchNamespace: ALL
         folder: /rules/fake
+        extraVolumeMounts:
+          - name: tmp
+            mountPath: /tmp
