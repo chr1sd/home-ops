@@ -20,28 +20,27 @@ spec:
       retries: 3
   postRenderers:
     - kustomize:
-        patchesStrategicMerge:
-          - |
-            apiVersion: apps/v1
-            kind: StatefulSet
-            metadata:
-              name: loki
-              namespace: observability
-            spec:
-              template:
-                spec:
-                  # add an extra emptyDir just for the sidecar
-                  volumes:
-                    - name: sidecar-tmp
-                      emptyDir: {}
-                  containers:
-                    - name: loki-sc-rules
-                      env:
-                        - name: TMPDIR
-                          value: /tmp
-                      volumeMounts:
-                        - name: sidecar-tmp
-                          mountPath: /tmp
+        patches:
+          - patch: |
+              apiVersion: apps/v1
+              kind: StatefulSet
+              metadata:
+                name: loki
+                namespace: observability
+              spec:
+                template:
+                  spec:
+                    volumes:
+                      - name: sidecar-tmp
+                        emptyDir: {}
+                    containers:
+                      - name: loki-sc-rules
+                        volumeMounts:
+                          - name: sidecar-tmp
+                            mountPath: /tmp
+                        env:
+                          - name: TMPDIR
+                            value: /tmp
   values:
     deploymentMode: SingleBinary
     loki:
