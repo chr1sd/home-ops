@@ -18,6 +18,30 @@ spec:
     crds: Skip
     remediation:
       retries: 3
+  postRenderers:
+    - kustomize:
+        patchesStrategicMerge:
+          - |
+            apiVersion: apps/v1
+            kind: StatefulSet
+            metadata:
+              name: loki
+              namespace: observability
+            spec:
+              template:
+                spec:
+                  # add an extra emptyDir just for the sidecar
+                  volumes:
+                    - name: sidecar-tmp
+                      emptyDir: {}
+                  containers:
+                    - name: loki-sc-rules
+                      env:
+                        - name: TMPDIR
+                          value: /tmp
+                      volumeMounts:
+                        - name: sidecar-tmp
+                          mountPath: /tmp
   values:
     deploymentMode: SingleBinary
     loki:
