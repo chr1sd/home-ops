@@ -20,10 +20,6 @@ spec:
       retries: 3
   values:
     deploymentMode: SingleBinary
-    global:
-      extraEnv:
-        - name: TMPDIR
-          value: /rules/fake
     loki:
       auth_enabled: false
       analytics:
@@ -67,6 +63,9 @@ spec:
           rule_path: /rules/fake
     singleBinary:
       replicas: 1
+      extraVolumeMounts:
+        - name: tmp
+          mountPath: /tmp
       persistence:
         enabled: true
         storageClass: ceph-block
