@@ -21,12 +21,9 @@ spec:
   values:
     deploymentMode: SingleBinary
     global:
-      extraVolumes:
-        - name: tmp
-          emptyDir: {}
-      extraVolumeMounts:
-        - name: tmp
-          mountPath: /tmp
+      extraEnv:
+        - name: TMPDIR
+          value: /rules/fake
     loki:
       auth_enabled: false
       analytics:
