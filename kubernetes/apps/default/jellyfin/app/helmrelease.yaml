@@ -26,18 +26,36 @@ spec:
               TZ: America/New_York
               JELLYFIN_PublishedServerUrl: https://jellyfin.dovis.me
             probes:
-              liveness: &probes
+              startup:
                 enabled: true
                 custom: true
                 spec:
                   httpGet:
-                    path: /identity
+                    path: /health
                     port: &port 8096
-                  initialDelaySeconds: 0
+                  failureThreshold: 30
+                  periodSeconds: 5
+                  timeoutSeconds: 5
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: *port
                   periodSeconds: 10
-                  timeoutSeconds: 1
-                  failureThreshold: 3
-              readiness: *probes
+                  timeoutSeconds: 5
+                  failureThreshold: 6
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: *port
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 6
             resources:
               requests:
                 cpu: 200m
