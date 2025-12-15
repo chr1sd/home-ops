@@ -92,6 +92,7 @@ spec:
         globalMounts:
           - path: /data/media
             subPath: media
+            readOnly: true
       tmp:
         type: emptyDir
         sizeLimit: 1Gi
