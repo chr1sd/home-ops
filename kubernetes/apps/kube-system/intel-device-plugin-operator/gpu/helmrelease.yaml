@@ -18,5 +18,5 @@ spec:
       retries: 3
   values:
     name: i915
-    nodeFeatureRule: false
+    nodeFeatureRule: true
     sharedDevNum: 99

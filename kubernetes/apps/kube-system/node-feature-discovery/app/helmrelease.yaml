@@ -1,0 +1,28 @@
+---
+# yaml-language-server: $schema=https://datreeio.github.io/CRDs-catalog/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: node-feature-discovery
+  namespace: kube-system
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: node-feature-discovery
+  values:
+    master:
+      tolerations:
+        - key: node-role.kubernetes.io/control-plane
+          operator: Exists
+          effect: NoSchedule
+    worker:
+      config:
+        core:
+          sources: ["pci"]
+        sources:
+          pci:
+            deviceClassWhitelist: ["03"]
+            deviceLabelFields: ["class", "vendor"]
+    prometheus:
+      enable: false

@@ -16,3 +16,4 @@ resources:
   - ./csi-driver-nfs/ks.yaml
   - ./descheduler/ks.yaml
   - ./multus/ks.yaml
+  - ./node-feature-discovery/ks.yaml
