@@ -78,13 +78,19 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
     service:
       app:
-        type: LoadBalancer
-        annotations:
-          lbipam.cilium.io/ips: 10.13.17.60
-        externalTrafficPolicy: Local
+        type: ClusterIP
         ports:
           http:
             port: *port
+    # service:
+    #   app:
+    #     type: LoadBalancer
+    #     annotations:
+    #       lbipam.cilium.io/ips: 10.13.17.60
+    #     externalTrafficPolicy: Local
+    #     ports:
+    #       http:
+    #         port: *port
     route:
       app:
         annotations:
