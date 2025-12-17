@@ -5,7 +5,7 @@ machine:
       bond:
         deviceSelectors:
           - driver: e1000e # must be defined otherwise talos cannot intialize the vlan bonded interface
-            hardwareAddr: 10:e7:c6:16:*
+            hardwareAddr: 10:e7:c6:*
         mode: active-backup
       dhcp: false
       mtu: 1500
