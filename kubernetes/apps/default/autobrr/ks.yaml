@@ -6,6 +6,9 @@ metadata:
   name: &app autobrr
   namespace: &namespace default
 spec:
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
   components:
     - ../../../../components/common
     - ../../../../components/gatus/guarded
