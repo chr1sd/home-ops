@@ -7,7 +7,7 @@ spec:
   restartPolicy: Never
   containers:
     - name: helper
-      image: alpine:3.20
+      image: alpine:3.23
       command: ["sleep", "infinity"]
       volumeMounts:
         - name: world
