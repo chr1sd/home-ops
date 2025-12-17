@@ -6,6 +6,12 @@ metadata:
   name: &app qbittorrent
   namespace: &namespace default
 spec:
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  components:
+    - ../../../../components/common
+    - ../../../../components/gatus/guarded
   dependsOn:
     - name: multus-networks
       namespace: kube-system

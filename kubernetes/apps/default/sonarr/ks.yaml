@@ -5,8 +5,12 @@ kind: Kustomization
 metadata:
   name: sonarr
 spec:
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
   components:
     - ../../../../components/common
+    - ../../../../components/gatus/guarded
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
