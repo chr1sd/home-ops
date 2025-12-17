@@ -8,6 +8,7 @@ metadata:
 spec:
   components:
     - ../../../../components/common
+    - ../../../../components/gatus/guarded
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
