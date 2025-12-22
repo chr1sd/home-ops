@@ -24,11 +24,9 @@ spec:
   values:
     toolbox:
       enabled: true
-
     monitoring:
       enabled: true
       createPrometheusRules: false
-
     route:
       dashboard:
         host:
@@ -44,30 +42,22 @@ spec:
               - name: rook-ceph-mgr-dashboard
                 namespace: rook-ceph
                 port: 7000
-
     cephClusterSpec:
-      cephVersion:
-        image: quay.io/ceph/ceph:v19.2.3@sha256:af0c5903e901e329adabe219dfc8d0c3efc1f05102a753902f33ee16c26b6cee
-
       cephConfig:
         global:
           bdev_enable_discard: "true" # quote
           bdev_async_discard_threads: "1" # quote
           osd_class_update_on_start: "false" # quote
           device_failure_prediction_mode: local # requires mgr module
-
       cleanupPolicy:
         wipeDevicesFromOtherClusters: true
-
       crashCollector:
         disable: false
-
       dashboard:
         enabled: true
         urlPrefix: /
         ssl: false
         prometheusEndpoint: http://prometheus-operated.observability.svc.cluster.local:9090
-
       mgr:
         modules:
           - name: diskprediction_local
@@ -78,7 +68,6 @@ spec:
             enabled: true
           - name: rook
             enabled: true
-
       resources:
         mgr:
           requests:
@@ -116,7 +105,6 @@ spec:
             memory: 64Mi
           limits:
             memory: 256Mi
-
       storage:
         useAllNodes: false
         useAllDevices: false
@@ -132,7 +120,6 @@ spec:
           - name: "duwerk-3"
             devices:
               - name: "/dev/disk/by-id/nvme-Acer_SSD_FA100_1TB_ASBD42440400293"
-
     cephBlockPools:
       - name: ceph-blockpool
         spec:
@@ -156,13 +143,11 @@ spec:
             csi.storage.k8s.io/node-stage-secret-name: rook-csi-rbd-node
             csi.storage.k8s.io/node-stage-secret-namespace: "{{ .Release.Namespace }}"
             csi.storage.k8s.io/fstype: ext4
-
     cephBlockPoolsVolumeSnapshotClass:
       enabled: true
       name: csi-ceph-blockpool
       isDefault: false
       deletionPolicy: Delete
-
     # NOTE: After disabling the filesystem, the filesystem can be removed with the following commands:
     # ceph fs fail ceph-filesystem && ceph fs rm ceph-filesystem --yes-i-really-mean-it
     cephFileSystems:
@@ -195,7 +180,6 @@ spec:
               memory: 1Gi
             limits:
               memory: 4Gi
-
         storageClass:
           enabled: true
           isDefault: false
@@ -212,11 +196,9 @@ spec:
             csi.storage.k8s.io/node-stage-secret-name: rook-csi-cephfs-node
             csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
             csi.storage.k8s.io/fstype: ext4
-
     cephFileSystemVolumeSnapshotClass:
       enabled: true
       name: csi-ceph-filesystem
       isDefault: false
       deletionPolicy: Delete
-
     cephObjectStores: []
