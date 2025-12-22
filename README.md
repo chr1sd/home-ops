@@ -1,13 +1,22 @@
 # 🌐 --- k8s[adventure]time --- o()xxxx[{::::::::::::::::::::::::>
 Welcome to the humble home lab. This repo is the meat and potatoes of my bare metal **Kubernetes** cluster running on **Talos Linux**. The goal here is to deepen my understanding of k8s and become the **GitOps** mindset.
 
-### 🧱 Architecture
+```bash
+              __   ____          ___          __                 __                  ___   __  _
+             / /__( __ )_____   / _/___ _____/ /   _____  ____  / /___  __________  /  /  / /_(_)___ ___  ___
+            / //_/ __  / ___/  / // __ `/ __  / | / / _ \/ __ \/ __/ / / / ___/ _ \ / /  / __/ / __ `__ \/ _ \
+           / ,< / /_/ (__  )  / // /_/ / /_/ /| |/ /  __/ / / / /_/ /_/ / /  /  __// /  / /_/ / / / / / /  __/
+          /_/|_|\____/____/  / / \__,_/\__,_/ |___/\___/_/ /_/\__/\__,_/_/   \___// /   \__/_/_/ /_/ /_/\___/
+                            /__/                                                /__/
+```
 
-| System                   | Role           | Nodes | CPU                | RAM   | Graphics | Disk (boot) | Disk (storage) |
+### 🧱 Hardware
+
+| System                   | Role           | OS | CPU                | RAM   | Graphics | Disk (boot) | Disk (storage) |
 |--------------------------|----------------|-------|--------------------|-------|-------------|----------|------|
-| HP EliteDesk 800 G3 Mini | Control Plane  | 3     | Intel i5-6500T     | 16GB DDR4| Intel HD 530 |256GB SSD   | —              |
-| HP EliteDesk 800 G3 Mini | Worker         | 3     | Intel i5-6500T     | 64GB DDR4  | Intel HD 530 |512GB SSD   | 1TB NVMe       |
-| Cutom Built NZXT Server  | AI Workloads + NAS | 1 | Intel i7-6700K     | 64GB DDR4 | nVidia RTX3090 |256GB SSD | 12TB Mirrored ZFS Pool |
+| (3x) HP EliteDesk 800 G3 Mini | Control Plane  | Talos Linux     | Intel i5-6500T     | 16GB DDR4| Intel HD 530 |256GB SSD   | —              |
+| (3x) HP EliteDesk 800 G3 Mini | Worker         | Talos Linux     | Intel i5-6500T     | 64GB DDR4  | Intel HD 530 |512GB SSD   | 1TB NVMe       |
+| Custom Server  | AI Workloads + NAS | Ubuntu | Intel i7-6700K     | 64GB DDR4 |  RTX3090 |256GB SSD | 50TB RaidZ2 Pool (4x 28TB Disks) |
 
 All of this is connected to a Ubiquiti network with VLANS configured for IoT, Management, DMZ, and Cameras.
 
