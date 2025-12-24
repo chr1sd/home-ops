@@ -24,6 +24,9 @@ spec:
               TRILIUM_GENERAL_INSTANCE_NAME: k8s-notes
               TRILIUM_ENV: production
               TRILIUM_NETWORK_PORT: &port 80
+              TRILIUM_DATA_DIR: /home/node/trilium-data
+              USER_UID: 1000
+              USER_GID: 1000
             probes:
               liveness:
                 enabled: true
