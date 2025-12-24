@@ -24,7 +24,7 @@ nodes:
     installDisk: "/dev/disk/by-id/nvme-Acer_FA100_256GB_ASBD24310200195"
     machineSpec:
       secureboot: false
-    talosImageURL: factory.talos.dev/metal-installer/7361710113bd943edd751852342b1ccaa283d00a7257476a53eb4f10dcae8b02:v1.12
+    talosImageURL: factory.talos.dev/metal-installer/7361710113bd943edd751852342b1ccaa283d00a7257476a53eb4f10dcae8b02:v1.12.0
     controlPlane: true
     networkInterfaces:
       - deviceSelector:
@@ -43,7 +43,7 @@ nodes:
     installDisk: "/dev/disk/by-id/nvme-Acer_FA100_256GB_ASBD24310200013"
     machineSpec:
       secureboot: false
-    talosImageURL: factory.talos.dev/metal-installer/7361710113bd943edd751852342b1ccaa283d00a7257476a53eb4f10dcae8b02:v1.12
+    talosImageURL: factory.talos.dev/metal-installer/7361710113bd943edd751852342b1ccaa283d00a7257476a53eb4f10dcae8b02:v1.12.0
     controlPlane: true
     networkInterfaces:
       - deviceSelector:
@@ -62,7 +62,7 @@ nodes:
     installDisk: "/dev/disk/by-id/nvme-Acer_FA100_256GB_ASBD24310200322"
     machineSpec:
       secureboot: false
-    talosImageURL: factory.talos.dev/metal-installer/7361710113bd943edd751852342b1ccaa283d00a7257476a53eb4f10dcae8b02:v1.12
+    talosImageURL: factory.talos.dev/metal-installer/7361710113bd943edd751852342b1ccaa283d00a7257476a53eb4f10dcae8b02:v1.12.0
     controlPlane: true
     networkInterfaces:
       - deviceSelector:
@@ -81,7 +81,7 @@ nodes:
     installDisk: "/dev/disk/by-id/ata-Acer_SSD_RE100_2.5_512G_ASBB34310200208"
     machineSpec:
       secureboot: false
-    talosImageURL: factory.talos.dev/metal-installer/7361710113bd943edd751852342b1ccaa283d00a7257476a53eb4f10dcae8b02:v1.12
+    talosImageURL: factory.talos.dev/metal-installer/7361710113bd943edd751852342b1ccaa283d00a7257476a53eb4f10dcae8b02:v1.12.0
     controlPlane: false
     networkInterfaces:
       - deviceSelector:
@@ -98,7 +98,7 @@ nodes:
     installDisk: "/dev/disk/by-id/ata-Acer_SSD_RE100_2.5_512G_ASBB34310200151"
     machineSpec:
       secureboot: false
-    talosImageURL: factory.talos.dev/metal-installer/7361710113bd943edd751852342b1ccaa283d00a7257476a53eb4f10dcae8b02:v1.12
+    talosImageURL: factory.talos.dev/metal-installer/7361710113bd943edd751852342b1ccaa283d00a7257476a53eb4f10dcae8b02:v1.12.0
     controlPlane: false
     networkInterfaces:
       - deviceSelector:
@@ -115,7 +115,7 @@ nodes:
     installDisk: "/dev/disk/by-id/ata-Acer_SSD_RE100_2.5_512G_ASBB34310200094"
     machineSpec:
       secureboot: false
-    talosImageURL: factory.talos.dev/metal-installer/7361710113bd943edd751852342b1ccaa283d00a7257476a53eb4f10dcae8b02:v1.12
+    talosImageURL: factory.talos.dev/metal-installer/7361710113bd943edd751852342b1ccaa283d00a7257476a53eb4f10dcae8b02:v1.12.0
     controlPlane: false
     networkInterfaces:
       - deviceSelector:
