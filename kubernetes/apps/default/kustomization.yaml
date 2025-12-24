@@ -22,3 +22,5 @@ resources:
   - ./flaresolverr/ks.yaml
   - ./cross-seed/ks.yaml
   - ./jellyfin/ks.yaml
+  - ./trilium/ks.yaml
+

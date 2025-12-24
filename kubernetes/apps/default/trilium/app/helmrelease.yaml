@@ -1,0 +1,75 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: trilium
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: trilium
+  interval: 1h
+  values:
+    controllers:
+      trilium:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/triliumnext/trilium
+              tag: v0.100.0@sha256:8a8f15720c50583e82bc180ca1820942f1a2ffb4ce70ab65eab1bf051b55e440
+            env:
+              TZ: America/New_York
+              TRILIUM_GENERAL_INSTANCE_NAME: k8s-notes
+              TRILIUM_ENV: production
+              TRILIUM_DATA_DIR: /data
+              TRILIUM_NETWORK_PORT: &port 80
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: {drop: ["ALL"]}
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                cpu: "1"
+                memory: 512Mi
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
+        fsGroupChangePolicy: OnRootMismatch
+    service:
+      app:
+        ports:
+          http:
+            port: *port
+    route:
+      app:
+        hostnames:
+          - "{{ .Release.Name }}.dovis.me"
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https
+        rules:
+        - backendRefs:
+            - name: trilium
+              port: *port
+    persistence:
+      data:
+        existingClaim: "{{ .Release.Name }}"
+        globalMounts:
+          - subPath: data
+            path: /data
+      tmp:
+        type: emptyDir
+        medium: Memory
