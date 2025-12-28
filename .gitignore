@@ -20,3 +20,4 @@ talosconfig
 .DS_Store
 Thumbs.db
 /known_hosts
+talos-shutdown-all.sh
