@@ -20,6 +20,9 @@ spec:
   interval: 1h
   path: ./kubernetes/apps/volsync-system/kopia/app
   postBuild:
+    substituteFrom:
+      - name: cluster-secrets
+        kind: Secret
     substitute:
       APP: kopia
   prune: true
