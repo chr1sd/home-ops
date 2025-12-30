@@ -11,3 +11,4 @@ resources:
   - ./gatus/ks.yaml
   - ./loki/ks.yaml
   - ./fluent-bit/ks.yaml
+  - ./keda/ks.yaml
