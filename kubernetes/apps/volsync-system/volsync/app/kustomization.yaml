@@ -7,4 +7,4 @@ resources:
   - ./helmrelease.yaml
   - ./ocirepository.yaml
   - ./mutatingadmissionpolicy.yaml
-  - ./prometheusrule.yaml
+  # - ./prometheusrule.yaml ignore for now.
