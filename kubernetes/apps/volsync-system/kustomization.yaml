@@ -1,0 +1,13 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: volsync-system
+
+# components:
+#   - ../../components/alerts #alerts no fully implemented yet
+
+resources:
+  - ./namespace.yaml
+  - ./kopia/ks.yaml
+  - ./volsync/ks.yaml
