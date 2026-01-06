@@ -11,6 +11,7 @@ spec:
   components:
     - ../../../../components/common
     - ../../../../components/gatus/guarded
+    - ../../../../components/volsync
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
@@ -25,7 +26,8 @@ spec:
       - name: cluster-secrets
         kind: Secret
     substitute:
-      APP: sonarr
+      APP: *app
+      VOLSYNC_CAPACITY: 10Gi
   prune: true
   sourceRef:
     kind: GitRepository

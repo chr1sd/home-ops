@@ -21,3 +21,4 @@ talosconfig
 Thumbs.db
 /known_hosts
 talos-shutdown-all.sh
+temp-pvc.sh

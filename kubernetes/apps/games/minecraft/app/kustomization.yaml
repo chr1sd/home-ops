@@ -7,7 +7,6 @@ resources:
   - ./secret.sops.yaml
   - ./helmrelease.yaml
   - ./ocirepository.yaml
-  - ./pvc.yaml
   # Used for world transfer. Moved world data from old server to k8s.
   # Once namespace and pvc are created, deploy helper-pod.
   # Copy world data to volume - kubectl cp /Users/chr1s/Downloads/minecraft-world.tar.gz games/minecraft-java-migrate:/minecraft-world.tar.gz

@@ -3,7 +3,7 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: OCIRepository
 metadata:
-  name: minecraft
+  name: minecraft-java
 spec:
   interval: 1h
   layerSelector:

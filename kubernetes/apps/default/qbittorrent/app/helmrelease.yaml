@@ -75,7 +75,7 @@ spec:
         enabled: false
     persistence:
       config:
-        existingClaim: qbittorrent-config
+        existingClaim: "{{ .Release.Name }}"
       media:
         type: nfs
         server: com-plex-ity.dovis.me

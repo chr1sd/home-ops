@@ -12,6 +12,7 @@ spec:
   components:
     - ../../../../components/common
     - ../../../../components/gatus/guarded
+    - ../../../../components/volsync
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
@@ -27,6 +28,7 @@ spec:
         kind: Secret
     substitute:
       APP: *app
+      VOLSYNC_CAPACITY: 1Gi
   prune: true
   sourceRef:
     kind: GitRepository

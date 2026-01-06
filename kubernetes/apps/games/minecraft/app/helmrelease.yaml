@@ -3,12 +3,12 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app minecraft
+  name: &app minecraft-java
 spec:
   interval: 1h
   chartRef:
     kind: OCIRepository
-    name: minecraft
+    name: minecraft-java
   dependsOn: []
   values:
     fullnameOverride: *app
@@ -27,7 +27,7 @@ spec:
     persistence:
       dataDir:
         enabled: true
-        existingClaim: minecraft-java
+        existingClaim: "{{ .Release.Name }}"
     livenessProbe:
       initialDelaySeconds: 30
     readinessProbe:
