@@ -11,7 +11,7 @@ spec:
       app.kubernetes.io/name: *app
   components:
     - ../../../../components/gatus/guarded
-    # - ../../../../components/volsync
+    - ../../../../components/volsync
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
@@ -27,7 +27,7 @@ spec:
         kind: Secret
     substitute:
       APP: *app
-      # VOLSYNC_CAPACITY: 1Gi
+      VOLSYNC_CAPACITY: 1Gi
   prune: true
   sourceRef:
     kind: GitRepository
