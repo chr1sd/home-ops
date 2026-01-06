@@ -27,7 +27,7 @@ spec:
     persistence:
       dataDir:
         enabled: true
-        existingClaim: "{{ .Release.Name }}"
+        existingClaim: minecraft-java
     livenessProbe:
       initialDelaySeconds: 30
     readinessProbe:
