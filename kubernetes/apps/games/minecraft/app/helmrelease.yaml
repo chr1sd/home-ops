@@ -8,7 +8,7 @@ spec:
   interval: 1h
   chartRef:
     kind: OCIRepository
-    name: minecraft-java
+    name: *app
   dependsOn: []
   values:
     fullnameOverride: *app
