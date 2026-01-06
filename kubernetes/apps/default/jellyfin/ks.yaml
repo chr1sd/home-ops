@@ -17,7 +17,14 @@ spec:
       namespace: rook-ceph
   interval: 1h
   path: ./kubernetes/apps/default/jellyfin/app
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
   postBuild:
+    substituteFrom:
+      - name: cluster-secrets
+        kind: Secret
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 10Gi
