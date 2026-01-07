@@ -51,14 +51,6 @@ spec:
               limits:
                 memory: 18Gi
     defaultPodOptions:
-      # annotations:
-      #   k8s.v1.cni.cncf.io/networks: |-
-      #     [{
-      #       "name": "vpn",
-      #       "namespace": "kube-system",
-      #       "ips": ["10.13.87.51/24"],
-      #       "mac": "1a:a2:4d:d3:11:84"
-      #     }]
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
@@ -67,6 +59,8 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
     service:
       app:
+        forceRename: "{{ .Release.Name }}"
+        primary: true
         ports:
           http:
             port: *port
