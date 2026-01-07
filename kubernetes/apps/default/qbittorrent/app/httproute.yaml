@@ -13,5 +13,5 @@ spec:
     - qbittorrent.dovis.me
   rules:
     - backendRefs:
-        - name: qbittorrent
+        - name: qbittorrent-app
           port: 8080
