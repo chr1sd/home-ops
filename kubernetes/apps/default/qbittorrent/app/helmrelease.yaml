@@ -22,7 +22,7 @@ spec:
             env:
               TZ: America/New_York
               QBT_WEBUI_PORT: &port 8080
-              QBT_TORRENTING_PORT: 48234
+              QBT_TORRENTING_PORT: &torrentPort 48234
             probes:
               liveness: &probes
                 enabled: true
@@ -51,14 +51,14 @@ spec:
               limits:
                 memory: 18Gi
     defaultPodOptions:
-      annotations:
-        k8s.v1.cni.cncf.io/networks: |-
-          [{
-            "name": "vpn",
-            "namespace": "kube-system",
-            "ips": ["10.13.87.51/24"],
-            "mac": "1a:a2:4d:d3:11:84"
-          }]
+      # annotations:
+      #   k8s.v1.cni.cncf.io/networks: |-
+      #     [{
+      #       "name": "vpn",
+      #       "namespace": "kube-system",
+      #       "ips": ["10.13.87.51/24"],
+      #       "mac": "1a:a2:4d:d3:11:84"
+      #     }]
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
@@ -70,6 +70,15 @@ spec:
         ports:
           http:
             port: *port
+      bittorrent:
+        type: LoadBalancer
+        annotations:
+          lbipam.cilium.io/ips: 10.13.17.55
+        externalTrafficPolicy: Local
+        ports:
+          bittorrent-tcp:
+            port: *torrentPort
+            protocol: TCP
     route:
       app:
         enabled: false
