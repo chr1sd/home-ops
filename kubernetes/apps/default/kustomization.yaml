@@ -23,4 +23,5 @@ resources:
   - ./cross-seed/ks.yaml
   - ./jellyfin/ks.yaml
   - ./trilium/ks.yaml
+  - ./vikunja/ks.yaml
 
