@@ -18,7 +18,7 @@ spec:
           app:
             image:
               repository: ghcr.io/triliumnext/trilium
-              tag: v0.101.2@sha256:16c5789076ff62a7fc9155aa1ecb1d9211735765089071bb55901ce5edf0b72f
+              tag: v0.101.3@sha256:f9c978d08f24af19e58c7e3230218a5a6a0ab889ac261e25edb847ebd3762ff4
             command: ["node", "./main.cjs"]
             env:
               TZ: America/New_York
