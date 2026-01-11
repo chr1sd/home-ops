@@ -24,4 +24,5 @@ resources:
   - ./jellyfin/ks.yaml
   - ./trilium/ks.yaml
   - ./vikunja/ks.yaml
+  - ./n8n/ks.yaml
 
