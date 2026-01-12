@@ -25,4 +25,5 @@ resources:
   - ./trilium/ks.yaml
   - ./vikunja/ks.yaml
   - ./n8n/ks.yaml
+  - ./stress/ks.yaml
 
