@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: stress
+  namespace: default
+spec:
+  nodeName: duwerk-3
+  restartPolicy: Never
+  containers:
+    - name: toolbox
+      image: alpine:3.20
+      command: ["/bin/sh", "-lc"]
+      args:
+        - |
+          apk add --no-cache stress-ng >/dev/null
+          echo "Ready. Exec in and run stress-ng when you want."
+          sleep infinity
+      resources:
+        requests:
+          cpu: "100m"
+        limits:
+          cpu: 4
