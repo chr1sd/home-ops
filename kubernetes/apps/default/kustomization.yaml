@@ -26,4 +26,4 @@ resources:
   - ./vikunja/ks.yaml
   - ./n8n/ks.yaml
   - ./stress/ks.yaml
-
+  - ./agregarr/ks.yaml
