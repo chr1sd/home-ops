@@ -28,23 +28,21 @@ spec:
                 enabled: true
                 custom: true
                 spec:
-                  httpGet:
-                    path: /api/v2/app/version
+                  tcpSocket:
                     port: *port
                   initialDelaySeconds: 60
                   periodSeconds: 20
-                  timeoutSeconds: 10
+                  timeoutSeconds: 2
                   failureThreshold: 15
               readiness:
                 enabled: true
                 custom: true
                 spec:
-                  httpGet:
-                    path: /api/v2/app/version
+                  tcpSocket:
                     port: *port
                   initialDelaySeconds: 30
                   periodSeconds: 10
-                  timeoutSeconds: 5
+                  timeoutSeconds: 2
                   failureThreshold: 6
               startup:
                 enabled: true
