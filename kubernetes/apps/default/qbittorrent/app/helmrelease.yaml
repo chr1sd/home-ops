@@ -24,7 +24,18 @@ spec:
               QBT_WEBUI_PORT: &port 8080
               QBT_TORRENTING_PORT: &torrentPort 48234
             probes:
-              liveness: &probes
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/v2/app/version
+                    port: *port
+                  initialDelaySeconds: 60
+                  periodSeconds: 20
+                  timeoutSeconds: 10
+                  failureThreshold: 15
+              readiness:
                 enabled: true
                 custom: true
                 spec:
@@ -32,15 +43,15 @@ spec:
                     path: /api/v2/app/version
                     port: *port
                   initialDelaySeconds: 30
-                  periodSeconds: 15
+                  periodSeconds: 10
                   timeoutSeconds: 5
-                  failureThreshold: 4
-              readiness: *probes
+                  failureThreshold: 6
               startup:
                 enabled: true
                 spec:
                   failureThreshold: 30
                   periodSeconds: 10
+                  timeoutSeconds: 1
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
