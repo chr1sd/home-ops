@@ -34,7 +34,7 @@ data:
         "http://sonarr.default.svc.cluster.local/?apikey=" + process.env.SONARR__AUTH__APIKEY
       ],
 
-      torrentClients: ["qbittorrent:http://qbittorrent.default.svc.cluster.local:8080"],
+      torrentClients: ["qbittorrent:http://qbittorrent.default.svc.cluster.local:80"],
       torznab: fetchIndexers(
         "http://prowlarr.default.svc.cluster.local",
         process.env.PROWLARR__AUTH__APIKEY,

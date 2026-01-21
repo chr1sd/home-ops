@@ -89,3 +89,11 @@ spec:
           - path: /data
       tmp:
         type: emptyDir
+
+kubectl scale deploy -n default --all --replicas=1
+kubectl scale deploy -n games --all --replicas=1
+kubectl scale deploy -n observability --all --replicas=1
+kubectl -n observability scale sts prometheus-kube-prometheus-stack --replicas=1
+kubectl -n observability scale sts alertmanager-kube-prometheus-stack --replicas=1
+kubectl -n observability scale sts loki --replicas=1
+kubectl -n default scale sts cross-seed --replicas=1
