@@ -21,35 +21,26 @@ spec:
               tag: 5.1.4@sha256:56ecd30a7f5e1357daf5eea2a6935134d329b7b268a3a9b9c67041b65fb87fc6
             env:
               TZ: America/New_York
-              QBT_WEBUI_PORT: &port 8080
+              QBT_WEBUI_PORT: &port 80
               QBT_TORRENTING_PORT: &torrentPort 48234
             probes:
-              liveness:
+              liveness: &probes
                 enabled: true
                 custom: true
                 spec:
-                  tcpSocket:
+                  httpGet:
+                    path: /api/v2/app/version
                     port: *port
-                  initialDelaySeconds: 60
-                  periodSeconds: 20
-                  timeoutSeconds: 2
-                  failureThreshold: 15
-              readiness:
-                enabled: true
-                custom: true
-                spec:
-                  tcpSocket:
-                    port: *port
-                  initialDelaySeconds: 30
+                  initialDelaySeconds: 0
                   periodSeconds: 10
-                  timeoutSeconds: 2
-                  failureThreshold: 6
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
               startup:
                 enabled: true
                 spec:
                   failureThreshold: 30
                   periodSeconds: 10
-                  timeoutSeconds: 1
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
@@ -58,7 +49,7 @@ spec:
               requests:
                 cpu: 100m
               limits:
-                memory: 18Gi
+                memory: 6Gi
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
@@ -84,10 +75,31 @@ spec:
             protocol: TCP
     route:
       app:
-        enabled: false
+        hostnames:
+          - "{{ .Release.Name }}.dovis.me"
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https
+        rules:
+        - backendRefs:
+            - name: qbittorrent
+              port: *port
+    configMaps:
+      config:
+        data:
+          .qbt.toml: |-
+            [qbittorrent]
+            addr = "http://localhost:80"
     persistence:
       config:
         existingClaim: "{{ .Release.Name }}"
+      config-file:
+        type: configMap
+        identifier: config
+        globalMounts:
+          - path: /config/.qbt.toml
+            subPath: .qbt.toml
       media:
         type: nfs
         server: com-plex-ity.dovis.me
