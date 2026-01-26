@@ -11,7 +11,7 @@ spec:
   hostPID: true
   containers:
     - name: wipe
-      image: quay.io/ceph/ceph:v19
+      image: quay.io/ceph/ceph:v20
       securityContext:
         privileged: true
       command:
