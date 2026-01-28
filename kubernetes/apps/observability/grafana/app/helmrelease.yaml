@@ -242,17 +242,8 @@ spec:
     serviceMonitor:
       enabled: true
     route:
-      app:
-        hostnames:
-          - "{{ .Release.Name }}.dovis.me"
-        parentRefs:
-          - name: envoy-internal
-            namespace: network
-            sectionName: https
-        rules:
-          - backendRefs:
-              - name: grafana
-                port: 80
+      main:
+        enabled: false
     persistence:
       enabled: false
     testFramework:
