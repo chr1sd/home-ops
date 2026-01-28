@@ -39,7 +39,7 @@ spec:
             env:
               VIKUNJA_DATABASE_TYPE: sqlite
               VIKUNJA_DATABASE_PATH: /db/vikunja.db
-              VIKUNJA_SERVICE_PUBLICURL: "{{ .Release.Name }}.dovis.me"
+              VIKUNJA_SERVICE_PUBLICURL: https://vikunja.dovis.me
               # add smtp later
               # VIKUNJA_MAILER_HOST: smtp-relay.default.svc.cluster.local.
               # VIKUNJA_MAILER_PORT: "2525"
