@@ -66,6 +66,7 @@ spec:
       app:
         hostnames:
           - "{{ .Release.Name }}.dovis.me"
+          - qbt.dovis.me
         parentRefs:
           - name: envoy-internal
             namespace: network
