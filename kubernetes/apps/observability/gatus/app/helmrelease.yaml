@@ -95,6 +95,10 @@ spec:
             namespace: network
           - name: envoy-internal
             namespace: network
+        rules:
+          - backendRefs:
+              - name: gatus
+                port: 80
     rbac:
       roles:
         gatus:

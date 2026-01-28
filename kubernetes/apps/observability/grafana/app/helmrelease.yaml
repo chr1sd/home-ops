@@ -248,6 +248,10 @@ spec:
         parentRefs:
           - name: envoy-internal
             namespace: network
+        rules:
+          - backendRefs:
+              - name: grafana
+                port: 80
     persistence:
       enabled: false
     testFramework:
