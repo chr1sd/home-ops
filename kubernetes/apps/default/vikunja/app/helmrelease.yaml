@@ -55,19 +55,14 @@ spec:
         controller: *app
         ports:
           http:
-            port: &port 3456
+            port: 3456
     route:
       app:
         hostnames:
           - "{{ .Release.Name }}.dovis.me"
         parentRefs:
-          - name: internal
-            namespace: kube-system
-            sectionName: https
-        rules:
-        - backendRefs:
-            - name: *app
-              port: *port
+          - name: envoy-internal
+            namespace: network
     persistence:
       config:
         existingClaim: *app

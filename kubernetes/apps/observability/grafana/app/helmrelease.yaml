@@ -242,8 +242,12 @@ spec:
     serviceMonitor:
       enabled: true
     route:
-      main:
-        enabled: false
+      app:
+        hostnames:
+          - "{{ .Release.Name }}.dovis.me"
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
     persistence:
       enabled: false
     testFramework:

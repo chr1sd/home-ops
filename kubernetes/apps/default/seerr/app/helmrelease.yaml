@@ -69,13 +69,8 @@ spec:
           - "{{ .Release.Name }}.dovis.me"
           - request.dovis.me
         parentRefs:
-          - name: external
-            namespace: kube-system
-            sectionName: https
-        rules:
-          - backendRefs:
-              - name: seerr
-                port: *port
+          - name: envoy-external
+            namespace: network
     persistence:
       config:
         existingClaim: "{{ .Release.Name }}"

@@ -45,7 +45,11 @@ spec:
           - port: http
     route:
       app:
-        enabled: false
+        hostnames:
+          - pdf.dovis.me
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
     persistence:
       config:
         enabled: true

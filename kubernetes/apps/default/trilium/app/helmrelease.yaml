@@ -79,13 +79,8 @@ spec:
         hostnames:
           - "{{ .Release.Name }}.dovis.me"
         parentRefs:
-          - name: internal
-            namespace: kube-system
-            sectionName: https
-        rules:
-        - backendRefs:
-            - name: trilium
-              port: *port
+          - name: envoy-internal
+            namespace: network
     persistence:
       data:
         existingClaim: "{{ .Release.Name }}"

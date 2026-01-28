@@ -67,13 +67,8 @@ spec:
         hostnames:
           - "{{ .Release.Name }}.dovis.me"
         parentRefs:
-          - name: internal
-            namespace: kube-system
-            sectionName: https
-        rules:
-        - backendRefs:
-            - name: qbittorrent
-              port: *port
+          - name: envoy-internal
+            namespace: network
     configMaps:
       config:
         data:

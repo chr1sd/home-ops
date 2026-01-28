@@ -60,20 +60,14 @@ spec:
         hostnames:
           - "{{ .Release.Name }}.dovis.me"
         parentRefs:
-          - name: internal
-            namespace: kube-system
-            sectionName: https
-        rules:
-        - backendRefs:
-            - name: *app
-              port: *port
+          - name: envoy-internal
+            namespace: network
       webhooks:
         hostnames:
           - n8n-webhook.dovis.me
         parentRefs:
-          - name: external
-            namespace: kube-system
-            sectionName: https
+          - name: envoy-external
+            namespace: network
         rules:
           - matches:
               - path:

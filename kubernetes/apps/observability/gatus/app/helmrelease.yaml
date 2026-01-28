@@ -87,7 +87,14 @@ spec:
           - port: http
     route:
       app:
-        enabled: false
+        hostnames:
+          - "{{ .Release.Name }}.dovis.me"
+          - status.dovis.me
+        parentRefs:
+          - name: envoy-external
+            namespace: network
+          - name: envoy-internal
+            namespace: network
     rbac:
       roles:
         gatus:
