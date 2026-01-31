@@ -25,3 +25,4 @@ resources:
   - ./n8n/ks.yaml
   - ./stress/ks.yaml
   - ./agregarr/ks.yaml
+  - ./audiobookshelf/ks.yaml
