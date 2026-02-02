@@ -6,8 +6,8 @@ metadata:
   namespace: observability
 spec:
   parentRefs:
-    - name: internal
-      namespace: kube-system
+    - name: envoy-internal
+      namespace: network
       sectionName: https
   hostnames:
     - alertmanager.dovis.me
@@ -24,8 +24,8 @@ metadata:
   namespace: observability
 spec:
   parentRefs:
-    - name: internal
-      namespace: kube-system
+    - name: envoy-internal
+      namespace: network
       sectionName: https
   hostnames:
     - prometheus.dovis.me
