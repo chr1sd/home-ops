@@ -10,6 +10,8 @@ spec:
     name: csi-driver-nfs
   interval: 1h
   values:
+    controller:
+      enableSnapshotter: false
     storageClass:
       create: true
       name: nfs-k8s
@@ -18,8 +20,10 @@ spec:
         share: /seagate-data
       mountOptions:
         - nfsvers=4.2
-        - nconnect=16
+        - nconnect=8
         - hard
         - noatime
+        - rsize=1048576
+        - wsize=1048576
       reclaimPolicy: Delete
       volumeBindingMode: Immediate
