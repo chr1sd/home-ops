@@ -20,7 +20,7 @@ spec:
         share: /seagate-data/k8s
       mountOptions:
         - nfsvers=4.2
-        - nconnect=8
+        - nconnect=16
         - hard
         - noatime
         - rsize=1048576
