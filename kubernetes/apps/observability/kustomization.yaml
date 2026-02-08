@@ -9,6 +9,6 @@ resources:
   - ./grafana/ks.yaml
   - ./kube-prometheus-stack/ks.yaml
   - ./gatus/ks.yaml
-  - ./loki/ks.yaml
+  - ./victoria-logs/ks.yaml
   - ./fluent-bit/ks.yaml
   - ./keda/ks.yaml
