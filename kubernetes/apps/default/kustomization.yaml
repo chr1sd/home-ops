@@ -26,4 +26,4 @@ resources:
   - ./stress/ks.yaml
   - ./agregarr/ks.yaml
   - ./audiobookshelf/ks.yaml
-  - ./atuin/ks.yaml
+  # - ./atuin/ks.yaml
