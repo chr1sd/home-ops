@@ -24,8 +24,6 @@ spec:
               ATUIN_DB_URI: sqlite:///config/atuin.db
               TZ: America/New_York
             command:
-              - /atuin
-              - server
               - start
             probes:
               liveness:
