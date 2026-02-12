@@ -19,37 +19,47 @@ The goal here is to deepen my understanding of k8s, become the GitOps mindset, a
 | (3x) HP EliteDesk 800 G3 Mini | Worker         | Intel i5-6500T     | 64GB DDR4  | Intel HD 530 |512GB SSD   | 1TB NVMe       |
 | Custom Server  | AI Workloads + NAS | Intel i7-6700K     | 64GB DDR4 |  RTX3090 |256GB SSD | 50TB RaidZ2 Pool (4x 28TB Disks) |
 
-All of this is connected to a Ubiquiti network with VLANS configured for IoT, Management, DMZ, and Cameras.
+All of this is connected to a [Ubiquiti](https://ui.com) network with VLANS configured for IoT, Management, DMZ, and Cameras.
+
+## 🛡️ Talos Linux
+
+[Talos](https://www.talos.dev) is an immutable, API driven operating system designed specifically for Kubernetes. Talos is configured declaritively and is a great choice for a GitOps driven workflow.
 
 ## ☸️ Kubernetes
 
-I want to have my own mini data center at the house and the infrastructure should be easy to redeploy if anything fails. That's why I chose to go the GitOps route.  If something breaks I can roll back to a previous working configuration. K8s allows me to scale and provide useful, locally hosted applications for my family.
+For me, a home lab about tinkering and learning. So I set off to learn [Kubernetes](https://kubernetes.io) with a goal to grow my skillset and have an infrastructure that allows me to scale and provide useful, locally hosted applications for my family.
 
-#### 🌐 Networking: Cilium
+### 🌐 Networking: Cilium
 
-Networking in my cluster is handled by **[Cilium](https://cilium.io/)**.
+Networking in my cluster is handled by [Cilium](https://cilium.io/).
 
-#### 📈 Observability Stack
+I'm using [Envoy Gateway](https://gateway.envoyproxy.io) to manage application traffic coming into the cluster.
 
-To keep a pulse on the cluster, these are the obvervability apps I'm currently using: **[Prometheus](https://prometheus.io)**, **[Grafana](https://grafana.com)**, **[Loki](https://grafana.com/oss/loki/)**, **[Alertmanager](https://github.com/prometheus/alertmanager)**, **[Gatus](https://github.com/TwiN/gatus)**, and **[Fluentbit](https://fluentbit.io)**.
+### 📈 Observability Stack
 
-#### 🪵 Storage: Rook + Ceph
+To keep a pulse on the cluster, I'm using: [Prometheus](https://prometheus.io), [Grafana](https://grafana.com), [VictoriaLogs](https://victoriametrics.com/products/victorialogs/), [Alertmanager](https://github.com/prometheus/alertmanager), [Gatus](https://github.com/TwiN/gatus), and [Fluentbit](https://fluentbit.io).
 
-Persistent storage is provided by **[Rook-Ceph](https://rook.io/)**, utilizing the 1TB NVMe drives on each worker.
+### 🪵 Storage: Rook + Ceph
 
-#### ⚙️ GitOps with Flux
+Persistent storage is provided by [Rook-Ceph](https://rook.io/), utilizing the 1TB NVMe drives on each worker.
 
-The backbone of this cluster is **[Flux CD](https://fluxcd.io/)** — a GitOps controller that reconciles my entire Kubernetes state from a Git repository.
+### ⚙️ GitOps with Flux
 
-My ultimate goal is to have Flux and **[Renovate](https://www.mend.io/renovate/)** handle most of the deployments and updates to the cluster.
+The backbone of this cluster is [Flux CD](https://fluxcd.io/) — a GitOps controller that reconciles my entire Kubernetes state from a Git repository.
+
+My ultimate goal is to have Flux and [Renovate](https://www.mend.io/renovate/) handle most of the deployments and updates to the cluster.
+
+This [Youtube video](https://youtu.be/aeUKOpeoiUs) I made, gives a general overview of my configuration and the core components.
 
 ---
 ## 📌 Foundation: onedr0p's Cluster Template
 
-Special thanks to the most excellent **[onedr0p/cluster-template](https://github.com/onedr0p/cluster-template)**. It provides a clean, modern foundation for Talos + Flux-based clusters — and taught me how to organize manifests properly, use SOPS, and implement GitOps the right way.
+Special thanks to the most excellent [onedr0p/cluster-template](https://github.com/onedr0p/cluster-template). It provides a clean, modern foundation for Talos + Flux-based clusters — and taught me how to organize manifests properly, use SOPS, and implement GitOps the right way.
 
 ---
 ## 🤯 Start This Journey Today
-If you're interested in this type of thing, I encourage you to build your own home lab. Embrace the process. It will be infuriating at times, blissful at others.
+If you're interested in this type of thing, I encourage you to build your own home lab. It doesn't have to be Kubernetes. Grab ANY old computer and see what you can deploy on it.
+
+Embrace the process. It will be infuriating at times, blissful at others.
 
 You'll build some really cool stuff along the way. And your brain waves will expand.
