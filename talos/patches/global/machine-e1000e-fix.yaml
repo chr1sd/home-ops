@@ -1,0 +1,10 @@
+---
+apiVersion: v1alpha1
+kind: EthernetConfig
+name: eno1
+rings:
+  rx: 4096
+  tx: 4096
+features:
+  tx-tcp-segmentation: false
+  tx-generic-segmentation: false
