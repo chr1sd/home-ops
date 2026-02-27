@@ -19,7 +19,7 @@ spec:
             image:
               repository: ghcr.io/n8n-io/n8n
               # renovate: datasource=github-releases depName=n8n-io/n8n
-              tag: 2.10.1
+              tag: 2.10.2
             env:
               DB_SQLITE_VACUUM_ON_STARTUP: true
               EXECUTIONS_DATA_PRUNE: true
