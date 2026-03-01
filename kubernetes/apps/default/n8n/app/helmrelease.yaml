@@ -63,6 +63,9 @@ spec:
           - name: envoy-internal
             namespace: network
       webhooks:
+        annotations:
+            gatus.home-operations.com/endpoint: |-
+              conditions: ["[STATUS] == 404"]
         hostnames:
           - n8n-webhook.dovis.me
         parentRefs:
