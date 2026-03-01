@@ -49,7 +49,7 @@ The backbone of this cluster is [Flux CD](https://fluxcd.io/) — a GitOps contr
 
 My ultimate goal is to have Flux and [Renovate](https://www.mend.io/renovate/) handle most of the deployments and updates to the cluster.
 
-This [Youtube video](https://youtu.be/aeUKOpeoiUs) I made, gives a general overview of my configuration and the core components.
+I made a [Youtube video](https://youtu.be/aeUKOpeoiUs) that gives a general overview of my configuration and the core components.
 
 ---
 ## 📌 Foundation: onedr0p's Cluster Template
