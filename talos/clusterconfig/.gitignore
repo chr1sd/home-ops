@@ -5,3 +5,6 @@ kubernetes-duwerk-1.yaml
 kubernetes-duwerk-2.yaml
 kubernetes-duwerk-3.yaml
 talosconfig
+
+
+talosctl upgrade --nodes 10.13.17.21 --image factory.talos.dev/metal-installer/7361710113bd943edd751852342b1ccaa283d00a7257476a53eb4f10dcae8b02:v1.12.4
