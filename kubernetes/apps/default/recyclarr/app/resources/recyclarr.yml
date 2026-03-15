@@ -111,12 +111,9 @@ radarr:
     replace_existing_custom_formats: true
     quality_profiles:
       - name: SQP-1 (2160p)
-    include:
-      - template: radarr-quality-profile-sqp-1-2160p-default
-      - template: radarr-custom-formats-sqp-1-2160p
     custom_formats:
       - trash_ids:
-          - 839bea857ed2c0a8e084f3cbdbd65ecb # x265 (no HDR/DV)
+          - 5128baeb2b081b72126bc8482b2a86a0 # [SQP] SQP-1 (2160p)
         assign_scores_to:
           - name: SQP-1 (2160p)
             score: 0
@@ -128,4 +125,4 @@ radarr:
           - 5c44f52a8714fdd79bb4d98e2673be1f # Retags
           - f537cf427b64c38c8e36298f657e4828 # Scene
         assign_scores_to:
-          - name: SQP-1 (2160p)
+          - trash_id: 5128baeb2b081b72126bc8482b2a86a0 # [SQP] SQP-1 (2160p)
