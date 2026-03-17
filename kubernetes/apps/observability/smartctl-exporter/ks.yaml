@@ -8,7 +8,7 @@ spec:
     labels:
       app.kubernetes.io/name: *appname
   interval: 1h
-  path: ./k8s/base/observability/smartctl-exporter/app
+  path: ./kubernetes/apps/observability/smartctl-exporter/app
   prune: true
   sourceRef:
     kind: GitRepository
