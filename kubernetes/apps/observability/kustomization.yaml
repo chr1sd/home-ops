@@ -12,3 +12,4 @@ resources:
   - ./victoria-logs/ks.yaml
   - ./fluent-bit/ks.yaml
   - ./keda/ks.yaml
+  - ./smartctl-exporter/ks.yaml
