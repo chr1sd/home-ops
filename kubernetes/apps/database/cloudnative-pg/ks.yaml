@@ -11,9 +11,9 @@ spec:
   interval: 30m
   path: ./kubernetes/apps/database/cloudnative-pg/app
   decryption:
-  provider: sops
-  secretRef:
-    name: sops-age
+    provider: sops
+    secretRef:
+      name: sops-age
   prune: true
   retryInterval: 1m
   sourceRef:
