@@ -7,7 +7,7 @@ metadata:
     lbipam.cilium.io/ips: 10.13.17.65
     external-dns.alpha.kubernetes.io/hostname: postgres.dovis.me
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     cnpg.io/cluster: postgres17
     cnpg.io/instanceRole: primary
