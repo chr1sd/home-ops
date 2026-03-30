@@ -27,3 +27,4 @@ resources:
   - ./audiobookshelf/ks.yaml
   - ./atuin/ks.yaml
   - ./seasonpackarr/ks.yaml
+  - ./tautulli/ks.yaml
