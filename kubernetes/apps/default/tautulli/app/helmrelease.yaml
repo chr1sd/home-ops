@@ -76,7 +76,7 @@ spec:
           - "{{ .Release.Name }}.dovis.me"
         parentRefs:
           - name: envoy-internal
-            namespace: networking
+            namespace: network
     service:
       app:
         ports:
