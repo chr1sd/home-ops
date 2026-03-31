@@ -1,0 +1,54 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.nerdz.cloud/gateway.networking.k8s.io/httproute_v1.json
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: plane
+  namespace: plane
+  annotations:
+    external-dns.alpha.kubernetes.io/target: internal.${SECRET_DOMAIN}
+spec:
+  parentRefs:
+    - name: envoy-internal
+      namespace: network
+      sectionName: https
+  hostnames: ["plane.${SECRET_DOMAIN}"]
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: plane-web
+          port: 3000
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /api
+        - path:
+            type: PathPrefix
+            value: /auth
+      backendRefs:
+        - name: plane-api
+          port: 8000
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /live
+      backendRefs:
+        - name: plane-live
+          port: 3000
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /spaces
+      backendRefs:
+        - name: plane-space
+          port: 3000
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /god-mode
+      backendRefs:
+        - name: plane-admin
+          port: 3000

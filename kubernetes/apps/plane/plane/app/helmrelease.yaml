@@ -1,0 +1,115 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.nerdz.cloud/helm.toolkit.fluxcd.io/helmrelease_v2beta2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: plane
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: plane-ce
+      version: 1.4.1
+      sourceRef:
+        kind: HelmRepository
+        name: makeplane
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+      strategy: rollback
+  values:
+    planeVersion: v1.0.0
+    ingress:
+      appHost: plane.${SECRET_DOMAIN}
+
+    redis:
+      local_setup: false
+    postgres:
+      local_setup: false
+    minio:
+      local_setup: false
+    rabbitmq:
+      local_setup: true
+      image: rabbitmq:3.13.7-management-alpine
+      pullPolicy: IfNotPresent
+      servicePort: 5672
+      managementPort: 15672
+      storageClass: ""
+      volumeSize: 100Mi
+      external_rabbitmq_url: ""
+      assign_cluster_ip: false
+
+    external_secrets:
+      pgdb_existingSecret: plane-secret
+      doc_store_existingSecret: plane-secret
+      app_env_existingSecret: plane-secret
+      live_env_existingSecret: plane-secret
+      rabbitmq_existingSecret: plane-secret
+
+    web:
+      image: artifacts.plane.so/makeplane/plane-frontend
+      pullPolicy: Always
+      replicas: 1
+      cpuRequest: 50m
+      cpuLimit: 500m
+      memoryRequest: 50Mi
+      memoryLimit: 1000Mi
+
+    space:
+      image: artifacts.plane.so/makeplane/plane-space
+      pullPolicy: Always
+      replicas: 1
+      cpuRequest: 50m
+      cpuLimit: 500m
+      memoryRequest: 50Mi
+      memoryLimit: 1000Mi
+
+    admin:
+      image: artifacts.plane.so/makeplane/plane-admin
+      pullPolicy: Always
+      replicas: 1
+      cpuRequest: 50m
+      cpuLimit: 500m
+      memoryRequest: 50Mi
+      memoryLimit: 1000Mi
+
+    live:
+      image: artifacts.plane.so/makeplane/plane-live
+      pullPolicy: Always
+      replicas: 1
+      cpuRequest: 50m
+      cpuLimit: 500m
+      memoryRequest: 50Mi
+      memoryLimit: 1000Mi
+
+    api:
+      image: artifacts.plane.so/makeplane/plane-backend
+      pullPolicy: Always
+      replicas: 1
+      cpuRequest: 50m
+      cpuLimit: 500m
+      memoryRequest: 50Mi
+      memoryLimit: 1000Mi
+
+    worker:
+      image: artifacts.plane.so/makeplane/plane-backend
+      pullPolicy: Always
+      replicas: 1
+      cpuRequest: 50m
+      cpuLimit: 500m
+      memoryRequest: 50Mi
+      memoryLimit: 4000Mi
+
+    beatworker:
+      image: artifacts.plane.so/makeplane/plane-backend
+      pullPolicy: Always
+      replicas: 1
+      cpuRequest: 50m
+      cpuLimit: 500m
+      memoryRequest: 50Mi
+      memoryLimit: 1000Mi
