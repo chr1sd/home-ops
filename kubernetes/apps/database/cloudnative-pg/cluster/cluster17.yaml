@@ -31,3 +31,10 @@ spec:
       memory: 6Gi
   monitoring:
     enablePodMonitor: true
+  managed:
+    roles:
+      - name: plane
+        ensure: present
+        login: true
+        passwordSecret:
+          name: plane-db-credentials
