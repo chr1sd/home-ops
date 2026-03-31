@@ -21,7 +21,7 @@ spec:
             env:
               TAUTULLI_HTTP_PORT: &port 80
               TAUTULLI_HTTP_BASE_URL: https://{{ .Release.Name }}.dovis.me
-              TZ: America/New York
+              TZ: America/New_York
             envFrom:
               - secretRef:
                   name: "{{ .Release.Name }}-secret"
