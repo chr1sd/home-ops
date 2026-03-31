@@ -11,7 +11,14 @@ spec:
       namespace: rook-ceph
   interval: 1h
   path: ./kubernetes/apps/default/brrpolice/app
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
   postBuild:
+    substituteFrom:
+      - name: cluster-secrets
+        kind: Secret
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 2Gi
