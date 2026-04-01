@@ -86,7 +86,7 @@ I made a [Youtube video](https://youtu.be/aeUKOpeoiUs) that gives a general over
 </a>
 
 ---
-## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f6a7/512.gif" alt="🚧" width="32" height="32"> Foundation: onedr0p's Cluster Template
+# <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f6a7/512.gif" alt="🚧" width="32" height="32"> Foundation: onedr0p's Cluster Template
 
 Special thanks to the most excellent [onedr0p/cluster-template](https://github.com/onedr0p/cluster-template). It provides a clean, modern foundation for Talos + Flux-based clusters — and taught me how to organize manifests properly, use SOPS, and implement GitOps the right way.
 
