@@ -69,7 +69,7 @@ spec:
           - "{{ .Release.Name }}.dovis.me"
         parentRefs:
           - name: envoy-external
-            namespace: networking
+            namespace: network
         rules:
           - backendRefs:
               - identifier: app
