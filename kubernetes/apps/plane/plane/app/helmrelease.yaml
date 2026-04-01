@@ -35,7 +35,7 @@ spec:
       local_setup: true
     rabbitmq:
       local_setup: true
-      image: rabbitmq:3.13.7-management-alpine
+      image: rabbitmq:4.2.5-management-alpine
       pullPolicy: IfNotPresent
       servicePort: 5672
       managementPort: 15672
