@@ -90,3 +90,14 @@ If you're interested in this type of thing, I encourage you to build your own ho
 Embrace the process. It will be infuriating at times, blissful at others.
 
 You'll build some really cool stuff along the way. And your brain waves will expand.
+
+---
+## ⭐ Stargazers
+
+<a href="https://star-history.com/#gavinmcfall/home-ops&Date">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=chr1sd/home-ops&type=Date&theme=dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=chr1sd/home-ops&type=Date" />
+    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=chr1sd/home-ops&type=Date" />
+  </picture>
+</a>
