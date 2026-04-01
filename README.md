@@ -26,11 +26,14 @@
 [![Memory-Usage](https://img.shields.io/endpoint?url=https%3A%2F%2Fkromgo.dovis.me%2Fcluster_memory_usage&style=flat-square&label=Memory)](https://github.com/kashalls/kromgo)&nbsp;&nbsp;
 
 </div>
-<img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f44b/512.gif" alt="👋" width="28" height="28"> Welcome to the (Kubernetes) Humble Home Lab repo. The source of truth for my bare metal cluster running on Talos Linux.
+
+# <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f44b/512.gif" alt="👋" width="28" height="28"> Welcome
+
+Welcome to the (Kubernetes) Humble Home Lab repo. The source of truth for my bare metal cluster running on Talos Linux.
 
 The goal here is to deepen my understanding of k8s, become the GitOps mindset, and share what I learn along the way.
 
-## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f916/512.gif" alt="🤖" width="32" height="32"> Hardware
+# <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f916/512.gif" alt="🤖" width="32" height="32"> Hardware
 
 | System                   | Role           | CPU   | RAM   | Graphics | Disk (boot) | Disk (storage) |
 |--------------------------|----------------|-------|-------|----------|-------------|----------------|
@@ -40,29 +43,29 @@ The goal here is to deepen my understanding of k8s, become the GitOps mindset, a
 
 All of this is connected to a [Ubiquiti](https://ui.com) network with VLANS configured for IoT, Management, DMZ, and Cameras.
 
-## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f512/512.gif" alt="🔒" width="32" height="32"> Talos Linux
+# <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f512/512.gif" alt="🔒" width="32" height="32"> Talos Linux
 
 [Talos](https://www.talos.dev) is an immutable, API driven operating system designed specifically for Kubernetes. Talos is configured declaritively and is a great choice for a GitOps driven workflow.
 
-## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f680/512.gif" alt="🚀" width="32" height="32"> Kubernetes
+# <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f680/512.gif" alt="🚀" width="32" height="32"> Kubernetes
 
 For me, a home lab about tinkering and learning. So I set off to learn [Kubernetes](https://kubernetes.io) with a goal to grow my skillset and have an infrastructure that allows me to scale and provide useful, locally hosted applications for my family.
 
-### <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f30f/512.gif" alt="🌏" width="28" height="28"> Networking: Cilium
+# <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f30f/512.gif" alt="🌏" width="28" height="28"> Networking: Cilium
 
 Networking in my cluster is handled by [Cilium](https://cilium.io/).
 
 I'm using [Envoy Gateway](https://gateway.envoyproxy.io) to manage application traffic coming into the cluster.
 
-### <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f4c8/512.gif" alt="📈" width="28" height="28"> Observability Stack
+# <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f4c8/512.gif" alt="📈" width="28" height="28"> Observability Stack
 
 To keep a pulse on the cluster, I'm using: [Prometheus](https://prometheus.io), [Grafana](https://grafana.com), [VictoriaLogs](https://victoriametrics.com/products/victorialogs/), [Alertmanager](https://github.com/prometheus/alertmanager), [Gatus](https://github.com/TwiN/gatus), and [Fluentbit](https://fluentbit.io).
 
-### <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f48e/512.gif" alt="💎" width="28" height="28"> Storage: Rook + Ceph
+# <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f48e/512.gif" alt="💎" width="28" height="28"> Storage: Rook + Ceph
 
 Persistent storage is provided by [Rook-Ceph](https://rook.io/), utilizing the 1TB NVMe drives on each worker.
 
-### <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/2699_fe0f/512.gif" alt="⚙️" width="28" height="28"> GitOps with Flux
+# <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/2699_fe0f/512.gif" alt="⚙️" width="28" height="28"> GitOps with Flux
 
 The backbone of this cluster is [Flux CD](https://fluxcd.io/) — a GitOps controller that reconciles my entire Kubernetes state from a Git repository.
 
@@ -84,7 +87,7 @@ Special thanks to the most excellent [onedr0p/cluster-template](https://github.c
 
 
 ---
-## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f92f/512.gif" alt="🤯" width="32" height="32"> Start This Journey Today
+# <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f92f/512.gif" alt="🤯" width="32" height="32"> Start This Journey Today
 If you're interested in this type of thing, I encourage you to build your own home lab. It doesn't have to be Kubernetes. Grab ANY old computer and see what you can deploy on it.
 
 Embrace the process. It will be infuriating at times, blissful at others.
@@ -92,7 +95,7 @@ Embrace the process. It will be infuriating at times, blissful at others.
 You'll build some really cool stuff along the way. And your brain waves will expand.
 
 ---
-## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f31f/512.gif" alt="🌟" width="32" height="32"> Stargazers
+# <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f31f/512.gif" alt="🌟" width="32" height="32"> Stargazers
 
 <a href="https://star-history.com/#gavinmcfall/home-ops&Date">
   <picture>
