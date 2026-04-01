@@ -79,6 +79,45 @@ The backbone of this cluster is [Flux CD](https://fluxcd.io/) — a GitOps contr
 
 My ultimate goal is to have Flux and [Renovate](https://www.mend.io/renovate/) handle most of the deployments and updates to the cluster.
 
+### How does it work?
+
+The core idea: **Git is the single source of truth**. Flux continuously compares what's in Git against what's running in the cluster, and corrects any difference — whether that's a new commit you pushed, or a "drift" caused by a manual change someone made directly on the cluster.
+
+<details>
+  <summary>See Flux in action</summary>
+
+```mermaid
+flowchart TD
+    Dev["👩‍💻 You push YAML to Git"] --> Git[("📂 Git Repo
+    Source of Truth")]
+    Git -->|"Flux polls ~every 1 min"| Fetch["Flux fetches
+    latest manifests"]
+    Fetch --> Diff{"Cluster state = Git state?"}
+    Diff -->|"✅ Already in sync"| Idle["Flux idles"]
+    Idle -.->|"next poll"| Fetch
+    Diff -->|"❌ Out of sync"| Apply["Flux applies manifests to Kubernetes"]
+    Apply --> Cluster["☸️ Kubernetes creates / updates resources"]
+    Cluster -->|"sync complete"| Diff
+    Drift["⚠️ Someone manually changes the cluster"] -.->|"causes drift"| Diff
+
+    classDef gitNode fill:#6e40c9,stroke:#4a2d8c,color:#fff
+    classDef fluxNode fill:#326ce5,stroke:#1e4db3,color:#fff
+    classDef k8sNode fill:#81D4FA,stroke:#0277BD,color:#000
+    classDef devNode fill:#2ea44f,stroke:#1a7036,color:#fff
+    classDef driftNode fill:#FFE082,stroke:#F57C00,color:#000
+
+    class Git gitNode
+    class Fetch,Diff,Idle fluxNode
+    class Apply,Cluster k8sNode
+    class Dev devNode
+    class Drift driftNode
+```
+
+> **The magic of GitOps:** if someone manually tweaks a resource directly on the cluster, Flux detects the drift and reverts it back to what Git says it should be. The cluster always converges to Git — not the other way around.
+
+</details>
+
+---
 I made a [Youtube video](https://youtu.be/aeUKOpeoiUs) that gives a general overview of my configuration and the core components.
 
 <a href="https://youtube.com/watch?v=aeUKOpeoiUs">
