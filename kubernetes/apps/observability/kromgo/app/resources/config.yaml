@@ -45,14 +45,15 @@ metrics:
       - { color: red, min: 76, max: 9999 }
     title: Memory
 
-  - name: cluster_power_usage
-    query: avg(upsAdvOutputActivePower)
-    suffix: w
-    colors:
-      - { color: green, min: 0, max: 500 }
-      - { color: orange, min: 501, max: 750 }
-      - { color: red, min: 751, max: 9999 }
-    title: Power
+# i don't have these metrics yet
+  # - name: cluster_power_usage
+  #   query: avg(upsAdvOutputActivePower)
+  #   suffix: w
+  #   colors:
+  #     - { color: green, min: 0, max: 500 }
+  #     - { color: orange, min: 501, max: 750 }
+  #     - { color: red, min: 751, max: 9999 }
+  #   title: Power
 
   - name: cluster_age_days
     query: round((time() - min(kube_node_created) ) / 86400)
@@ -72,6 +73,7 @@ metrics:
       - { color: red, min: 361, max: 9999 }
     title: Uptime
 
+# i don't have these metrics yet
   # - name: cluster_alert_count
   #   query: alertmanager_alerts{state="active"} - 1 # Ignore Watchdog
   #   colors:
