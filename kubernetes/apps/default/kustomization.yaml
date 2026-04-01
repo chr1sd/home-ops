@@ -28,4 +28,4 @@ resources:
   - ./atuin/ks.yaml
   - ./seasonpackarr/ks.yaml
   - ./tautulli/ks.yaml
-  - ./brrpolice/ks.yaml
+  # - ./brrpolice/ks.yaml
