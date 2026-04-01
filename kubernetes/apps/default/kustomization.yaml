@@ -29,3 +29,4 @@ resources:
   - ./seasonpackarr/ks.yaml
   - ./tautulli/ks.yaml
   # - ./brrpolice/ks.yaml
+  - ./mealie/ks.yaml
