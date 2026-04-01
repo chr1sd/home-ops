@@ -64,7 +64,7 @@ spec:
       app:
         annotations:
           gatus.home-operations.com/endpoint: |-
-            url: https://{{ .Release.Name }}.dovis.me/talos_version
+            url: https://{{ .Release.Name }}.dovis.me
         hostnames:
           - "{{ .Release.Name }}.dovis.me"
         parentRefs:
