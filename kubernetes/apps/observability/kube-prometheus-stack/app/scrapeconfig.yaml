@@ -6,7 +6,7 @@ metadata:
 spec:
   staticConfigs:
     - targets:
-        - com-plex-ity.dovis.me:9100
+        - hl15-plex-ity.dovis.me:9100
   metricsPath: /metrics
   relabelings:
     - action: replace

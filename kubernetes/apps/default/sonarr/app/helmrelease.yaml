@@ -78,7 +78,7 @@ spec:
         existingClaim: "{{ .Release.Name }}"
       media:
         type: nfs
-        server: com-plex-ity.dovis.me
+        server: hl15-plex-ity.dovis.me
         path: /seagate-data
         globalMounts:
           - path: /data

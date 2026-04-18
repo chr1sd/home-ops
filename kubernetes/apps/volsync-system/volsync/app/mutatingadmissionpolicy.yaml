@@ -108,7 +108,7 @@ spec:
               value: Object.spec.template.spec.volumes{
                 name: "repository",
                 nfs: Object.spec.template.spec.volumes.nfs{
-                  server: "com-plex-ity.dovis.me",
+                  server: "hl15-plex-ity.dovis.me",
                   path: "/seagate-data/k8s/backup"
                 }
               }
