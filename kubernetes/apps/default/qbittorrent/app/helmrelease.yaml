@@ -103,8 +103,8 @@ spec:
                 volumeMode: Filesystem
       media:
         type: nfs
-        server: hl15-plex-ity.dovis.me
-        path: /seagate-data
+        server: lil-nas.dovis.me
+        path: /mnt/seagate-data
         globalMounts:
           - path: /data/torrents
             subPath: torrents

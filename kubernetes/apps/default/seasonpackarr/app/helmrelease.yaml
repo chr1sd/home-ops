@@ -76,8 +76,8 @@ spec:
     persistence:
       media:
         type: nfs
-        server: hl15-plex-ity.dovis.me
-        path: /seagate-data/torrents
+        server: lil-nas.dovis.me
+        path: /mnt/seagate-data/torrents
         globalMounts:
           - path: /torrents
       tmp:
