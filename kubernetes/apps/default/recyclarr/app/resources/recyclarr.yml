@@ -68,6 +68,18 @@ sonarr:
           - e3515e519f3b1360cbfc17651944354c # Anime LQ Groups
         assign_scores_to:
           - trash_id: 20e0fc959f1f1704bed501f23bdae76f # [Anime] Remux-1080p
+      - # Sign Language Editions
+        trash_ids:
+          - c196536ea8122397c5854040d01f2aa7 # WiTH ASL
+          - b40dc2e630723745aab9f1b94f4aab74 # WiTH BASL
+          - 0aef382c4ed4c5eb5d40109dfd351b72 # WiTH BSL
+        assign_scores_to:
+          - trash_id: 72dae194fc92bf828f32cde7744e51a1 # WEB-1080p
+            score: -10000
+          - trash_id: d1498e7d189fbe6c7110ceaabb7473e6 # WEB-2160p
+            score: -10000
+          - trash_id: 20e0fc959f1f1704bed501f23bdae76f # [Anime] Remux-1080p
+            score: -10000
 
 radarr:
   movies:
@@ -134,3 +146,13 @@ radarr:
           - 06b6542a47037d1e33b15aa3677c2365 # Anime Raws
         assign_scores_to:
           - trash_id: 722b624f9af1e492284c4bc842153a38 # [Anime] Remux-1080p
+      - # Sign Language Editions
+        trash_ids:
+          - 09c60ba54fadb511c6986a7edec4da4b # WiTH ASL
+          - 41e4baea7b10ddefc6609d52f742dacd # WiTH BASL
+          - e205c5ba6be76b472903f4aec97fdb4b # WiTH BSL
+        assign_scores_to:
+          - trash_id: 5128baeb2b081b72126bc8482b2a86a0 # [SQP] SQP-1 (2160p)
+            score: -10000
+          - trash_id: 722b624f9af1e492284c4bc842153a38 # [Anime] Remux-1080p
+            score: -10000
