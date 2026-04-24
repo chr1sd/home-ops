@@ -22,6 +22,9 @@ spec:
             env:
               QUI__HOST: 0.0.0.0
               QUI__PORT: &port 80
+              QUI__METRICS_ENABLED: true
+              QUI__METRICS_HOST: 0.0.0.0
+              QUI__METRICS_PORT: &metricsPort 8080
               QUI__LOG_LEVEL: INFO
               TZ: America/New_York
             envFrom:
@@ -61,6 +64,8 @@ spec:
         ports:
           http:
             port: *port
+          metrics:
+            port: *metricsPort
     serviceMonitor:
       app:
         endpoints:
