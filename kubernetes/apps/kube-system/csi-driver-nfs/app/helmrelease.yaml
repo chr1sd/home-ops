@@ -16,7 +16,7 @@ spec:
       create: true
       name: nfs-k8s
       parameters:
-        server: hl15-plex-ity.dovis.me
+        server: lil-nas.dovis.me
         share: /seagate-data/k8s
       mountOptions:
         - nfsvers=4.2
