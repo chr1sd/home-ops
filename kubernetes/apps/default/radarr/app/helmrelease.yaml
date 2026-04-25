@@ -51,7 +51,7 @@ spec:
               capabilities: {drop: ["ALL"]}
             resources:
               requests:
-                cpu: 100m
+                cpu: 25m
               limits:
                 memory: 4Gi
     defaultPodOptions:
