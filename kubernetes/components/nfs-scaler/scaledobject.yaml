@@ -11,7 +11,7 @@ spec:
     failureThreshold: 3
     replicas: 1
   cooldownPeriod: 300
-  minReplicaCount: 0
+  minReplicaCount: 1
   maxReplicaCount: 1
   scaleTargetRef:
     apiVersion: apps/v1
