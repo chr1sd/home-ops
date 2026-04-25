@@ -1,0 +1,54 @@
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: nic-tuning
+  namespace: kube-system
+  labels:
+    app.kubernetes.io/name: nic-tuning
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: nic-tuning
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: nic-tuning
+    spec:
+      nodeSelector:
+        node-role.kubernetes.io/worker: ""
+      hostNetwork: true
+      tolerations:
+        - operator: Exists
+      priorityClassName: system-node-critical
+      containers:
+        - name: nic-tuning
+          image: ghcr.io/nicolaka/netshoot@sha256:47b907d662d139d1e2f22bfe14f4efca1e3f1feed283572f47c970c780c03b61
+          securityContext:
+            privileged: true
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -eu
+              IFACE=enp1s0
+              echo "[nic-tuning] Applying NIC settings for ${IFACE}"
+              ethtool -G ${IFACE} rx 4096 tx 4096 && \
+                echo "[nic-tuning] Ring buffers set: rx=4096 tx=4096" || \
+                echo "[nic-tuning] WARN: ring buffer setting failed"
+              ethtool -C ${IFACE} rx-usecs 50 tx-usecs 50 && \
+                echo "[nic-tuning] Coalescing set: rx-usecs=50 tx-usecs=50" || \
+                echo "[nic-tuning] WARN: coalescing setting failed"
+              ethtool -L ${IFACE} combined 4 && \
+                echo "[nic-tuning] Queues set: combined=4" || \
+                echo "[nic-tuning] WARN: queue count setting failed"
+              echo "[nic-tuning] Done. Sleeping."
+              sleep infinity
+          resources:
+            requests:
+              cpu: 1m
+              memory: 8Mi
+            limits:
+              memory: 32Mi

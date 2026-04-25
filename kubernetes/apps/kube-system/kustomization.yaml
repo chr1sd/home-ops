@@ -17,3 +17,4 @@ resources:
   - ./descheduler/ks.yaml
   - ./multus/ks.yaml
   - ./node-feature-discovery/ks.yaml
+  - ./nic-tuning/ks.yaml
