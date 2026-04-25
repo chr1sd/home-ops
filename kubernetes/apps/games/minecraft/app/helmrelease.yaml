@@ -17,7 +17,7 @@ spec:
       tag: java25@sha256:b42d19bcda4673fedf1ae14a94e729708275c00777be95d5a6e27c11847f7d64
     resources:
       requests:
-        cpu: 200m
+        cpu: 100m
       limits:
         cpu: 2000m
         memory: 8Gi

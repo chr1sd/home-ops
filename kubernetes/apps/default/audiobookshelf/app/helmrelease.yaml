@@ -39,7 +39,7 @@ spec:
               readiness: *probes
             resources:
               requests:
-                cpu: 100m
+                cpu: 25m
               limits:
                 memory: 1Gi
             securityContext:
