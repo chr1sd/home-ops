@@ -14,3 +14,4 @@ resources:
   - ./keda/ks.yaml
   - ./smartctl-exporter/ks.yaml
   - ./kromgo/ks.yaml
+  - ./blackbox-exporter/ks.yaml

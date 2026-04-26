@@ -1,0 +1,43 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/monitoring.coreos.com/probe_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: internal-icmp
+spec:
+  module: icmp
+  prober:
+    url: blackbox-exporter-internal.observability.svc.cluster.local:9115
+  targets:
+    staticConfig:
+      static:
+        - lil-nas.dovis.me
+        - troll-1.dovis.me
+        - troll-2.dovis.me
+        - troll-3.dovis.me
+        - duwerk-1.dovis.me
+        - duwerk-2.dovis.me
+        - duwerk-3.dovis.me
+  metricRelabelings:
+    - targetLabel: service
+      replacement: blackbox-exporter-internal
+      action: replace
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/monitoring.coreos.com/probe_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: internal-nfs
+spec:
+  jobName: nfs_probe
+  module: tcp_connect
+  prober:
+    url: blackbox-exporter-internal.observability.svc.cluster.local:9115
+  targets:
+    staticConfig:
+      static:
+        - lil-nas.dovis.me:2049
+  metricRelabelings:
+    - targetLabel: service
+      replacement: blackbox-exporter-internal
+      action: replace
