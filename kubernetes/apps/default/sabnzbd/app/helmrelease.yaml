@@ -83,6 +83,6 @@ spec:
         path: /mnt/seagate-data
         globalMounts:
           - path: /data/usenet
-          - subPath: usenet
+            subPath: usenet
       tmp:
         type: emptyDir
