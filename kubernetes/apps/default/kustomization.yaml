@@ -30,3 +30,4 @@ resources:
   - ./tautulli/ks.yaml
   - ./brrpolice/ks.yaml
   - ./mealie/ks.yaml
+  - ./sabnzbd/ks.yaml
