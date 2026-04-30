@@ -21,9 +21,9 @@ spec:
               SABNZBD__PORT: &port 80
               SABNZBD__HOST_WHITELIST_ENTRIES: sabnzbd.dovis.me
               TZ: America/New_York
-            # envFrom:
-            #   - secretRef:
-            #       name: "{{ .Release.Name }}-secret"
+            envFrom:
+              - secretRef:
+                  name: "{{ .Release.Name }}-secret"
             probes:
               liveness:
                 enabled: true
