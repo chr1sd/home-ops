@@ -80,8 +80,9 @@ spec:
       media:
         type: nfs
         server: lil-nas.dovis.me
-        path: /mnt/seagate-data/usenet
+        path: /mnt/seagate-data
         globalMounts:
-          - path: /usenet
+          - path: /data/usenet
+          - subPath: usenet
       tmp:
         type: emptyDir
