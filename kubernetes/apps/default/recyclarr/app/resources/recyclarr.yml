@@ -23,13 +23,13 @@ sonarr:
     quality_profiles:
       - trash_id: 72dae194fc92bf828f32cde7744e51a1 # WEB-1080p
         reset_unmatched_scores:
-          enabled: true
+          enabled: false
       - trash_id: d1498e7d189fbe6c7110ceaabb7473e6 # WEB-2160p
         reset_unmatched_scores:
-          enabled: true
+          enabled: false
       - trash_id: 20e0fc959f1f1704bed501f23bdae76f # [Anime] Remux-1080p
         reset_unmatched_scores:
-          enabled: true
+          enabled: false
 
     custom_formats:
       - trash_ids:
@@ -102,10 +102,10 @@ radarr:
     quality_profiles:
       - trash_id: 5128baeb2b081b72126bc8482b2a86a0 # [SQP] SQP-1 (2160p)
         reset_unmatched_scores:
-          enabled: true
+          enabled: false
       - trash_id: 722b624f9af1e492284c4bc842153a38 # [Anime] Remux-1080p
         reset_unmatched_scores:
-          enabled: true
+          enabled: false
 
     custom_formats:
       - trash_ids:
