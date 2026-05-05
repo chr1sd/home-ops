@@ -48,6 +48,9 @@ spec:
               namespace: network
       prometheusSpec:
         externalUrl: https://prometheus.dovis.me
+        livenessProbe:
+          failureThreshold: 10
+          timeoutSeconds: 10
         podMonitorSelectorNilUsesHelmValues: false
         probeSelectorNilUsesHelmValues: false
         ruleSelectorNilUsesHelmValues: false
