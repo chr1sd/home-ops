@@ -49,7 +49,12 @@ spec:
       prometheusSpec:
         externalUrl: https://prometheus.dovis.me
         livenessProbe:
+          httpGet:
+            path: /-/healthy
+            port: http-web
+            scheme: HTTP
           failureThreshold: 10
+          periodSeconds: 5
           timeoutSeconds: 10
         metricRelabelings:
           - sourceLabels: [__name__]
