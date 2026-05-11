@@ -48,14 +48,16 @@ spec:
               namespace: network
       prometheusSpec:
         externalUrl: https://prometheus.dovis.me
-        livenessProbe:
-          httpGet:
-            path: /-/healthy
-            port: http-web
-            scheme: HTTP
-          failureThreshold: 10
-          periodSeconds: 5
-          timeoutSeconds: 10
+        containers:
+          - name: prometheus
+            livenessProbe:
+              httpGet:
+                path: /-/healthy
+                port: http-web
+                scheme: HTTP
+              failureThreshold: 10
+              periodSeconds: 5
+              timeoutSeconds: 10
         metricRelabelings:
           - sourceLabels: [__name__]
             regex: "apiserver_request_body_size_bytes_bucket|apiserver_watch_list_duration_seconds_bucket|apiserver_watch_cache_read_wait_seconds_bucket|apiserver_response_sizes_bucket|apiserver_watch_events_sizes_bucket"
