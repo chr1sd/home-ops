@@ -15,6 +15,7 @@ resources:
   - ./intel-device-plugin-operator/ks.yaml
   - ./csi-driver-nfs/ks.yaml
   - ./descheduler/ks.yaml
+  - ./gateway-api-crds/ks.yaml
   - ./multus/ks.yaml
   - ./node-feature-discovery/ks.yaml
   - ./nic-tuning/ks.yaml
