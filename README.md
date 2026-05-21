@@ -41,7 +41,8 @@ The goal here is to deepen my understanding of k8s, become the GitOps mindset, a
 |--------------------------|----------------|-------|-------|----------|-------------|----------------|
 | (3x) HP EliteDesk 800 G3 Mini | Control Plane  | Intel i5-6500T     | 16GB DDR4| Intel HD 530 |256GB SSD   | —              |
 | (3x) HP EliteDesk 800 G3 Mini | Worker         | Intel i5-6500T     | 64GB DDR4  | Intel HD 530 |512GB SSD   | 1TB NVMe       |
-| Custom Server  | AI Workloads + NAS | Intel i7-6700K     | 64GB DDR4 |  RTX3090 |256GB SSD | 50TB RaidZ2 Pool (4x 28TB Disks) |
+| Custom Server  | AI Workloads | Intel i7-6700K     | 64GB DDR4 |  2x RTX3090 |256GB SSD | 512GB SSD |
+| HL15 2.0 | NAS | AMD Epyc 7452 | 256GB DDR4 | Intel ARC A310 | 512GB SSD Mirror | ZFS RaidZ2 Pool (12x 8TB Disks)
 
 All of this is connected to a [Ubiquiti](https://ui.com) network with VLANS configured for IoT, Management, DMZ, and Cameras.
 
