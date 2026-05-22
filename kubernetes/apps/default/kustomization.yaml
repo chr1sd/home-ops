@@ -26,7 +26,6 @@ resources:
   - ./agregarr/ks.yaml
   - ./audiobookshelf/ks.yaml
   - ./atuin/ks.yaml
-  - ./seasonpackarr/ks.yaml
   - ./tautulli/ks.yaml
   - ./brrpolice/ks.yaml
   - ./mealie/ks.yaml
