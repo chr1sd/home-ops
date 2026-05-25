@@ -9,13 +9,18 @@ spec:
     groupBy: [alertname, job]
     groupInterval: 10m
     groupWait: 1m
-    receiver: "null"
+    receiver: discord
     repeatInterval: 12h
     routes:
       - receiver: "null"
         matchers:
           - name: alertname
             value: InfoInhibitor
+            matchType: =
+      - receiver: "null"
+        matchers:
+          - name: alertname
+            value: Watchdog
             matchType: =
 
   inhibitRules:
@@ -31,3 +36,17 @@ spec:
 
   receivers:
     - name: "null"
+    - name: discord
+      discordConfigs:
+        - apiURL:
+            name: alertmanager-secret
+            key: DISCORD_WEBHOOK_URL
+          title: |-
+            {{ range .Alerts }}{{ .Labels.alertname }}{{ end }}
+          message: |-
+            {{ range .Alerts -}}
+            **{{ .Labels.severity | toUpper }}** — {{ .Labels.alertname }}
+            {{ if .Labels.namespace }}Namespace: `{{ .Labels.namespace }}`{{ end }}
+            {{ if .Annotations.summary }}{{ .Annotations.summary }}{{ end }}
+            {{ if .Annotations.description }}{{ .Annotations.description }}{{ end }}
+            {{ end }}
