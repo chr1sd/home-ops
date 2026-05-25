@@ -11,6 +11,9 @@ spec:
   interval: 1h
   values:
     cleanPrometheusOperatorObjectNames: true
+    defaultRules:
+      disabled:
+        NodeMemoryHighUtilization: true
     alertmanager:
       route:
         main:

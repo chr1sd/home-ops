@@ -22,14 +22,6 @@ spec:
           - name: alertname
             value: Watchdog
             matchType: =
-      - receiver: "null"
-        matchers:
-          - name: alertname
-            value: NodeMemoryHighUtilization
-            matchType: =
-          - name: instance
-            value: lil-nas.dovis.me:9100
-            matchType: =
 
   inhibitRules:
     - equal: [alertname, namespace]

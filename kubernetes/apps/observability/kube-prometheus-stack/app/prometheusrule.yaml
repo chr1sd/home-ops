@@ -10,6 +10,18 @@ spec:
       rules:
         - alert: NodeMemoryHighUtilization
           expr: |-
+            100 - (node_memory_MemAvailable_bytes{job="node-exporter", instance!="lil-nas.dovis.me:9100"}
+            / node_memory_MemTotal_bytes{job="node-exporter", instance!="lil-nas.dovis.me:9100"} * 100) > 90
+          for: 15m
+          labels:
+            severity: warning
+          annotations:
+            summary: Host is running out of memory.
+            description: >-
+              Memory is filling up at {{ $labels.instance }}, has been above 90% for the last 15 minutes,
+              is currently at {{ printf "%.2f" $value }}%.
+        - alert: NodeMemoryHighUtilization
+          expr: |-
             100 - (node_memory_MemAvailable_bytes{job="node-exporter", instance="lil-nas.dovis.me:9100"}
             / node_memory_MemTotal_bytes{job="node-exporter", instance="lil-nas.dovis.me:9100"} * 100) > 99
           for: 15m
