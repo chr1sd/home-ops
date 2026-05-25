@@ -1,0 +1,22 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/monitoring.coreos.com/prometheusrule_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: kube-prometheus-stack-custom
+spec:
+  groups:
+    - name: custom.node.rules
+      rules:
+        - alert: NodeMemoryHighUtilization
+          expr: |-
+            100 - (node_memory_MemAvailable_bytes{job="node-exporter", instance="lil-nas.dovis.me:9100"}
+            / node_memory_MemTotal_bytes{job="node-exporter", instance="lil-nas.dovis.me:9100"} * 100) > 99
+          for: 15m
+          labels:
+            severity: warning
+          annotations:
+            summary: Host is running out of memory.
+            description: >-
+              Memory is filling up at {{ $labels.instance }}, has been above 99% for the last 15 minutes,
+              is currently at {{ printf "%.2f" $value }}%.
