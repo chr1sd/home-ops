@@ -27,6 +27,7 @@ spec:
               RADARR__LOG__DBENABLED: "False"
               RADARR__LOG__LEVEL: info
               RADARR__SERVER__PORT: &port 80
+              RADARR__UPDATE__MECHANISM: docker
               RADARR__UPDATE__BRANCH: develop
               TZ: America/New_York
             envFrom:
@@ -42,8 +43,8 @@ spec:
                     port: *port
                   initialDelaySeconds: 0
                   periodSeconds: 10
-                  timeoutSeconds: 1
-                  failureThreshold: 3
+                  timeoutSeconds: 3
+                  failureThreshold: 4
               readiness: *probes
             securityContext:
               allowPrivilegeEscalation: false
