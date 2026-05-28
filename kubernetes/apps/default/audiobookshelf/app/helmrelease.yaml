@@ -34,7 +34,7 @@ spec:
                     port: &port 80
                   initialDelaySeconds: 0
                   periodSeconds: 10
-                  timeoutSeconds: 1
+                  timeoutSeconds: 3
                   failureThreshold: 3
               readiness: *probes
             resources:
