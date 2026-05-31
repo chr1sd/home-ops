@@ -4,3 +4,4 @@ kind: Kustomization
 resources:
   - ./cloudnative-pg.yaml
   - ./makeplane.yaml
+  - ./twingate.yaml

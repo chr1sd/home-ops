@@ -11,3 +11,4 @@ resources:
   # - ./k8s-gateway/ks.yaml # not needed... i think.
   - ./unifi-dns/ks.yaml
   - ./envoy-gateway/ks.yaml
+  - ./twingate/ks.yaml
