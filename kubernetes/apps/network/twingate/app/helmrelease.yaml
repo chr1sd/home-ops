@@ -30,7 +30,7 @@ spec:
       pullPolicy: IfNotPresent
     connector:
       logLevel: "info"
-      network: "${TWINGATE_NETWORK}"
+      network: "goatsinapond"
       url: "twingate.com"
       existingSecret: twingate-secret
     topologySpreadConstraints:

@@ -15,10 +15,6 @@ spec:
       name: sops-age
   interval: 1h
   path: ./kubernetes/apps/network/twingate/app
-  postBuild:
-    substituteFrom:
-      - name: twingate-secret
-        kind: Secret
   prune: true
   retryInterval: 2m
   sourceRef:
