@@ -136,8 +136,24 @@
       matchDatasources: ["github-releases"],
       addLabels: ["renovate/github-release"],
     },
+    {
+      matchDatasources: ["grafana"],
+      semanticCommitScope: "grafana",
+      commitMessageTopic: "dashboard {{depName}}",
+      addLabels: ["renovate/grafana-dashboard"],
+    },
   ],
   customManagers: [
+    {
+      description: "Process Grafana dashboard revisions",
+      customType: "regex",
+      managerFilePatterns: ["/(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$/"],
+      matchStrings: [
+        "https://grafana\\.com/api/dashboards/(?<depName>\\d+)/revisions/(?<currentValue>\\d+)/download",
+      ],
+      datasourceTemplate: "grafana",
+      versioningTemplate: "regex:^(?<major>\\d+)$",
+    },
     {
       description: "Process annotated dependencies",
       customType: "regex",
