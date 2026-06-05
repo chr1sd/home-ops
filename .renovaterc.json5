@@ -137,12 +137,29 @@
       addLabels: ["renovate/github-release"],
     },
     {
-      matchDatasources: ["grafana"],
+      description: "Auto-merge Grafana dashboards",
+      matchDatasources: ["custom.grafana-dashboards"],
+      matchUpdateTypes: ["major"],
+      automerge: true,
+      automergeType: "branch",
+      ignoreTests: true,
+    },
+    {
+      matchDatasources: ["custom.grafana-dashboards"],
       semanticCommitScope: "grafana",
       commitMessageTopic: "dashboard {{depName}}",
       addLabels: ["renovate/grafana-dashboard"],
     },
   ],
+  customDatasources: {
+    "grafana-dashboards": {
+      defaultRegistryUrlTemplate: "https://grafana.com/api/dashboards/{{packageName}}/revisions",
+      format: "json",
+      transformTemplates: [
+        '{"releases": $.items.{"version": $string(revision)}}',
+      ],
+    },
+  },
   customManagers: [
     {
       description: "Process Grafana dashboard revisions",
@@ -151,7 +168,7 @@
       matchStrings: [
         "https://grafana\\.com/api/dashboards/(?<depName>\\d+)/revisions/(?<currentValue>\\d+)/download",
       ],
-      datasourceTemplate: "grafana",
+      datasourceTemplate: "custom.grafana-dashboards",
       versioningTemplate: "regex:^(?<major>\\d+)$",
     },
     {
