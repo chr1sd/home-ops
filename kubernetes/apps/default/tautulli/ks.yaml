@@ -9,21 +9,13 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   components:
-    - ../../../../components/common
     - ../../../../components/volsync
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
   interval: 1h
   path: ./kubernetes/apps/default/tautulli/app
-  decryption:
-    provider: sops
-    secretRef:
-      name: sops-age
   postBuild:
-    substituteFrom:
-      - name: cluster-secrets
-        kind: Secret
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 2Gi
