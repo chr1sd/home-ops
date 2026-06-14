@@ -51,7 +51,7 @@ spec:
                     port: *port
                   initialDelaySeconds: 0
                   periodSeconds: 10
-                  timeoutSeconds: 1
+                  timeoutSeconds: 3
                   failureThreshold: 3
               startup:
                 enabled: true
