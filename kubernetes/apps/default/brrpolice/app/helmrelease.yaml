@@ -20,7 +20,7 @@ spec:
             env:
               BRRPOLICE_HTTP__PORT: &port 80
               BRRPOLICE_LOGGING__LEVEL: info
-              BRRPOLICE_QBITTORRENT__BASE_URL: http://qbittorrent.default.svc.cluster.local
+              BRRPOLICE_QBITTORRENT__BASE_URL: http://10.13.17.48:8080
               TZ: America/New_York
             probes:
               liveness:
