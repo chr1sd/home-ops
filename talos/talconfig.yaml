@@ -28,7 +28,12 @@ nodes:
     controlPlane: true
     networkInterfaces:
       - interface: bond0
-        dhcp: true
+        dhcp: false
+        addresses:
+          - "10.13.17.22/24"
+        routes:
+          - network: "0.0.0.0/0"
+            gateway: "10.13.17.1"
         mtu: 1500
         vip:
           ip: "10.13.17.17"
@@ -41,7 +46,12 @@ nodes:
     controlPlane: true
     networkInterfaces:
       - interface: bond0
-        dhcp: true
+        dhcp: false
+        addresses:
+          - "10.13.17.23/24"
+        routes:
+          - network: "0.0.0.0/0"
+            gateway: "10.13.17.1"
         mtu: 1500
         vip:
           ip: "10.13.17.17"
@@ -54,7 +64,12 @@ nodes:
     controlPlane: true
     networkInterfaces:
       - interface: bond0
-        dhcp: true
+        dhcp: false
+        addresses:
+          - "10.13.17.24/24"
+        routes:
+          - network: "0.0.0.0/0"
+            gateway: "10.13.17.1"
         mtu: 1500
         vip:
           ip: "10.13.17.17"
@@ -67,7 +82,12 @@ nodes:
     controlPlane: false
     networkInterfaces:
       - interface: bond0
-        dhcp: true
+        dhcp: false
+        addresses:
+          - "10.13.17.19/24"
+        routes:
+          - network: "0.0.0.0/0"
+            gateway: "10.13.17.1"
         mtu: 1500
   - hostname: "duwerk-2"
     ipAddress: "10.13.17.20"
@@ -78,7 +98,12 @@ nodes:
     controlPlane: false
     networkInterfaces:
       - interface: bond0
-        dhcp: true
+        dhcp: false
+        addresses:
+          - "10.13.17.20/24"
+        routes:
+          - network: "0.0.0.0/0"
+            gateway: "10.13.17.1"
         mtu: 1500
   - hostname: "duwerk-3"
     ipAddress: "10.13.17.21"
@@ -89,7 +114,12 @@ nodes:
     controlPlane: false
     networkInterfaces:
       - interface: bond0
-        dhcp: true
+        dhcp: false
+        addresses:
+          - "10.13.17.21/24"
+        routes:
+          - network: "0.0.0.0/0"
+            gateway: "10.13.17.1"
         mtu: 1500
 
 # Global patches

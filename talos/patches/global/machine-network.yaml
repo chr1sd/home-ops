@@ -7,7 +7,7 @@ machine:
           - driver: igc
             hardwareAddr: 02:26:26:*
         mode: active-backup
-      dhcp: true
+      dhcp: false
       mtu: 1500
       vlans:
         - # VPN
