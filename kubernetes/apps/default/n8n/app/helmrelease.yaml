@@ -32,11 +32,9 @@ spec:
               N8N_HOST: n8n.dovis.me
               N8N_LOG_LEVEL: info
               N8N_LOG_OUTPUT: console
-              N8N_ENCRYPTION_KEY:
-                valueFrom:
-                  secretKeyRef:
-                    name: n8n-secret
-                    key: N8N_ENCRYPTION_KEY
+            envFrom:
+              - secretRef:
+                  name: "{{ .Release.Name }}-secret"
             resources:
               requests:
                 cpu: 5m
