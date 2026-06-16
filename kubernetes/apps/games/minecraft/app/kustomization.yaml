@@ -4,7 +4,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ./namespace.yaml
-  - ./secret.sops.yaml
+  - ./externalsecret.yaml
   - ./helmrelease.yaml
   - ./ocirepository.yaml
   # Used for world transfer. Moved world data from old server to k8s.

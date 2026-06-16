@@ -57,6 +57,6 @@ spec:
         serviceType: ClusterIP
   valuesFrom:
     - kind: Secret
-      name: minecraft-java-rcon
+      name: minecraft-java-rcon-secret
       valuesKey: RCON_PASSWORD
       targetPath: minecraftServer.rcon.password
