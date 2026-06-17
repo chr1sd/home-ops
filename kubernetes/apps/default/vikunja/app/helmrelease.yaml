@@ -43,7 +43,7 @@ spec:
               # add smtp later
               # VIKUNJA_MAILER_HOST: smtp-relay.default.svc.cluster.local.
               # VIKUNJA_MAILER_PORT: "2525"
-              # VIKUNJA_MAILER_FROMEMAIL: Vikunja <vikunja@${SECRET_DOMAIN}>
+              # VIKUNJA_MAILER_FROMEMAIL: Vikunja <vikunja@dovis.me>
             resources:
               requests:
                 cpu: 5m

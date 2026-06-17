@@ -25,7 +25,7 @@ spec:
   values:
     planeVersion: v1.0.0
     ingress:
-      appHost: plane.${SECRET_DOMAIN}
+      appHost: plane.dovis.me
 
     redis:
       local_setup: true

@@ -71,7 +71,7 @@ spec:
           - port: http
     route:
       app:
-        hostnames: ["{{ .Release.Name }}.${SECRET_DOMAIN}"]
+        hostnames: ["{{ .Release.Name }}.dovis.me"]
         parentRefs:
           - name: envoy-external
             namespace: network

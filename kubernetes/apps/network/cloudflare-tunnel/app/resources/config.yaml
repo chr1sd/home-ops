@@ -1,10 +1,10 @@
 ---
 originRequest:
-  originServerName: "external.${SECRET_DOMAIN}"
+  originServerName: "external.dovis.me"
 
 ingress:
-  - hostname: "${SECRET_DOMAIN}"
+  - hostname: "dovis.me"
     service: &svc https://envoy-external.network.svc.cluster.local
-  - hostname: "*.${SECRET_DOMAIN}"
+  - hostname: "*.dovis.me"
     service: *svc
   - service: http_status:404

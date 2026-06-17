@@ -6,13 +6,13 @@ metadata:
   name: plane
   namespace: plane
   annotations:
-    external-dns.alpha.kubernetes.io/target: internal.${SECRET_DOMAIN}
+    external-dns.alpha.kubernetes.io/target: internal.dovis.me
 spec:
   parentRefs:
     - name: envoy-internal
       namespace: network
       sectionName: https
-  hostnames: ["plane.${SECRET_DOMAIN}"]
+  hostnames: ["plane.dovis.me"]
   rules:
     - matches:
         - path:
