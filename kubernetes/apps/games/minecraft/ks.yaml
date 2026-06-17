@@ -11,19 +11,12 @@ spec:
       app.kubernetes.io/name: *app
   components:
     - ../../../../components/volsync
-  decryption:
-    provider: sops
-    secretRef:
-      name: sops-age
   interval: 1h
   path: ./kubernetes/apps/games/minecraft/app
   postBuild:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 50Gi
-    substituteFrom:
-      - name: cluster-secrets
-        kind: Secret
   prune: true
   retryInterval: 2m
   sourceRef:

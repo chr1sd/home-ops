@@ -14,16 +14,8 @@ spec:
       namespace: rook-ceph
     - name: cloudnative-pg-cluster
       namespace: database
-  decryption:
-    provider: sops
-    secretRef:
-      name: sops-age
   interval: 1h
   path: ./kubernetes/apps/plane/plane/app
-  postBuild:
-    substituteFrom:
-      - name: cluster-secrets
-        kind: Secret
   prune: true
   retryInterval: 2m
   sourceRef:

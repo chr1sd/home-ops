@@ -10,14 +10,6 @@ spec:
       app.kubernetes.io/name: *app
   interval: 30m
   path: ./kubernetes/apps/database/cloudnative-pg/app
-  decryption:
-    provider: sops
-    secretRef:
-      name: sops-age
-  postBuild:
-    substituteFrom:
-      - name: cluster-secrets
-        kind: Secret
   prune: true
   retryInterval: 1m
   sourceRef:
@@ -44,14 +36,6 @@ spec:
       namespace: openebs-system
   interval: 30m
   path: ./kubernetes/apps/database/cloudnative-pg/cluster
-  decryption:
-    provider: sops
-    secretRef:
-      name: sops-age
-  postBuild:
-    substituteFrom:
-      - name: cluster-secrets
-        kind: Secret
   prune: true
   retryInterval: 1m
   sourceRef:

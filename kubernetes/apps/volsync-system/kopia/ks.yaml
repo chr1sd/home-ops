@@ -9,10 +9,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  decryption:
-    provider: sops
-    secretRef:
-      name: sops-age
   components:
     - ../../../../components/nfs-scaler
   dependsOn:
@@ -20,9 +16,6 @@ spec:
   interval: 1h
   path: ./kubernetes/apps/volsync-system/kopia/app
   postBuild:
-    substituteFrom:
-      - name: cluster-secrets
-        kind: Secret
     substitute:
       APP: kopia
   prune: true
