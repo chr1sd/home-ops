@@ -44,6 +44,8 @@ spec:
                     secretKeyRef:
                       name: grafana-admin-secret
                       key: GF_SECURITY_ADMIN_PASSWORD
+                - name: GF_INSTALL_PLUGINS
+                  value: "victoriametrics-logs-datasource"
               securityContext:
                 allowPrivilegeEscalation: false
                 readOnlyRootFilesystem: true
