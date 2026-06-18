@@ -84,9 +84,7 @@ spec:
           json_date_format iso8601
           compress gzip
           log_response_payload false
-          buffer_size 128KB
-          net.keepalive on
-          net.keepalive_idle_timeout 55
+          http.read_idle_timeout 55
     dashboards:
       enabled: true
     serviceMonitor:
