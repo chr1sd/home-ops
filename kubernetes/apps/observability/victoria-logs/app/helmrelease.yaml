@@ -12,6 +12,8 @@ spec:
   values:
     fullnameOverride: victoria-logs
     server:
+      extraArgs:
+        maxConcurrentInserts: "32"
       persistentVolume:
         enabled: true
         storageClassName: ceph-block
