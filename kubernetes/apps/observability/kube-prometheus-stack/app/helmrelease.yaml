@@ -51,6 +51,16 @@ spec:
               namespace: network
       prometheusSpec:
         externalUrl: https://prometheus.dovis.me
+        affinity:
+          nodeAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+              - weight: 100
+                preference:
+                  matchExpressions:
+                    - key: kubernetes.io/hostname
+                      operator: NotIn
+                      values:
+                        - duwerk-3
         containers:
           - name: prometheus
             livenessProbe:
