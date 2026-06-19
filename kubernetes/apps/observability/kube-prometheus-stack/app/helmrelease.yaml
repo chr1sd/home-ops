@@ -97,6 +97,12 @@ spec:
                   storage: 50Gi
     prometheus-node-exporter:
       fullnameOverride: node-exporter
+      livenessProbe:
+        timeoutSeconds: 5
+        failureThreshold: 5
+      readinessProbe:
+        timeoutSeconds: 5
+        failureThreshold: 5
     kube-state-metrics:
       fullnameOverride: kube-state-metrics
     grafana:
