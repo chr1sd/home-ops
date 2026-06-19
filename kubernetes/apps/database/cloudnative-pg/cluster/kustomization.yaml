@@ -4,5 +4,3 @@ kind: Kustomization
 resources:
   - ./cluster17.yaml
   - ./service.yaml
-  - ./plane-db.yaml
-  - ./plane-db-secret.sops.yaml
