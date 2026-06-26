@@ -1,14 +1,13 @@
 ---
 # yaml-language-server: $schema=https://taskfile.dev/schema.json
-version: '3'
+version: "3"
 
 tasks:
-
   talos:
     desc: Bootstrap the Talos cluster
-    dir: '{{.TALOS_DIR}}'
+    dir: "{{.TALOS_DIR}}"
     cmds:
-      - '[ -f talsecret.sops.yaml ] || talhelper gensecret | sops --filename-override talos/talsecret.sops.yaml --encrypt /dev/stdin > talsecret.sops.yaml'
+      - "[ -f talsecret.sops.yaml ] || talhelper gensecret | sops --filename-override talos/talsecret.sops.yaml --encrypt /dev/stdin > talsecret.sops.yaml"
       - talhelper genconfig
       - talhelper gencommand apply --extra-flags="--insecure" | bash
       - until talhelper gencommand bootstrap | bash; do sleep 10; done

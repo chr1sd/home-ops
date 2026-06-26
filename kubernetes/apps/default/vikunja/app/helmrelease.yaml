@@ -64,9 +64,9 @@ spec:
           - name: envoy-internal
             namespace: network
         rules:
-        - backendRefs:
-            - name: *app
-              port: *port
+          - backendRefs:
+              - name: *app
+                port: *port
     persistence:
       config:
         existingClaim: *app

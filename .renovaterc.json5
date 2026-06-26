@@ -155,9 +155,7 @@
     "grafana-dashboards": {
       defaultRegistryUrlTemplate: "https://grafana.com/api/dashboards/{{packageName}}/revisions",
       format: "json",
-      transformTemplates: [
-        '{"releases": $.items.{"version": $string(revision)}}',
-      ],
+      transformTemplates: ['{"releases": $.items.{"version": $string(revision)}}'],
     },
   },
   customManagers: [

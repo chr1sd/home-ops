@@ -1,4 +1,5 @@
 ### Bonded Interface Notes
+
 Bonded interfaces are useful when you need to use one physical network adapter and create multiple VLAN virtual adapters on that adapter.
 
 Good examples are for IOT devices and VPN traffic. With VLAN tagged network devices you can use a tool like Multus to assign a different network to the the virtual adapters and then pods can take advantage of that network.
@@ -64,18 +65,21 @@ talosctl -n 10.13.17.19 get links eno1 -o yaml
 Connect to the pod that is using the additional network you defined in Multus. There are a few commands you can run to validate that it's routing traffic through the additional network.
 
 1. Connect to the pod
-`kubectl -n default exec -it qbittorrent-9b487874-lbthn -- sh`
+   `kubectl -n default exec -it qbittorrent-9b487874-lbthn -- sh`
 
 2. List the IP addresses for the pod. You want to see the IP address you defined in the deployment files.
-`ip addr list`
+   `ip addr list`
+
 ```
 5: net1@if9: <BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN> mtu 1500 qdisc noqueue state UP qlen 1000
     link/ether ee:66:43:b3:48:ff brd ff:ff:ff:ff:ff:ff
     inet 10.13.87.51/24 brd 10.13.87.255 scope global net1
        valid_lft forever preferred_lft forever
 ```
+
 3. List the routes the pod is using. You want to see the routes you defined for the network in Multus.
-`ip route list`
+   `ip route list`
+
 ```
 0.0.0.0/5 via 10.13.87.1 dev net1
 default via 10.244.2.234 dev eth0
@@ -112,8 +116,10 @@ default via 10.244.2.234 dev eth0
 208.0.0.0/4 via 10.13.87.1 dev net1
 224.0.0.0/3 via 10.13.87.1 dev net1
 ```
+
 4. Ping the default gateway of the subnet your bonded VLAN network address. You need a response here.
-`ping 10.13.87.1`
+   `ping 10.13.87.1`
+
 ```
 PING 10.13.87.1 (10.13.87.1): 56 data bytes
 64 bytes from 10.13.87.1: seq=0 ttl=42 time=0.643 ms
@@ -122,8 +128,10 @@ PING 10.13.87.1 (10.13.87.1): 56 data bytes
 64 bytes from 10.13.87.1: seq=3 ttl=42 time=0.442 ms
 64 bytes from 10.13.87.1: seq=4 ttl=42 time=0.574 ms
 ```
+
 5. See what the external IP address of the pod is. YOU DON'T WANT YOUR ISP ADDRESS HERE. It should be the VPN address. My VPN client is configured in Unifi and I can see the IP address of the client in the Unifi Network console to validate what the pod has.
-`curl ifconfig.me`
+   `curl ifconfig.me`
+
 ```
 ~ $ curl ifconfig.me
 184.75.221.59~

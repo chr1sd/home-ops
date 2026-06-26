@@ -29,6 +29,7 @@
 </div>
 
 ---
+
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f44b/512.gif" alt="👋" width="30" height="30"> Welcome
 
 Welcome to the (Kubernetes) Humble Home Lab repo. The source of truth for my bare metal cluster running on Talos Linux.
@@ -36,28 +37,32 @@ Welcome to the (Kubernetes) Humble Home Lab repo. The source of truth for my bar
 The goal here is to deepen my understanding of k8s, become the GitOps mindset, and share what I learn along the way.
 
 ---
+
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f916/512.gif" alt="🤖" width="30" height="30"> Hardware
 
-| System                   | Role           | CPU   | RAM   | Graphics | Disk (boot) | Disk (storage) |
-|--------------------------|----------------|-------|-------|----------|-------------|----------------|
-| (3x) HP EliteDesk 800 G3 Mini | Control Plane  | Intel i5-6500T     | 16GB DDR4| Intel HD 530 |256GB SSD   | —              |
-| (3x) HP EliteDesk 800 G3 Mini | Worker         | Intel i5-6500T     | 64GB DDR4  | Intel HD 530 |512GB SSD   | 1TB NVMe       |
-| Custom Server  | AI Workloads | Intel i7-6700K     | 64GB DDR4 |  2x RTX3090 |256GB SSD | 512GB SSD |
-| HL15 2.0 | NAS | AMD Epyc 7452 | 256GB DDR4 | Intel ARC A310 | 512GB SSD Mirror | ZFS RaidZ2 Pool (12x 8TB Disks)
+| System                        | Role          | CPU            | RAM        | Graphics       | Disk (boot)      | Disk (storage)                  |
+| ----------------------------- | ------------- | -------------- | ---------- | -------------- | ---------------- | ------------------------------- |
+| (3x) HP EliteDesk 800 G3 Mini | Control Plane | Intel i5-6500T | 16GB DDR4  | Intel HD 530   | 256GB SSD        | —                               |
+| (3x) HP EliteDesk 800 G3 Mini | Worker        | Intel i5-6500T | 64GB DDR4  | Intel HD 530   | 512GB SSD        | 1TB NVMe                        |
+| Custom Server                 | AI Workloads  | Intel i7-6700K | 64GB DDR4  | 2x RTX3090     | 256GB SSD        | 512GB SSD                       |
+| HL15 2.0                      | NAS           | AMD Epyc 7452  | 256GB DDR4 | Intel ARC A310 | 512GB SSD Mirror | ZFS RaidZ2 Pool (12x 8TB Disks) |
 
 All of this is connected to a [Ubiquiti](https://ui.com) network with VLANS configured for IoT, Management, DMZ, and Cameras.
 
 ---
+
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f512/512.gif" alt="🔒" width="30" height="30"> Talos Linux
 
 [Talos](https://www.talos.dev) is an immutable, API driven operating system designed specifically for Kubernetes. Talos is configured declaritively and is a great choice for a GitOps driven workflow.
 
 ---
+
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f680/512.gif" alt="🚀" width="30" height="30"> Kubernetes
 
 For me, a home lab about tinkering and learning. So I set off to learn [Kubernetes](https://kubernetes.io) with a goal to grow my skillset and have an infrastructure that allows me to scale and provide useful, locally hosted applications for my family.
 
 ---
+
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f30f/512.gif" alt="🌏" width="30" height="30"> Networking: Cilium
 
 Networking in my cluster is handled by [Cilium](https://cilium.io/).
@@ -65,16 +70,19 @@ Networking in my cluster is handled by [Cilium](https://cilium.io/).
 I'm using [Envoy Gateway](https://gateway.envoyproxy.io) to manage application traffic coming into the cluster.
 
 ---
+
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f4c8/512.gif" alt="📈" width="30" height="30"> Observability Stack
 
 To keep a pulse on the cluster, I'm using: [Prometheus](https://prometheus.io), [Grafana](https://grafana.com), [VictoriaLogs](https://victoriametrics.com/products/victorialogs/), [Alertmanager](https://github.com/prometheus/alertmanager), [Gatus](https://github.com/TwiN/gatus), and [Fluentbit](https://fluentbit.io).
 
 ---
+
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f48e/512.gif" alt="💎" width="30" height="30"> Storage: Rook + Ceph
 
 Persistent storage is provided by [Rook-Ceph](https://rook.io/), utilizing the 1TB NVMe drives on each worker.
 
 ---
+
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/2699_fe0f/512.gif" alt="⚙️" width="30" height="30"> GitOps with Flux
 
 The backbone of this cluster is [Flux CD](https://fluxcd.io/) — a GitOps controller that reconciles my entire Kubernetes state from a Git repository.
@@ -120,6 +128,7 @@ flowchart TD
 </details>
 
 ---
+
 I made a [Youtube video](https://youtu.be/aeUKOpeoiUs) that gives a general overview of my configuration and the core components.
 
 <a href="https://youtube.com/watch?v=aeUKOpeoiUs">
@@ -127,6 +136,7 @@ I made a [Youtube video](https://youtu.be/aeUKOpeoiUs) that gives a general over
 </a>
 
 ---
+
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f6a7/512.gif" alt="🚧" width="30" height="30"> Foundation: onedr0p's Cluster Template
 
 Special thanks to the most excellent [onedr0p/cluster-template](https://github.com/onedr0p/cluster-template). It provides a clean, modern foundation for Talos + Flux-based clusters — and taught me how to organize manifests properly, use SOPS, and implement GitOps the right way.
@@ -134,9 +144,10 @@ Special thanks to the most excellent [onedr0p/cluster-template](https://github.c
 [![Flux Cluster Template](https://img.shields.io/badge/Cluster%20Template-1f6feb?style=for-the-badge)](https://github.com/onedr0p/cluster-template)
 [![Flux Cluster Template Stars](https://img.shields.io/github/stars/onedr0p/cluster-template?style=for-the-badge&color=1f6feb)](https://github.com/onedr0p/cluster-template)
 
-
 ---
+
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f92f/512.gif" alt="🤯" width="30" height="30"> Start This Journey Today
+
 If you're interested in this type of thing, I encourage you to build your own home lab. It doesn't have to be Kubernetes. Grab ANY old computer and see what you can deploy on it.
 
 Embrace the process. It will be infuriating at times, blissful at others.
@@ -144,6 +155,7 @@ Embrace the process. It will be infuriating at times, blissful at others.
 You'll build some really cool stuff along the way. And your brain waves will expand.
 
 ---
+
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f31f/512.gif" alt="🌟" width="30" height="30"> Stargazers
 
 <a href="https://star-history.com/#gavinmcfall/home-ops&Date">

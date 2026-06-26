@@ -45,7 +45,7 @@ metrics:
       - { color: red, min: 76, max: 9999 }
     title: Memory
 
-# i don't have these metrics yet
+  # i don't have these metrics yet
   # - name: cluster_power_usage
   #   query: avg(upsAdvOutputActivePower)
   #   suffix: w
@@ -76,6 +76,6 @@ metrics:
   - name: cluster_alert_count
     query: alertmanager_alerts{state="active"} - 1 # Ignore Watchdog
     colors:
-      - {color: "green", min: 0, max: 0}
-      - {color: "red", min: 1, max: 9999}
+      - { color: "green", min: 0, max: 0 }
+      - { color: "red", min: 1, max: 9999 }
     title: Alerts

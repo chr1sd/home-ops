@@ -44,7 +44,7 @@ spec:
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
-              capabilities: {drop: ["ALL"]}
+              capabilities: { drop: ["ALL"] }
             resources:
               requests:
                 cpu: 10m
@@ -71,9 +71,9 @@ spec:
             namespace: network
             sectionName: https
         rules:
-        - backendRefs:
-            - name: kopia
-              port: *port
+          - backendRefs:
+              - name: kopia
+                port: *port
     configMaps:
       config:
         data:
