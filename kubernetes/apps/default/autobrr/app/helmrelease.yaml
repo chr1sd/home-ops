@@ -60,7 +60,7 @@ spec:
                   httpGet:
                     path: /api/healthz/liveness
                     port: *port
-                  failureThreshold: 120
+                  failureThreshold: 360
                   periodSeconds: 5
                   timeoutSeconds: 1
             securityContext:
