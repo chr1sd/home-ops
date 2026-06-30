@@ -333,11 +333,24 @@
 
             // ── API ──────────────────────────────────────────────
             async function load() {
-                const res = await fetch("/api/bracket");
-                bracket = await res.json();
-                renderPool();
-                renderBracket();
-                updateChampion();
+              try {
+                const res = await fetch('/api/bracket')
+                if (!res.ok) throw new Error(`HTTP ${res.status}`)
+                bracket = await res.json()
+              } catch (err) {
+                console.error('Failed to load bracket state, using defaults:', err)
+                bracket = {
+                  r32: Array.from({length: 16}, () => ['', '']),
+                  r16: Array.from({length: 8}, () => ['', '']),
+                  qf: Array.from({length: 4}, () => ['', '']),
+                  sf: Array.from({length: 2}, () => ['', '']),
+                  third: ['', ''],
+                  final: ['', '']
+                }
+              }
+              renderPool()
+              renderBracket()
+              updateChampion()
             }
 
             async function save() {
