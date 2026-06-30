@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>FIFA World Cup 2026</title>
+        <style>
+            :root {
+                --bg: #071422;
+                --surface: #0e2038;
+                --surface2: #132840;
+                --border: #1e3a5a;
+                --accent: #c9a227;
+                --accent-dim: rgba(201, 162, 39, 0.15);
+                --text: #dde6f0;
+                --muted: #6a88a8;
+                --slot-empty: #112233;
+                --slot-filled: #0d3566;
+                --slot-border: #1e4080;
+                --chip-bg: #0f2a40;
+                --chip-border: #2a4a6a;
+                --chip-hover: #1a3a58;
+                --drag-over: rgba(201, 162, 39, 0.25);
+            }
+
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            body {
+                background: var(--bg);
+                color: var(--text);
+                font-family: "Segoe UI", system-ui, sans-serif;
+                font-size: 13px;
+                min-height: 100vh;
+            }
+
+            /* ── Header ── */
+            header {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 16px;
+                padding: 16px 24px;
+                border-bottom: 1px solid var(--border);
+                background: var(--surface);
+            }
+
+            header h1 {
+                font-size: 1.4rem;
+                font-weight: 700;
+                letter-spacing: 3px;
+                text-transform: uppercase;
+                color: var(--accent);
+            }
+
+            header p {
+                color: var(--muted);
+                font-size: 0.75rem;
+            }
+
+            /* ── Team Pool ── */
+            #pool {
+                padding: 12px 20px;
+                border-bottom: 2px solid var(--border);
+                background: var(--surface);
+            }
+
+            #pool-heading {
+                font-size: 0.65rem;
+                text-transform: uppercase;
+                letter-spacing: 2px;
+                color: var(--muted);
+                margin-bottom: 10px;
+            }
+
+            .pool-groups {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .pool-group {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+            }
+
+            .pool-group-label {
+                font-size: 0.6rem;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                color: var(--accent);
+            }
+
+            .pool-chips {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 3px;
+            }
+
+            .chip {
+                background: var(--chip-bg);
+                border: 1px solid var(--chip-border);
+                border-radius: 5px;
+                padding: 3px 8px;
+                font-size: 0.75rem;
+                cursor: grab;
+                user-select: none;
+                white-space: nowrap;
+                transition:
+                    background 0.12s,
+                    border-color 0.12s;
+            }
+
+            .chip:hover {
+                background: var(--chip-hover);
+                border-color: var(--accent);
+            }
+            .chip.dragging {
+                opacity: 0.35;
+            }
+
+            /* ── Bracket ── */
+            #bracket-scroll {
+                overflow-x: auto;
+                padding: 28px 20px 48px;
+            }
+
+            #bracket {
+                display: flex;
+                align-items: center;
+                min-width: 1360px;
+                gap: 0;
+            }
+
+            .half {
+                display: flex;
+                flex: 1;
+                align-items: center;
+            }
+
+            /* ── Round column ── */
+            .round-col {
+                display: flex;
+                flex-direction: column;
+                min-width: 150px;
+                flex: 1;
+            }
+
+            .round-heading {
+                font-size: 0.6rem;
+                text-transform: uppercase;
+                letter-spacing: 1.5px;
+                color: var(--muted);
+                text-align: center;
+                padding-bottom: 8px;
+                white-space: nowrap;
+            }
+
+            .round-matches {
+                display: flex;
+                flex-direction: column;
+                flex: 1;
+                justify-content: space-around;
+            }
+
+            /* ── Match ── */
+            .match {
+                display: flex;
+                flex-direction: column;
+                margin: 3px 6px;
+            }
+
+            /* ── Slot ── */
+            .slot {
+                height: 34px;
+                padding: 0 10px;
+                display: flex;
+                align-items: center;
+                background: var(--slot-empty);
+                border: 1px solid var(--border);
+                font-size: 0.78rem;
+                cursor: pointer;
+                transition:
+                    background 0.12s,
+                    border-color 0.12s;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .slot:first-child {
+                border-radius: 4px 4px 0 0;
+                border-bottom: none;
+            }
+            .slot:last-child {
+                border-radius: 0 0 4px 4px;
+            }
+
+            .slot.filled {
+                background: var(--slot-filled);
+                border-color: var(--slot-border);
+            }
+
+            .slot.final-slot {
+                background: var(--accent-dim);
+                border-color: var(--accent);
+                font-weight: 600;
+            }
+
+            .slot.dragover {
+                background: var(--drag-over);
+                border-color: var(--accent);
+            }
+
+            .slot:hover {
+                border-color: #3a6aac;
+            }
+            .slot.filled:hover {
+                border-color: var(--accent);
+            }
+
+            /* ── Center column ── */
+            .center-col {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 0 20px;
+                gap: 28px;
+            }
+
+            .center-section {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 4px;
+            }
+
+            .center-heading {
+                font-size: 0.65rem;
+                text-transform: uppercase;
+                letter-spacing: 2px;
+                text-align: center;
+                margin-bottom: 6px;
+            }
+
+            .center-heading.final {
+                color: var(--accent);
+                font-size: 0.85rem;
+            }
+            .center-heading.third {
+                color: var(--muted);
+            }
+
+            .center-section .match {
+                margin: 0;
+            }
+            .center-section .slot {
+                min-width: 160px;
+            }
+
+            /* ── Champion banner ── */
+            #champion {
+                display: none;
+                text-align: center;
+                padding: 10px 20px;
+                background: var(--accent-dim);
+                border-top: 1px solid var(--accent);
+                border-bottom: 1px solid var(--accent);
+            }
+
+            #champion.visible {
+                display: block;
+            }
+
+            #champion-name {
+                font-size: 1.1rem;
+                font-weight: 700;
+                color: var(--accent);
+                letter-spacing: 2px;
+            }
+
+            #champion-label {
+                font-size: 0.65rem;
+                text-transform: uppercase;
+                letter-spacing: 2px;
+                color: var(--muted);
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <div>
+                <h1>⚽ FIFA World Cup 2026</h1>
+                <p>Drag teams into the bracket &nbsp;·&nbsp; Click a filled slot to clear it</p>
+            </div>
+        </header>
+
+        <div id="champion">
+            <div id="champion-label">World Champion</div>
+            <div id="champion-name"></div>
+        </div>
+
+        <div id="pool">
+            <div id="pool-heading">Teams — drag into bracket</div>
+            <div class="pool-groups" id="pool-groups"></div>
+        </div>
+
+        <div id="bracket-scroll">
+            <div id="bracket"></div>
+        </div>
+
+        <script>
+            const GROUPS = {
+                A: ["🇲🇽 Mexico", "🇿🇦 South Africa", "🇰🇷 South Korea", "🇨🇿 Czech Republic"],
+                B: ["🇨🇦 Canada", "🇨🇭 Switzerland", "🇶🇦 Qatar", "🇧🇦 Bosnia & Herz."],
+                C: ["🇧🇷 Brazil", "🇲🇦 Morocco", "🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scotland", "🇭🇹 Haiti"],
+                D: ["🇺🇸 United States", "🇵🇾 Paraguay", "🇦🇺 Australia", "🇹🇷 Turkey"],
+                E: ["🇩🇪 Germany", "🇨🇼 Curaçao", "🇨🇷 Costa Rica", "🇪🇨 Ecuador"],
+                F: ["🇳🇱 Netherlands", "🇯🇵 Japan", "🇹🇳 Tunisia", "🇸🇪 Sweden"],
+                G: ["🇧🇪 Belgium", "🇪🇬 Egypt", "🇮🇷 Iran", "🇳🇿 New Zealand"],
+                H: ["🇪🇸 Spain", "🇨🇻 Cape Verde", "🇸🇦 Saudi Arabia", "🇺🇾 Uruguay"],
+                I: ["🇫🇷 France", "🇸🇳 Senegal", "🇳🇴 Norway", "🇮🇶 Iraq"],
+                J: ["🇦🇷 Argentina", "🇩🇿 Algeria", "🇦🇹 Austria", "🇯🇴 Jordan"],
+                K: ["🇵🇹 Portugal", "🇨🇴 Colombia", "🇺🇿 Uzbekistan", "🇨🇩 DR Congo"],
+                L: ["🏴󠁧󠁢󠁥󠁮󠁧󠁿 England", "🇭🇷 Croatia", "🇬🇭 Ghana", "🇵🇦 Panama"],
+            };
+
+            let bracket = null;
+
+            // ── API ──────────────────────────────────────────────
+            async function load() {
+                const res = await fetch("/api/bracket");
+                bracket = await res.json();
+                renderPool();
+                renderBracket();
+                updateChampion();
+            }
+
+            async function save() {
+                await fetch("/api/bracket", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(bracket),
+                });
+            }
+
+            // ── State helpers ─────────────────────────────────────
+            function getVal(round, matchIdx, slotIdx) {
+                if (round === "final" || round === "third") return bracket[round][slotIdx];
+                return bracket[round][matchIdx][slotIdx];
+            }
+
+            function setVal(round, matchIdx, slotIdx, value) {
+                if (round === "final" || round === "third") {
+                    bracket[round][slotIdx] = value;
+                } else {
+                    bracket[round][matchIdx][slotIdx] = value;
+                }
+            }
+
+            function updateChampion() {
+                const [t1, t2] = bracket.final;
+                const el = document.getElementById("champion");
+                if (t1 && t2) {
+                    document.getElementById("champion-label").textContent = "🏆 World Cup Final";
+                    document.getElementById("champion-name").textContent = `${t1}  vs  ${t2}`;
+                    el.classList.add("visible");
+                } else {
+                    el.classList.remove("visible");
+                }
+            }
+
+            // ── Slot element ──────────────────────────────────────
+            function makeSlot(round, matchIdx, slotIdx, isFinalStyle) {
+                const slot = document.createElement("div");
+                slot.className = "slot" + (isFinalStyle ? " final-slot" : "");
+
+                const val = getVal(round, matchIdx, slotIdx);
+                if (val) {
+                    slot.textContent = val;
+                    slot.classList.add("filled");
+                }
+
+                slot.addEventListener("dragover", (e) => {
+                    e.preventDefault();
+                    slot.classList.add("dragover");
+                });
+                slot.addEventListener("dragleave", () => slot.classList.remove("dragover"));
+                slot.addEventListener("drop", (e) => {
+                    e.preventDefault();
+                    slot.classList.remove("dragover");
+                    const team = e.dataTransfer.getData("text/plain");
+                    if (!team) return;
+                    setVal(round, matchIdx, slotIdx, team);
+                    slot.textContent = team;
+                    slot.classList.add("filled");
+                    if (round === "final") updateChampion();
+                    save();
+                });
+                slot.addEventListener("click", () => {
+                    if (!slot.classList.contains("filled")) return;
+                    setVal(round, matchIdx, slotIdx, "");
+                    slot.textContent = "";
+                    slot.classList.remove("filled");
+                    if (round === "final") updateChampion();
+                    save();
+                });
+
+                return slot;
+            }
+
+            function makeMatch(round, matchIdx, isFinalStyle = false) {
+                const div = document.createElement("div");
+                div.className = "match";
+                div.appendChild(makeSlot(round, matchIdx, 0, isFinalStyle));
+                div.appendChild(makeSlot(round, matchIdx, 1, isFinalStyle));
+                return div;
+            }
+
+            function makeRoundCol(heading, round, matchIndices, isFinalStyle = false) {
+                const col = document.createElement("div");
+                col.className = "round-col";
+                const h = document.createElement("div");
+                h.className = "round-heading";
+                h.textContent = heading;
+                col.appendChild(h);
+                const matches = document.createElement("div");
+                matches.className = "round-matches";
+                for (const idx of matchIndices) {
+                    matches.appendChild(makeMatch(round, idx, isFinalStyle));
+                }
+                col.appendChild(matches);
+                return col;
+            }
+
+            // ── Pool ──────────────────────────────────────────────
+            function renderPool() {
+                const container = document.getElementById("pool-groups");
+                container.innerHTML = "";
+                for (const [name, teams] of Object.entries(GROUPS)) {
+                    const groupEl = document.createElement("div");
+                    groupEl.className = "pool-group";
+                    const label = document.createElement("div");
+                    label.className = "pool-group-label";
+                    label.textContent = `Group ${name}`;
+                    groupEl.appendChild(label);
+                    const chips = document.createElement("div");
+                    chips.className = "pool-chips";
+                    for (const team of teams) {
+                        const chip = document.createElement("div");
+                        chip.className = "chip";
+                        chip.textContent = team;
+                        chip.draggable = true;
+                        chip.addEventListener("dragstart", (e) => {
+                            e.dataTransfer.setData("text/plain", team);
+                            e.dataTransfer.effectAllowed = "copy";
+                            chip.classList.add("dragging");
+                        });
+                        chip.addEventListener("dragend", () => chip.classList.remove("dragging"));
+                        chips.appendChild(chip);
+                    }
+                    groupEl.appendChild(chips);
+                    container.appendChild(groupEl);
+                }
+            }
+
+            // ── Bracket ───────────────────────────────────────────
+            function renderBracket() {
+                const root = document.getElementById("bracket");
+                root.innerHTML = "";
+
+                // Left half: R32→R16→QF→SF (outer to inner)
+                const leftHalf = document.createElement("div");
+                leftHalf.className = "half";
+                leftHalf.appendChild(makeRoundCol("Round of 32", "r32", [0, 1, 2, 3, 4, 5, 6, 7]));
+                leftHalf.appendChild(makeRoundCol("Round of 16", "r16", [0, 1, 2, 3]));
+                leftHalf.appendChild(makeRoundCol("Quarterfinals", "qf", [0, 1]));
+                leftHalf.appendChild(makeRoundCol("Semifinals", "sf", [0]));
+                root.appendChild(leftHalf);
+
+                // Center: Final + 3rd place
+                const center = document.createElement("div");
+                center.className = "center-col";
+
+                const finalSec = document.createElement("div");
+                finalSec.className = "center-section";
+                const finalH = document.createElement("div");
+                finalH.className = "center-heading final";
+                finalH.textContent = "⚽ Final";
+                finalSec.appendChild(finalH);
+                finalSec.appendChild(makeMatch("final", 0, true));
+                center.appendChild(finalSec);
+
+                const thirdSec = document.createElement("div");
+                thirdSec.className = "center-section";
+                const thirdH = document.createElement("div");
+                thirdH.className = "center-heading third";
+                thirdH.textContent = "3rd Place";
+                thirdSec.appendChild(thirdH);
+                thirdSec.appendChild(makeMatch("third", 0, false));
+                center.appendChild(thirdSec);
+
+                root.appendChild(center);
+
+                // Right half: SF→QF→R16→R32 (inner to outer)
+                const rightHalf = document.createElement("div");
+                rightHalf.className = "half";
+                rightHalf.appendChild(makeRoundCol("Semifinals", "sf", [1]));
+                rightHalf.appendChild(makeRoundCol("Quarterfinals", "qf", [2, 3]));
+                rightHalf.appendChild(makeRoundCol("Round of 16", "r16", [4, 5, 6, 7]));
+                rightHalf.appendChild(
+                    makeRoundCol("Round of 32", "r32", [8, 9, 10, 11, 12, 13, 14, 15]),
+                );
+                root.appendChild(rightHalf);
+            }
+
+            load();
+        </script>
+    </body>
+</html>
