@@ -21,6 +21,7 @@ talosconfig
 Thumbs.db
 /known_hosts
 .claude/
-/docs/.superpowers/sdd/
+/docs/
+/.superpowers/
 # Node
 apps/fifa-bracket/node_modules/
