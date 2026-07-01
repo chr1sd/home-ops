@@ -29,3 +29,5 @@ resources:
   - ./brrpolice/ks.yaml
   - ./mealie/ks.yaml
   - ./sabnzbd/ks.yaml
+  - ./miniflux/ks.yaml
+  - ./nextflux/ks.yaml

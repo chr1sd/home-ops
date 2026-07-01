@@ -4,3 +4,5 @@ kind: Kustomization
 resources:
   - ./cluster17.yaml
   - ./service.yaml
+  - ./miniflux-role-secret.yaml
+  - ./miniflux-db.yaml
