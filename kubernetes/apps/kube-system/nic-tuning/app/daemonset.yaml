@@ -25,7 +25,7 @@ spec:
       priorityClassName: system-node-critical
       containers:
         - name: nic-tuning
-          image: ghcr.io/nicolaka/netshoot@sha256:47b907d662d139d1e2f22bfe14f4efca1e3f1feed283572f47c970c780c03b61
+          image: ghcr.io/nicolaka/netshoot@sha256:b09d9b21381f47a79b3cbcb30da25266dc17186ea00ae65e99fdc51396f48e70
           securityContext:
             privileged: true
           command:
