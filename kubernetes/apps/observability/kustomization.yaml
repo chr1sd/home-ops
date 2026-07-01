@@ -16,3 +16,4 @@ resources:
   - ./kromgo/ks.yaml
   - ./blackbox-exporter/ks.yaml
   - ./unpoller/ks.yaml
+  - ./radar/ks.yaml
