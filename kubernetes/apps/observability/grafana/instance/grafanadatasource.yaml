@@ -46,4 +46,4 @@ spec:
     type: victoriametrics-logs-datasource
     access: proxy
     isDefault: true
-    url: http://victoria-logs.observability.svc.cluster.local:9428
+    url: http://victoria-logs-server.observability.svc.cluster.local:9428
