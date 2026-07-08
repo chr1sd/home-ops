@@ -44,6 +44,7 @@ ui:
 
     - name: Homelab
       link: https://github.com/chr1sd/home-ops
+  dark-mode: true
 
 web:
   port: ${GATUS_WEB_PORT}
