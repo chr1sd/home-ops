@@ -26,6 +26,7 @@ spec:
     keepHistory: false
   values:
     image:
+      repository: ghcr.io/skyhook-io/radar
       tag: 1.8.5@sha256:a03aa5ce3e25ee62e37ae26dff3d31d79971c81bafc5bcc96351bef82e99f386
     rbac:
       # Hubble relay isn't deployed yet (cilium hubble.enabled: false) - no traffic
