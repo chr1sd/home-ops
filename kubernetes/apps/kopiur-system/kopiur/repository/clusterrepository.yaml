@@ -55,4 +55,4 @@ spec:
       runAsGroup: 1000
     ttlSecondsAfterFinished: 300
   scheduleDefaults:
-    timezone: Pacific/Auckland
+    timezone: America/New_York
