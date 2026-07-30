@@ -1,0 +1,34 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kopiur.home-operations.com/snapshotpolicy_v1alpha1.json
+apiVersion: kopiur.home-operations.com/v1alpha1
+kind: SnapshotPolicy
+metadata:
+  name: ${APP}
+spec:
+  compression:
+    compressor: zstd-fastest
+  copyMethod: Snapshot
+  credentialProjection:
+    enabled: true
+  mover:
+    cache:
+      capacity: ${KOPIUR_CAPACITY:=5Gi}
+      storageClassName: ${KOPIUR_CACHE_STORAGECLASS:=openebs-hostpath}
+    podSecurityContext:
+      runAsUser: ${KOPIUR_PUID:=1000}
+      runAsGroup: ${KOPIUR_PGID:=1000}
+      fsGroup: ${KOPIUR_PGID:=1000}
+  repository:
+    kind: ClusterRepository
+    name: lil-nas
+  retention:
+    keepHourly: 24
+    keepDaily: 7
+  sources:
+    - pvc:
+        name: ${APP}
+      # Fork identity is <app>@<namespace>:/data — keep recording under /data
+      sourcePathOverride: /data
+  upload:
+    maxParallelFileReads: 2
+  volumeSnapshotClassName: ${KOPIUR_SNAPSHOTCLASS:=csi-ceph-blockpool}

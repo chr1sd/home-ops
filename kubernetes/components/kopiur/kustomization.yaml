@@ -1,0 +1,12 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+resources:
+  - ./snapshotpolicy.yaml
+  - ./snapshotschedule.yaml
+  # PVC ownership stays with the volsync component until volsync is removed.
+  # Uncomment both in the SAME commit that drops components/volsync from app
+  # ks.yaml files, so the PVC never leaves the Kustomization inventory.
+  # - ./pvc.yaml
+  # - ./restore.yaml

@@ -1,0 +1,58 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kopiur.home-operations.com/clusterrepository_v1alpha1.json
+apiVersion: kopiur.home-operations.com/v1alpha1
+kind: ClusterRepository
+metadata:
+  name: lil-nas
+spec:
+  allowedNamespaces:
+    all: true
+  backend:
+    filesystem:
+      path: /repository
+      volume:
+        nfs:
+          server: lil-nas.dovis.me
+          path: /mnt/seagate-data/k8s/backup
+  # During migration: rediscover the fork's snapshots as they land
+  catalog:
+    periodicRefresh: true
+    refreshInterval: 1h
+  # Adopt the existing VolSync kopia repository — never initialize a new one
+  create:
+    enabled: false
+  credentialProjection:
+    allowed: true
+  encryption:
+    passwordSecretRef:
+      name: kopiur-repository-secret
+      namespace: kopiur-system
+      key: KOPIA_PASSWORD
+  # Match the perfectra1n fork's snapshot identity (<app>@<namespace>) so
+  # history continues; sourcePathOverride /data is pinned in the component
+  identityDefaults:
+    hostnameExpr: namespace
+    usernameExpr: policyName
+  # Disabled until the fork's KopiaMaintenance is retired (phase 3)
+  maintenance:
+    enabled: false
+  moverDefaults:
+    affinity:
+      nodeAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            preference:
+              matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: NotIn
+                  values:
+                    - duwerk-3
+    podSecurityContext:
+      fsGroup: 1000
+      fsGroupChangePolicy: OnRootMismatch
+    securityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+    ttlSecondsAfterFinished: 300
+  scheduleDefaults:
+    timezone: Pacific/Auckland
