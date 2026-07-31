@@ -22,6 +22,7 @@ spec:
     substitute:
       APP: *app
       KOPIUR_CAPACITY: 5Gi
+      TIMEZONE: America/New_York
       VOLSYNC_CAPACITY: 5Gi
   prune: true
   sourceRef:
