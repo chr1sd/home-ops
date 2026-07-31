@@ -6,4 +6,5 @@ resources:
   - ./externalsecret.yaml
   - ./pvc.yaml
   - ./replicationdestination.yaml
-  - ./replicationsource.yaml
+  # kopiur owns backups now (phase 3); file kept for rollback until volsync is removed
+  # - ./replicationsource.yaml

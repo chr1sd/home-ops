@@ -10,6 +10,7 @@ spec:
       app.kubernetes.io/name: *app
   components:
     - ../../../../components/common
+    - ../../../../components/kopiur
     - ../../../../components/volsync
     - ../../../../components/nfs-scaler
   dependsOn:
@@ -20,6 +21,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      KOPIUR_CAPACITY: 10Gi
       VOLSYNC_CAPACITY: 10Gi
   prune: true
   sourceRef:

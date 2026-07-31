@@ -5,6 +5,7 @@ metadata:
   name: &app brrpolice
 spec:
   components:
+    - ../../../../components/kopiur
     - ../../../../components/volsync
   dependsOn:
     - name: rook-ceph-cluster
@@ -14,6 +15,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      KOPIUR_CAPACITY: 2Gi
       VOLSYNC_CAPACITY: 2Gi
   prune: true
   sourceRef:

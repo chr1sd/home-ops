@@ -10,6 +10,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   components:
+    - ../../../../components/kopiur
     - ../../../../components/volsync
   dependsOn:
     - name: rook-ceph-cluster
@@ -19,6 +20,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      KOPIUR_CAPACITY: 2Gi
       VOLSYNC_CAPACITY: 2Gi
   prune: true
   sourceRef:
