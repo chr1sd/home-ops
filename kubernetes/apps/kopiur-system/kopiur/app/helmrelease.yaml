@@ -10,6 +10,11 @@ spec:
     name: kopiur
   interval: 1h
   values:
+    # Grants the operator ClusterRole secrets create/patch so it can project
+    # the repository credentials into mover namespaces (credentialProjection)
+    features:
+      credentialProjection:
+        enabled: true
     monitoring:
       dashboards:
         enabled: true
