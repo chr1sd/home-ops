@@ -6,7 +6,6 @@ metadata:
 spec:
   components:
     - ../../../../components/kopiur
-    - ../../../../components/volsync
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
@@ -16,7 +15,6 @@ spec:
     substitute:
       APP: *app
       KOPIUR_CAPACITY: 2Gi
-      VOLSYNC_CAPACITY: 2Gi
   prune: true
   sourceRef:
     kind: GitRepository

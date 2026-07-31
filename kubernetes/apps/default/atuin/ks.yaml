@@ -8,7 +8,6 @@ spec:
   components:
     - ../../../../components/common
     - ../../../../components/kopiur
-    - ../../../../components/volsync
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
@@ -18,7 +17,6 @@ spec:
     substitute:
       APP: atuin
       KOPIUR_CAPACITY: 5Gi
-      VOLSYNC_CAPACITY: 5Gi
   prune: true
   sourceRef:
     kind: GitRepository

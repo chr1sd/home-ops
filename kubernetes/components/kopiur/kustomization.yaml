@@ -5,8 +5,5 @@ kind: Component
 resources:
   - ./snapshotpolicy.yaml
   - ./snapshotschedule.yaml
-  # PVC ownership stays with the volsync component until volsync is removed.
-  # Uncomment both in the SAME commit that drops components/volsync from app
-  # ks.yaml files, so the PVC never leaves the Kustomization inventory.
-  # - ./pvc.yaml
-  # - ./restore.yaml
+  - ./pvc.yaml
+  - ./restore.yaml
