@@ -11,7 +11,6 @@ spec:
       app.kubernetes.io/name: *app
   components:
     - ../../../../components/kopiur
-    - ../../../../components/volsync
     - ../../../../components/nfs-scaler
   dependsOn:
     - name: rook-ceph-cluster
@@ -22,7 +21,6 @@ spec:
     substitute:
       APP: *app
       KOPIUR_CAPACITY: 1Gi
-      VOLSYNC_CAPACITY: 1Gi
   prune: true
   sourceRef:
     kind: GitRepository

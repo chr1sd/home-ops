@@ -12,7 +12,6 @@ spec:
   components:
     - ../../../../components/common
     - ../../../../components/kopiur
-    - ../../../../components/volsync
     - ../../../../components/nfs-scaler
   dependsOn:
     - name: rook-ceph-cluster
@@ -23,7 +22,6 @@ spec:
     substitute:
       APP: *app
       KOPIUR_CAPACITY: 5Gi
-      VOLSYNC_CAPACITY: 5Gi
   prune: true
   sourceRef:
     kind: GitRepository
