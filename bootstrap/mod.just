@@ -76,14 +76,14 @@ secrets:
     @just log info "Applying bootstrap secrets"
     @kustomize build {{ justfile_directory() }}/bootstrap/kustomize/apps | just template - | kubectl apply --server-side -f -
 
-# Apply CRDs required before the Helm apps
+# Extract CRDs from the charts and apply them out-of-band, before any consumer
 [private]
 crds:
     @just log info "Applying CRDs"
-    @helmfile --file {{ justfile_directory() }}/bootstrap/helmfile.d/00-crds.yaml template --quiet | kubectl apply --server-side -f -
+    @helmfile --file {{ justfile_directory() }}/bootstrap/helmfile/crds.yaml template --quiet | yq ea -r -e 'select(.kind == "CustomResourceDefinition")' | kubectl apply --server-side --force-conflicts -f -
 
-# Sync the bootstrap Helm releases (cilium, flux, etc.)
+# Sync the bootstrap Helm releases (cilium -> ... -> flux-instance)
 [private]
 apps:
     @just log info "Syncing Helm releases"
-    @helmfile --file {{ justfile_directory() }}/bootstrap/helmfile.d/01-apps.yaml sync --hide-notes
+    @helmfile --file {{ justfile_directory() }}/bootstrap/helmfile/apps.yaml sync --hide-notes

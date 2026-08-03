@@ -234,11 +234,16 @@ The command runs these stages in order (defined in [`bootstrap/mod.just`](mod.ju
 6. **secrets** — Applies the three bootstrap secrets, rendering
    `bootstrap/kustomize/apps` through `op inject`. This is what lets 1Password Connect
    and Flux start.
-7. **crds** — Applies the CRDs from
-   [`bootstrap/helmfile.d/00-crds.yaml`](helmfile.d/00-crds.yaml) out-of-band, so Helm
-   releases that reference them don't fail.
+7. **crds** — Extracts and applies CRDs out-of-band from
+   [`bootstrap/helmfile/crds.yaml`](helmfile/crds.yaml) (envoy-gateway, grafana-operator,
+   kube-prometheus-stack, external-dns), so any resource that references them — Gateway
+   API objects, `GrafanaDashboard`s, `ServiceMonitor`s — applies cleanly instead of
+   failing until its controller catches up.
 8. **apps** — `helmfile sync` of the minimal chain Flux needs before it can take over:
-   `cilium → coredns → spegel → cert-manager → flux-operator → flux-instance`.
+   `cilium → coredns → spegel → cert-manager → external-secrets → onepassword-connect →
+flux-operator → flux-instance`. Chart, version, and values for each come straight from
+   that app's manifests under `kubernetes/apps/`, so bootstrap installs exactly what Flux
+   will reconcile.
 
 Once `flux-instance` is healthy, Flux connects to Git and reconciles everything under
 `kubernetes/`. From here the cluster manages itself.
@@ -289,6 +294,42 @@ everything:
 
 The one credential that can't come from External Secrets is External Secrets' own access
 to 1Password — which is exactly the `1password` item the bootstrap applies by hand.
+
+---
+
+## Single source of truth
+
+The bootstrap installs the same charts Flux will go on to manage — Cilium, cert-manager,
+External Secrets, Flux itself, and the CRD-bearing operators. To stop the two from
+drifting, the bootstrap helmfiles hardcode neither chart versions nor values. They read
+both from each app's own Flux manifests.
+
+`bootstrap/helmfile/` holds two helmfiles, `crds.yaml` and `apps.yaml`, and both inherit
+a shared `default.yaml` that wires up two templates:
+
+- [`templates/release.yaml.gotmpl`](helmfile/templates/release.yaml.gotmpl) reads the
+  chart URL and version from `kubernetes/apps/<namespace>/<app>/app/ocirepository.yaml`.
+- [`templates/values.yaml.gotmpl`](helmfile/templates/values.yaml.gotmpl) reads
+  `.spec.values` from that app's `helmrelease.yaml`.
+
+A release therefore declares only its `name` and `namespace`. The `name` maps to the
+app's directory under `kubernetes/apps/`, and everything else is pulled from the manifests
+Flux already reconciles. Two consequences follow: the bootstrap installs exactly what
+steady-state Flux would (no "works in bootstrap, breaks under Flux" surprises), and there
+is exactly one place to bump a version — the app's `ocirepository.yaml`, which Renovate
+keeps current.
+
+[`crds.yaml`](helmfile/crds.yaml) uses the same sourcing for a different job. Its releases
+are never installed; the `crds` stage renders each with `--include-crds` and applies only
+the `CustomResourceDefinition` objects. Pre-installing CRDs this way lets a resource that
+references one — a `Gateway`, a `GrafanaDashboard`, a `ServiceMonitor` — apply on Flux's
+first pass instead of failing until its controller's chart catches up. That removes the
+need to thread `dependsOn` through nearly every Kustomization.
+
+> [!TIP]
+> To add a chart to the bootstrap, add a `name:`/`namespace:` entry pointing at an
+> existing app directory — never a chart URL or version. If that chart's CRDs are needed
+> before its consumers reconcile, add the same entry to `crds.yaml` as well.
 
 ---
 
