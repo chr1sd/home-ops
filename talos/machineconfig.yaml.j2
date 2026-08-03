@@ -32,19 +32,6 @@ machine:
     nameservers:
       - "10.13.17.1"
       - "1.1.1.1"
-    interfaces:
-      - interface: bond0
-        dhcp: false
-        mtu: 9000
-        bond:
-          mode: active-backup
-          deviceSelectors:
-            - driver: i40e
-              hardwareAddr: REPLACE_ME_BOND_MAC_PREFIX*
-        vlans:
-          - vlanId: 87
-            dhcp: false
-            mtu: 9000
   files:
     - op: create
       path: /etc/cri/conf.d/20-customization.part
@@ -127,3 +114,38 @@ cluster:
       kubernetes:
         disabled: true
       service: {}
+---
+# Bond members: alias both Intel X710 SFP+ ports (i40e driver) as sfp0/sfp1,
+# independent of predictable interface names. The MS01 onboard 2.5GbE NICs use
+# the igc driver and are left unconfigured. `%d` enumerates the matched links.
+apiVersion: v1alpha1
+kind: LinkAliasConfig
+name: sfp%d
+selector:
+  match: link.driver == "i40e"
+---
+# 2×10GbE LACP bond (802.3ad) across the two X710 ports. Requires each node's two
+# switch ports configured as an LACP LAG (enable LACP fallback/individual mode so
+# a single link is reachable in maintenance mode before the bond negotiates).
+apiVersion: v1alpha1
+kind: BondConfig
+name: bond0
+links:
+  - sfp0
+  - sfp1
+bondMode: 802.3ad
+lacpRate: fast
+miimon: 100
+updelay: 200
+downdelay: 200
+xmitHashPolicy: layer3+4
+mtu: 9000
+---
+# Tagged VLAN 87 on the bond (cluster subnet 10.13.17.0/24 rides untagged on bond0;
+# per-node addresses live in nodes/controlplane/<node>.yaml.j2).
+apiVersion: v1alpha1
+kind: VLANConfig
+name: bond0.87
+vlanID: 87
+parent: bond0
+mtu: 9000
