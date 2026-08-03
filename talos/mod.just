@@ -24,7 +24,7 @@ download-image:
     set -euo pipefail
     id=$(just talos schematic-id)
     curl -fL --remove-on-error --progress-bar \
-        -o "{{ justfile_directory() }}/talos-{{ talos_version }}-${id:0:8}.iso" \
+        -o "{{ source_directory() }}/talos-{{ talos_version }}-${id:0:8}.iso" \
         "https://factory.talos.dev/image/${id}/{{ talos_version }}/metal-amd64.iso"
     just log info "Downloaded ISO" "schematic" "${id:0:8}" "version" "{{ talos_version }}"
 
