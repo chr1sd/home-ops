@@ -653,7 +653,6 @@ checksum = "sha256:dd96df044a6e8538d5f423790f453bdd03d49e5b2bcc38214acc41a2f1297
 url = "https://github.com/zizmorcore/zizmor/releases/download/v1.29.0/zizmor-x86_64-unknown-linux-gnu.tar.gz"
 url_api = "https://api.github.com/repos/zizmorcore/zizmor/releases/assets/498263145"
 provenance = "github-attestations"
-provenance_verified = true
 
 [tools."github:woodruffw/zizmor"."platforms.linux-x64-musl"]
 checksum = "sha256:dd96df044a6e8538d5f423790f453bdd03d49e5b2bcc38214acc41a2f1297839"
@@ -690,7 +689,6 @@ url = "https://nodejs.org/dist/v24.19.0/node-v24.19.0-linux-arm64.tar.gz"
 [tools.node."platforms.linux-arm64-musl"]
 checksum = "sha256:16fe258006a6e86844fbe05b3b5e1e5623ca8d3da54e32d98d9e83234bf25b01"
 url = "https://nodejs.org/dist/v24.19.0/node-v24.19.0.tar.gz"
-install = "source"
 
 [tools.node."platforms.linux-x64"]
 checksum = "sha256:f625d97cd707df4ff96254916fbc5ff014f09c09effe5a1e0ca8f6d41a8789d4"
@@ -699,7 +697,6 @@ url = "https://nodejs.org/dist/v24.19.0/node-v24.19.0-linux-x64.tar.gz"
 [tools.node."platforms.linux-x64-musl"]
 checksum = "sha256:16fe258006a6e86844fbe05b3b5e1e5623ca8d3da54e32d98d9e83234bf25b01"
 url = "https://nodejs.org/dist/v24.19.0/node-v24.19.0.tar.gz"
-install = "source"
 
 [tools.node."platforms.macos-arm64"]
 checksum = "sha256:8294b7aa9b03997481c06babf1e8b270c859358f27da57a11509afe537ac381d"
