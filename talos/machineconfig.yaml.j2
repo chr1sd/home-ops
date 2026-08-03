@@ -35,16 +35,16 @@ machine:
     interfaces:
       - interface: bond0
         dhcp: false
-        mtu: 1500
+        mtu: 9000
         bond:
           mode: active-backup
           deviceSelectors:
-            - driver: igc
-              hardwareAddr: 02:26:26:*
+            - driver: i40e
+              hardwareAddr: REPLACE_ME_BOND_MAC_PREFIX*
         vlans:
           - vlanId: 87
             dhcp: false
-            mtu: 1500
+            mtu: 9000
   files:
     - op: create
       path: /etc/cri/conf.d/20-customization.part
@@ -127,14 +127,3 @@ cluster:
       kubernetes:
         disabled: true
       service: {}
----
-# eno1 e1000e offload fix (applies to all nodes)
-apiVersion: v1alpha1
-kind: EthernetConfig
-name: eno1
-rings:
-  rx: 4096
-  tx: 4096
-features:
-  tx-tcp-segmentation: false
-  tx-generic-segmentation: false
