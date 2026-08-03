@@ -33,6 +33,9 @@ talosconfig:
         --output "{{ justfile_directory() }}/talosconfig" --force
     talosctl --talosconfig "{{ justfile_directory() }}/talosconfig" \
         config endpoint 10.13.17.22 10.13.17.23 10.13.17.24
+    # Default nodes (all six) so `talosctl` without -n and the reset recipe work
+    talosctl --talosconfig "{{ justfile_directory() }}/talosconfig" \
+        config node 10.13.17.22 10.13.17.23 10.13.17.24 10.13.17.19 10.13.17.20 10.13.17.21
     just log info "Wrote talosconfig" "path" "{{ justfile_directory() }}/talosconfig"
 
 [doc("Render a node's full machine config to stdout")]
