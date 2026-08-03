@@ -18,6 +18,16 @@ default:
 schematic-id:
     @curl -sX POST --data-binary @<(minijinja-cli "{{ source_directory() }}/schematic.yaml.j2") https://factory.talos.dev/schematics | jq -r '.id'
 
+[doc('Download the Talos ISO matching the current schematic')]
+download-image:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    id=$(just talos schematic-id)
+    curl -fL --remove-on-error --progress-bar \
+        -o "{{ justfile_directory() }}/talos-{{ talos_version }}-${id:0:8}.iso" \
+        "https://factory.talos.dev/image/${id}/{{ talos_version }}/metal-amd64.iso"
+    just log info "Downloaded ISO" "schematic" "${id:0:8}" "version" "{{ talos_version }}"
+
 [doc('Generate talosconfig at the repo root from the 1Password talos secrets')]
 talosconfig:
     #!/usr/bin/env bash

@@ -25,3 +25,6 @@ Thumbs.db
 /.superpowers/
 # Node
 apps/fifa-bracket/node_modules/
+
+# Talos ISOs downloaded by just talos download-image
+talos-*.iso
