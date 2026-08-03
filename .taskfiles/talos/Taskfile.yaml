@@ -9,27 +9,26 @@ version: "3"
 
 tasks:
   schematic-id:
-    internal: true
+    desc: Print the Image Factory schematic ID
     dir: "{{.TALOS_DIR}}"
+    silent: true
     cmd: curl -sX POST --data-binary @<(minijinja-cli schematic.yaml.j2) https://factory.talos.dev/schematics | jq -r '.id'
 
   render:
     desc: Render a node's full machine config to stdout [NODE=required]
     dir: "{{.TALOS_DIR}}"
-    vars:
-      ROLE:
-        sh: test -f "nodes/controlplane/{{.NODE}}.yaml.j2" && echo controlplane || echo worker
-      SCHEMATIC:
-        sh: task talos:schematic-id
+    silent: true
     cmd: |
+      role=$(test -f "nodes/controlplane/{{.NODE}}.yaml.j2" && echo controlplane || echo worker)
+      schematic=$(curl -sX POST --data-binary @<(minijinja-cli schematic.yaml.j2) https://factory.talos.dev/schematics | jq -r '.id')
       talosctl machineconfig patch \
-        <(minijinja-cli machineconfig.yaml.j2 -D schematic="{{.SCHEMATIC}}" | op inject) \
-        --patch @<(minijinja-cli {{.ROLE}}.yaml.j2 | op inject) \
-        --patch @<(minijinja-cli nodes/{{.ROLE}}/{{.NODE}}.yaml.j2 | op inject)
+        <(minijinja-cli machineconfig.yaml.j2 -D schematic="$schematic" | op inject) \
+        --patch @<(minijinja-cli "${role}.yaml.j2" | op inject) \
+        --patch @<(minijinja-cli "nodes/${role}/{{.NODE}}.yaml.j2" | op inject)
     requires:
       vars: [NODE]
     preconditions:
-      - msg: "op CLI not signed in (run: op signin)"
+      - msg: "op CLI not signed in (run: eval $(op signin))"
         sh: op whoami
       - which minijinja-cli op talosctl jq curl
 
