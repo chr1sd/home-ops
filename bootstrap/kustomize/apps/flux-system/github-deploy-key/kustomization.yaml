@@ -2,7 +2,5 @@
 # yaml-language-server: $schema=https://json.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: external-secrets
-# Namespaces are pre-created by bootstrap-apps.sh apply_namespaces()
 resources:
-  - ./onepassword-connect
+  - ./secret.yaml
