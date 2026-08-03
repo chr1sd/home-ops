@@ -27,7 +27,15 @@ cluster:
     key: op://k8s/talos/CLUSTER_SERVICEACCOUNT_KEY
   secretboxEncryptionSecret: op://k8s/talos/CLUSTER_SECRETBOXENCRYPTIONSECRET
   allowSchedulingOnControlPlanes: false
+  discovery:
+    enabled: true
+    registries:
+      kubernetes:
+        disabled: true
+      service: {}
   apiServer:
+    # renovate: datasource=docker depName=registry.k8s.io/kube-apiserver
+    image: registry.k8s.io/kube-apiserver:v1.36.3
     certSANs:
       - "127.0.0.1"
       - "10.13.17.17"
@@ -48,10 +56,18 @@ cluster:
             warn: privileged
             warn-version: latest
           exemptions:
-            namespaces: []
+            namespaces:
+              - kube-system
             runtimeClasses: []
             usernames: []
+    auditPolicy:
+      apiVersion: audit.k8s.io/v1
+      kind: Policy
+      rules:
+        - level: Metadata
   controllerManager:
+    # renovate: datasource=docker depName=registry.k8s.io/kube-controller-manager
+    image: registry.k8s.io/kube-controller-manager:v1.36.3
     extraArgs:
       bind-address: 0.0.0.0
   coreDNS:
@@ -66,7 +82,11 @@ cluster:
       - "10.13.17.0/24"
   proxy:
     disabled: true
+    # renovate: datasource=docker depName=registry.k8s.io/kube-proxy
+    image: registry.k8s.io/kube-proxy:v1.36.3
   scheduler:
+    # renovate: datasource=docker depName=registry.k8s.io/kube-scheduler
+    image: registry.k8s.io/kube-scheduler:v1.36.3
     extraArgs:
       bind-address: 0.0.0.0
 ---

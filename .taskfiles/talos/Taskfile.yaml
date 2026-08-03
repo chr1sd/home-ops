@@ -4,7 +4,7 @@ version: "3"
 
 # Talos machine configs are rendered from Jinja templates in talos/, with
 # secrets resolved from 1Password at render time:
-#   minijinja-cli <tmpl> | op inject  ->  talosctl machineconfig patch
+#   minijinja-cli -a none <tmpl> | op inject  ->  talosctl machineconfig patch
 # No talhelper, no SOPS. Requires: minijinja-cli, op (signed in), talosctl, yq, jq, curl.
 
 tasks:
@@ -12,7 +12,7 @@ tasks:
     desc: Print the Image Factory schematic ID
     dir: "{{.TALOS_DIR}}"
     silent: true
-    cmd: curl -sX POST --data-binary @<(minijinja-cli schematic.yaml.j2) https://factory.talos.dev/schematics | jq -r '.id'
+    cmd: curl -sX POST --data-binary @<(minijinja-cli -a none schematic.yaml.j2) https://factory.talos.dev/schematics | jq -r '.id'
 
   render:
     desc: Render a node's full machine config to stdout [NODE=required]
@@ -20,11 +20,11 @@ tasks:
     silent: true
     cmd: |
       role=$(test -f "nodes/controlplane/{{.NODE}}.yaml.j2" && echo controlplane || echo worker)
-      schematic=$(curl -sX POST --data-binary @<(minijinja-cli schematic.yaml.j2) https://factory.talos.dev/schematics | jq -r '.id')
+      schematic=$(curl -sX POST --data-binary @<(minijinja-cli -a none schematic.yaml.j2) https://factory.talos.dev/schematics | jq -r '.id')
       talosctl machineconfig patch \
-        <(minijinja-cli machineconfig.yaml.j2 -D schematic="$schematic" | op inject) \
-        --patch @<(minijinja-cli "${role}.yaml.j2" | op inject) \
-        --patch @<(minijinja-cli "nodes/${role}/{{.NODE}}.yaml.j2" | op inject)
+        <(minijinja-cli -a none machineconfig.yaml.j2 -D schematic="$schematic" | op inject) \
+        --patch @<(minijinja-cli -a none "${role}.yaml.j2" | op inject) \
+        --patch @<(minijinja-cli -a none "nodes/${role}/{{.NODE}}.yaml.j2" | op inject)
     requires:
       vars: [NODE]
     preconditions:
@@ -37,7 +37,7 @@ tasks:
     dir: "{{.TALOS_DIR}}"
     cmd: |
       role=$(test -f "nodes/controlplane/{{.NODE}}.yaml.j2" && echo controlplane || echo worker)
-      ip=$(minijinja-cli "nodes/${role}/{{.NODE}}.yaml.j2" | yq 'select(.kind == "LinkConfig") | .addresses[0].address' | cut -d/ -f1)
+      ip=$(minijinja-cli -a none "nodes/${role}/{{.NODE}}.yaml.j2" | yq 'select(.kind == "LinkConfig") | .addresses[0].address' | cut -d/ -f1)
       task talos:render NODE={{.NODE}} | talosctl -n "$ip" apply-config --dry-run --mode=auto -f /dev/stdin
     requires:
       vars: [NODE]
@@ -49,7 +49,7 @@ tasks:
       MODE: '{{.MODE | default "auto"}}'
     cmd: |
       role=$(test -f "nodes/controlplane/{{.NODE}}.yaml.j2" && echo controlplane || echo worker)
-      ip=$(minijinja-cli "nodes/${role}/{{.NODE}}.yaml.j2" | yq 'select(.kind == "LinkConfig") | .addresses[0].address' | cut -d/ -f1)
+      ip=$(minijinja-cli -a none "nodes/${role}/{{.NODE}}.yaml.j2" | yq 'select(.kind == "LinkConfig") | .addresses[0].address' | cut -d/ -f1)
       task talos:render NODE={{.NODE}} | talosctl -n "$ip" apply-config --mode={{.MODE}} -f /dev/stdin
     requires:
       vars: [NODE]
@@ -67,7 +67,7 @@ tasks:
       TALOS_VERSION: v1.13.7
     cmd: |
       role=$(test -f "nodes/controlplane/{{.NODE}}.yaml.j2" && echo controlplane || echo worker)
-      ip=$(minijinja-cli "nodes/${role}/{{.NODE}}.yaml.j2" | yq 'select(.kind == "LinkConfig") | .addresses[0].address' | cut -d/ -f1)
+      ip=$(minijinja-cli -a none "nodes/${role}/{{.NODE}}.yaml.j2" | yq 'select(.kind == "LinkConfig") | .addresses[0].address' | cut -d/ -f1)
       talosctl -n "$ip" upgrade \
         --image="factory.talos.dev/metal-installer/{{.SCHEMATIC}}:{{.TALOS_VERSION}}" \
         --timeout=10m

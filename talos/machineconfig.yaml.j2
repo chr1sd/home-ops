@@ -3,6 +3,7 @@
 # Secrets are 1Password references resolved by `op inject` at render time.
 # {{ schematic }} is passed via `minijinja-cli -D schematic=<id>`.
 version: v1alpha1
+debug: false
 persist: true
 machine:
   token: op://k8s/talos/MACHINE_TOKEN
