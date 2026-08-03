@@ -160,8 +160,8 @@ You'll build some really cool stuff along the way. And your brain waves will exp
 
 <a href="https://www.star-history.com/?repos=chr1sd%2Fhome-ops&type=date&legend=top-left">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=chr1sd/home-ops&type=date&theme=dark&legend=top-left&sealed_token=5USYTxHyBzoA96pRPe8DWLgYmhZ58Xg5FYuPBfzNOTW_qoRBU4VIxfW5ulGsU85mk-0REqEI3NSWcEFqK74IJoa8VzoJt3PUr_8ZCSU59ESxvooXfnWpol5S9UH68L5QO0SQwznN56-QTY0gf3DcQtfmH9XKmNF3K5qkq6ByqYM4UxbPv7n2Ygd-fGRr" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=chr1sd/home-ops&type=date&legend=top-left&sealed_token=5USYTxHyBzoA96pRPe8DWLgYmhZ58Xg5FYuPBfzNOTW_qoRBU4VIxfW5ulGsU85mk-0REqEI3NSWcEFqK74IJoa8VzoJt3PUr_8ZCSU59ESxvooXfnWpol5S9UH68L5QO0SQwznN56-QTY0gf3DcQtfmH9XKmNF3K5qkq6ByqYM4UxbPv7n2Ygd-fGRr" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=chr1sd/home-ops&type=date&legend=top-left&sealed_token=5USYTxHyBzoA96pRPe8DWLgYmhZ58Xg5FYuPBfzNOTW_qoRBU4VIxfW5ulGsU85mk-0REqEI3NSWcEFqK74IJoa8VzoJt3PUr_8ZCSU59ESxvooXfnWpol5S9UH68L5QO0SQwznN56-QTY0gf3DcQtfmH9XKmNF3K5qkq6ByqYM4UxbPv7n2Ygd-fGRr" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=chr1sd/home-ops&type=date&theme=dark&legend=top-left&sealed_token=rt4b4YsMszpCGWPEEx0TgN1icgjWcY8w8xDTKxruvR7MF7yOd4LC9S6Cy0wVsz4bMUvYZlM_x1L8c2-A76b-oxL9HbNrOgF-zDvNUllZrCvGBvnUGMa4kg" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=chr1sd/home-ops&type=date&legend=top-left&sealed_token=rt4b4YsMszpCGWPEEx0TgN1icgjWcY8w8xDTKxruvR7MF7yOd4LC9S6Cy0wVsz4bMUvYZlM_x1L8c2-A76b-oxL9HbNrOgF-zDvNUllZrCvGBvnUGMa4kg" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=chr1sd/home-ops&type=date&legend=top-left&sealed_token=rt4b4YsMszpCGWPEEx0TgN1icgjWcY8w8xDTKxruvR7MF7yOd4LC9S6Cy0wVsz4bMUvYZlM_x1L8c2-A76b-oxL9HbNrOgF-zDvNUllZrCvGBvnUGMa4kg" />
  </picture>
 </a>
