@@ -1,0 +1,91 @@
+---
+# Control-plane-only patch. NOTE: machine.ca / cluster.ca / aggregatorCA / etcd.ca
+# each merge as a UNIT — crt must be repeated alongside key or the crt gets blanked.
+machine:
+  type: controlplane
+  ca:
+    crt: op://k8s/talos/MACHINE_CA_CRT
+    key: op://k8s/talos/MACHINE_CA_KEY
+  features:
+    kubernetesTalosAPIAccess:
+      enabled: true
+      allowedRoles:
+        - os:admin
+      allowedKubernetesNamespaces:
+        - actions-runner-system
+        - system-upgrade
+  nodeLabels:
+    node.kubernetes.io/exclude-from-external-load-balancers: ""
+cluster:
+  ca:
+    crt: op://k8s/talos/CLUSTER_CA_CRT
+    key: op://k8s/talos/CLUSTER_CA_KEY
+  aggregatorCA:
+    crt: op://k8s/talos/CLUSTER_AGGREGATORCA_CRT
+    key: op://k8s/talos/CLUSTER_AGGREGATORCA_KEY
+  serviceAccount:
+    key: op://k8s/talos/CLUSTER_SERVICEACCOUNT_KEY
+  secretboxEncryptionSecret: op://k8s/talos/CLUSTER_SECRETBOXENCRYPTIONSECRET
+  allowSchedulingOnControlPlanes: false
+  apiServer:
+    # renovate: datasource=docker depName=registry.k8s.io/kube-apiserver
+    image: registry.k8s.io/kube-apiserver:v1.36.3
+    certSANs:
+      - "127.0.0.1"
+      - "10.13.17.17"
+    extraArgs:
+      enable-aggregator-routing: "true"
+      feature-gates: MutatingAdmissionPolicy=true
+      runtime-config: admissionregistration.k8s.io/v1beta1=true
+    admissionControl:
+      - name: PodSecurity
+        configuration:
+          apiVersion: pod-security.admission.config.k8s.io/v1alpha1
+          kind: PodSecurityConfiguration
+          defaults:
+            enforce: privileged
+            enforce-version: latest
+            audit: privileged
+            audit-version: latest
+            warn: privileged
+            warn-version: latest
+          exemptions:
+            namespaces:
+              - kube-system
+            runtimeClasses: []
+            usernames: []
+    auditPolicy:
+      apiVersion: audit.k8s.io/v1
+      kind: Policy
+      rules:
+        - level: Metadata
+  controllerManager:
+    # renovate: datasource=docker depName=registry.k8s.io/kube-controller-manager
+    image: registry.k8s.io/kube-controller-manager:v1.36.3
+    extraArgs:
+      bind-address: 0.0.0.0
+  coreDNS:
+    disabled: true
+  etcd:
+    ca:
+      crt: op://k8s/talos/CLUSTER_ETCD_CA_CRT
+      key: op://k8s/talos/CLUSTER_ETCD_CA_KEY
+    extraArgs:
+      listen-metrics-urls: http://0.0.0.0:2381
+    advertisedSubnets:
+      - "10.13.17.0/24"
+  proxy:
+    disabled: true
+    # renovate: datasource=docker depName=registry.k8s.io/kube-proxy
+    image: registry.k8s.io/kube-proxy:v1.36.3
+  scheduler:
+    # renovate: datasource=docker depName=registry.k8s.io/kube-scheduler
+    image: registry.k8s.io/kube-scheduler:v1.36.3
+    extraArgs:
+      bind-address: 0.0.0.0
+---
+# Layer 2 VIP for the control-plane endpoint (floats across control-plane nodes)
+apiVersion: v1alpha1
+kind: Layer2VIPConfig
+name: 10.13.17.17
+link: bond0

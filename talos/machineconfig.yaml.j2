@@ -1,0 +1,140 @@
+---
+# Base machine config applied to every node.
+# Secrets are 1Password references resolved by `op inject` at render time.
+# {{ schematic }} is passed via `minijinja-cli -D schematic=<id>`.
+version: v1alpha1
+debug: false
+persist: true
+machine:
+  token: op://k8s/talos/MACHINE_TOKEN
+  ca:
+    crt: op://k8s/talos/MACHINE_CA_CRT
+  certSANs:
+    - "127.0.0.1"
+    - "10.13.17.17"
+  install:
+    # renovate: datasource=docker depName=ghcr.io/siderolabs/installer
+    image: factory.talos.dev/metal-installer/{{ schematic }}:v1.13.7
+    wipe: false
+    grubUseUKICmdline: true
+  kubelet:
+    # renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
+    image: ghcr.io/siderolabs/kubelet:v1.36.3
+    defaultRuntimeSeccompProfileEnabled: true
+    disableManifestsDirectory: true
+    extraConfig:
+      serializeImagePulls: false
+    nodeIP:
+      validSubnets:
+        - "10.13.17.0/24"
+  network:
+    disableSearchDomain: true
+    nameservers:
+      - "10.13.17.1"
+      - "1.1.1.1"
+    interfaces:
+      - interface: bond0
+        dhcp: false
+        mtu: 1500
+        bond:
+          mode: active-backup
+          deviceSelectors:
+            - driver: igc
+              hardwareAddr: 02:26:26:*
+        vlans:
+          - vlanId: 87
+            dhcp: false
+            mtu: 1500
+  files:
+    - op: create
+      path: /etc/cri/conf.d/20-customization.part
+      content: |
+        [plugins."io.containerd.cri.v1.images"]
+          discard_unpacked_layers = false
+        [plugins."io.containerd.cri.v1.runtime"]
+          device_ownership_from_security_context = true
+    - op: overwrite
+      path: /etc/nfsmount.conf
+      permissions: 0o644
+      content: |
+        [ NFSMount_Global_Options ]
+        nfsvers=4.2
+        hard=True
+        nconnect=16
+        noatime=True
+        rsize=4194304
+        wsize=4194304
+  time:
+    disabled: false
+    servers:
+      - 162.159.200.1
+      - 162.159.200.123
+  sysctls:
+    fs.inotify.max_user_instances: "8192"
+    fs.inotify.max_user_watches: "1048576"
+    net.core.default_qdisc: "fq"
+    net.core.netdev_max_backlog: "50000"
+    net.core.rmem_max: "67108864"
+    net.core.somaxconn: "65535"
+    net.core.wmem_max: "67108864"
+    net.ipv4.ip_local_port_range: "1024 65535"
+    net.ipv4.neigh.default.gc_thresh1: "4096"
+    net.ipv4.neigh.default.gc_thresh2: "8192"
+    net.ipv4.neigh.default.gc_thresh3: "16384"
+    net.ipv4.ping_group_range: "0 2147483647"
+    net.ipv4.tcp_congestion_control: "bbr"
+    net.ipv4.tcp_fastopen: "3"
+    net.ipv4.tcp_fin_timeout: "15"
+    net.ipv4.tcp_max_syn_backlog: "65535"
+    net.ipv4.tcp_mtu_probing: "1"
+    net.ipv4.tcp_notsent_lowat: "131072"
+    net.ipv4.tcp_rmem: "4096 131072 67108864"
+    net.ipv4.tcp_slow_start_after_idle: "0"
+    net.ipv4.tcp_tw_reuse: "1"
+    net.ipv4.tcp_window_scaling: "1"
+    net.ipv4.tcp_wmem: "4096 16384 67108864"
+    sunrpc.tcp_max_slot_table_entries: "128"
+    sunrpc.tcp_slot_table_entries: "128"
+    user.max_user_namespaces: "11255"
+  features:
+    diskQuotaSupport: true
+    kubePrism:
+      enabled: true
+      port: 7445
+    hostDNS:
+      enabled: true
+      forwardKubeDNSToHost: true
+cluster:
+  id: op://k8s/talos/CLUSTER_ID
+  secret: op://k8s/talos/CLUSTER_SECRET
+  token: op://k8s/talos/CLUSTER_TOKEN
+  ca:
+    crt: op://k8s/talos/CLUSTER_CA_CRT
+  clusterName: kubernetes
+  controlPlane:
+    endpoint: https://10.13.17.17:6443
+  network:
+    cni:
+      name: none
+    dnsDomain: cluster.local
+    podSubnets:
+      - "10.244.0.0/16"
+    serviceSubnets:
+      - "10.96.0.0/12"
+  discovery:
+    enabled: true
+    registries:
+      kubernetes:
+        disabled: true
+      service: {}
+---
+# eno1 e1000e offload fix (applies to all nodes)
+apiVersion: v1alpha1
+kind: EthernetConfig
+name: eno1
+rings:
+  rx: 4096
+  tx: 4096
+features:
+  tx-tcp-segmentation: false
+  tx-generic-segmentation: false

@@ -2,64 +2,96 @@
 # yaml-language-server: $schema=https://taskfile.dev/schema.json
 version: "3"
 
+# Talos machine configs are rendered from Jinja templates in talos/, with
+# secrets resolved from 1Password at render time:
+#   minijinja-cli -a none <tmpl> | op inject  ->  talosctl machineconfig patch
+# No talhelper, no SOPS. Requires: minijinja-cli, op (signed in), talosctl, yq, jq, curl.
+
 tasks:
-  generate-config:
-    desc: Generate Talos configuration
+  schematic-id:
+    desc: Print the Image Factory schematic ID
     dir: "{{.TALOS_DIR}}"
-    cmd: talhelper genconfig
+    silent: true
+    cmd: curl -sX POST --data-binary @<(minijinja-cli -a none schematic.yaml.j2) https://factory.talos.dev/schematics | jq -r '.id'
+
+  render:
+    desc: Render a node's full machine config to stdout [NODE=required]
+    dir: "{{.TALOS_DIR}}"
+    silent: true
+    cmd: |
+      role=$(test -f "nodes/controlplane/{{.NODE}}.yaml.j2" && echo controlplane || echo worker)
+      schematic=$(curl -sX POST --data-binary @<(minijinja-cli -a none schematic.yaml.j2) https://factory.talos.dev/schematics | jq -r '.id')
+      talosctl machineconfig patch \
+        <(minijinja-cli -a none machineconfig.yaml.j2 -D schematic="$schematic" | op inject) \
+        --patch @<(minijinja-cli -a none "${role}.yaml.j2" | op inject) \
+        --patch @<(minijinja-cli -a none "nodes/${role}/{{.NODE}}.yaml.j2" | op inject)
+    requires:
+      vars: [NODE]
     preconditions:
-      - test -f {{.TALOS_DIR}}/talconfig.yaml
-      - test -f {{.ROOT_DIR}}/.sops.yaml
-      - test -f {{.SOPS_AGE_KEY_FILE}}
-      - which talhelper
+      - msg: "op CLI not signed in (run: eval $(op signin))"
+        sh: op whoami
+      - which minijinja-cli op talosctl jq curl
+
+  diff:
+    desc: Dry-run a node's rendered config against what's applied [NODE=required]
+    dir: "{{.TALOS_DIR}}"
+    cmd: |
+      role=$(test -f "nodes/controlplane/{{.NODE}}.yaml.j2" && echo controlplane || echo worker)
+      ip=$(minijinja-cli -a none "nodes/${role}/{{.NODE}}.yaml.j2" | yq 'select(.kind == "LinkConfig") | .addresses[0].address' | cut -d/ -f1)
+      task talos:render NODE={{.NODE}} | talosctl -n "$ip" apply-config --dry-run --mode=auto -f /dev/stdin
+    requires:
+      vars: [NODE]
 
   apply-node:
-    desc: Apply Talos config to a node [IP=required]
+    desc: Apply a node's rendered config [NODE=required] [MODE=auto] [INSECURE=false]
     dir: "{{.TALOS_DIR}}"
-    cmd: talhelper gencommand apply --node {{.IP}} --extra-flags '--mode={{.MODE}}' | bash
     vars:
       MODE: '{{.MODE | default "auto"}}'
+      INSECURE: '{{.INSECURE | default "false"}}'
+    cmd: |
+      role=$(test -f "nodes/controlplane/{{.NODE}}.yaml.j2" && echo controlplane || echo worker)
+      ip=$(minijinja-cli -a none "nodes/${role}/{{.NODE}}.yaml.j2" | yq 'select(.kind == "LinkConfig") | .addresses[0].address' | cut -d/ -f1)
+      task talos:render NODE={{.NODE}} | talosctl -n "$ip" apply-config --mode={{.MODE}} {{if eq .INSECURE "true"}}--insecure{{end}} -f /dev/stdin
     requires:
-      vars: [IP]
+      vars: [NODE]
     preconditions:
-      - talosctl --nodes {{.IP}} get machineconfig
-      - talosctl config info
-      - test -f {{.TALOSCONFIG}}
-      - which talhelper talosctl yq
+      - msg: "op CLI not signed in (run: eval $(op signin))"
+        sh: op whoami
 
   upgrade-node:
-    desc: Upgrade Talos on a single node [IP=required]
+    desc: Upgrade Talos on a single node [NODE=required]
     dir: "{{.TALOS_DIR}}"
-    cmd: talhelper gencommand upgrade --node {{.IP}} --extra-flags "--image='{{.TALOS_IMAGE}}:{{.TALOS_VERSION}}' --timeout=10m" | bash
     vars:
-      TALOS_IMAGE:
-        sh: yq '.nodes[] | select(.ipAddress == "{{.IP}}") | .talosImageURL' {{.TALOS_DIR}}/talconfig.yaml
-      TALOS_VERSION:
-        sh: yq '.talosVersion' {{.TALOS_DIR}}/talenv.yaml
+      SCHEMATIC:
+        sh: task talos:schematic-id
+      # renovate: datasource=docker depName=ghcr.io/siderolabs/installer
+      TALOS_VERSION: v1.13.7
+    cmd: |
+      role=$(test -f "nodes/controlplane/{{.NODE}}.yaml.j2" && echo controlplane || echo worker)
+      ip=$(minijinja-cli -a none "nodes/${role}/{{.NODE}}.yaml.j2" | yq 'select(.kind == "LinkConfig") | .addresses[0].address' | cut -d/ -f1)
+      talosctl -n "$ip" upgrade \
+        --image="factory.talos.dev/metal-installer/{{.SCHEMATIC}}:{{.TALOS_VERSION}}" \
+        --timeout=10m
     requires:
-      vars: [IP]
-    preconditions:
-      - talosctl --nodes {{.IP}} get machineconfig
-      - talosctl config info
-      - test -f {{.TALOSCONFIG}}
-      - which kubectl talhelper talosctl yq
+      vars: [NODE]
 
   upgrade-k8s:
-    desc: Upgrade Kubernetes
+    desc: Upgrade Kubernetes across the cluster
     dir: "{{.TALOS_DIR}}"
-    cmd: talhelper gencommand upgrade-k8s --extra-flags "--to '{{.KUBERNETES_VERSION}}'" | bash
     vars:
-      KUBERNETES_VERSION:
-        sh: yq '.kubernetesVersion' {{.TALOS_DIR}}/talenv.yaml
+      CONTROLLER:
+        sh: talosctl config info -o yaml | yq -r '.endpoints[0]'
+      # renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
+      KUBERNETES_VERSION: v1.36.3
+    cmd: talosctl -n {{.CONTROLLER}} upgrade-k8s --to {{.KUBERNETES_VERSION}}
     preconditions:
       - talosctl config info
-      - test -f {{.TALOSCONFIG}}
-      - which talhelper talosctl yq
 
   reset:
-    desc: Resets nodes back to maintenance mode
+    desc: Reset nodes back to maintenance mode (DESTRUCTIVE)
     dir: "{{.TALOS_DIR}}"
     prompt: This will destroy your cluster and reset the nodes back to maintenance mode... continue?
-    cmd: talhelper gencommand reset --extra-flags="--reboot {{- if eq .CLI_FORCE false }} --system-labels-to-wipe STATE --system-labels-to-wipe EPHEMERAL{{ end }} --graceful=false --wait=false" | bash
-    preconditions:
-      - which talhelper
+    vars:
+      NODES:
+        sh: talosctl config info -o yaml | yq -r '.nodes | join(" ")'
+    cmd: talosctl -n {{.NODES}} reset --reboot --graceful=false --wait=false
