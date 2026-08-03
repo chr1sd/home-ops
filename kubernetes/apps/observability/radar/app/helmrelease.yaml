@@ -27,7 +27,7 @@ spec:
   values:
     image:
       repository: ghcr.io/skyhook-io/radar
-      tag: 1.8.6@sha256:981ce41afe549a3acaffa7ffc791ae537e4ac9503c03723edda6ad0885cb9e23
+      tag: 1.9.0@sha256:8da480509f96e8724e7bd2524537826db3f14ae383f4ab9d51a845efc40810b8
     rbac:
       # Hubble relay isn't deployed yet (cilium hubble.enabled: false) - no traffic
       # map source to read. Flip to true once Hubble is enabled cluster-wide.
