@@ -40,16 +40,6 @@ spec:
     epoch:
       minDuration: 6h
   moverDefaults:
-    affinity:
-      nodeAffinity:
-        preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 100
-            preference:
-              matchExpressions:
-                - key: kubernetes.io/hostname
-                  operator: NotIn
-                  values:
-                    - duwerk-3
     podSecurityContext:
       fsGroup: 1000
       fsGroupChangePolicy: OnRootMismatch

@@ -12,12 +12,9 @@ spec:
     staticConfig:
       static:
         - lil-nas.dovis.me
-        - troll-1.dovis.me
-        - troll-2.dovis.me
-        - troll-3.dovis.me
-        - duwerk-1.dovis.me
-        - duwerk-2.dovis.me
-        - duwerk-3.dovis.me
+        - kvrnts-1.dovis.me
+        - kvrnts-2.dovis.me
+        - kvrnts-3.dovis.me
   metricRelabelings:
     - targetLabel: service
       replacement: blackbox-exporter-internal

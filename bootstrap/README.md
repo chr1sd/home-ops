@@ -11,7 +11,7 @@ If you are reading this to learn how the setup works (rather than to rebuild it)
 and skip the stages.
 
 > [!NOTE]
-> The commands and values here are for **this** cluster (nodes `troll-*`/`duwerk-*` on
+> The commands and values here are for **this** cluster (nodes `kvrnts-*` on
 > `10.13.17.0/24`, 1Password vault `k8s`, repo `chr1sd/home-ops`). Lines marked
 > ⭐ are the ones you would change to adapt this to your own hardware and accounts.
 
@@ -19,8 +19,8 @@ and skip the stages.
 
 ## What you're building
 
-Six machines running [Talos Linux](https://www.talos.dev) (an immutable, API-driven OS
-built only for Kubernetes) — three control-plane nodes and three workers. Talos has no
+Three machines running [Talos Linux](https://www.talos.dev) (an immutable, API-driven OS
+built only for Kubernetes) — each a combined control-plane and worker. Talos has no
 shell and no SSH; every machine is configured by pushing a declarative config to its API.
 
 Once the cluster is up, [Flux](https://fluxcd.io) takes over and reconciles everything
@@ -48,10 +48,9 @@ to be a Kubernetes expert, but you will get more out of this if the words "pod",
 
 **Hardware.** Any x86-64 machines with wired networking will do. This cluster runs:
 
-| Role          | Nodes                              | IPs                 | Install disk                                |
-| ------------- | ---------------------------------- | ------------------- | ------------------------------------------- |
-| Control plane | `troll-1`, `troll-2`, `troll-3`    | `10.13.17.22`–`.24` | NVMe (`/dev/disk/by-id/nvme-Acer_FA100_*`)  |
-| Worker        | `duwerk-1`, `duwerk-2`, `duwerk-3` | `10.13.17.19`–`.21` | SATA SSD (`/dev/disk/by-id/ata-Acer_SSD_*`) |
+| Role                   | Nodes                              | IPs                 | Disks                                        |
+| ---------------------- | ---------------------------------- | ------------------- | -------------------------------------------- |
+| Control plane + worker | `kvrnts-1`, `kvrnts-2`, `kvrnts-3` | `10.13.17.22`–`.24` | 2× NVMe per node (one OS/etcd, one Ceph OSD) |
 
 The control-plane endpoint is a shared virtual IP, `10.13.17.17`, that floats across the
 three control-plane nodes. The gateway is `10.13.17.1`.

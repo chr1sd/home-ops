@@ -62,8 +62,8 @@ compacting and pruning on a schedule. Because 20 apps snapshot hourly, the repos
 busy, so `parameters.epoch.minDuration: 6h` lets Kopia close epochs sooner than its 24h
 default and keep index compaction ahead of the churn.
 
-> ⭐ Your NFS server/path, the identity convention, the node the movers avoid
-> (`duwerk-3`), and the schedule timezone (`America/New_York`) all live in
+> ⭐ Your NFS server/path, the identity convention, and the schedule timezone
+> (`America/New_York`) all live in
 > [`clusterrepository.yaml`](kopiur/repository/clusterrepository.yaml).
 
 ---
