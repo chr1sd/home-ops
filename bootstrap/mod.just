@@ -22,7 +22,7 @@ nodes:
     #!/usr/bin/env bash
     set -euo pipefail
     just log info "Applying Talos node configs"
-    for f in {{ justfile_directory() }}/talos/nodes/controlplane/*.yaml.j2 {{ justfile_directory() }}/talos/nodes/worker/*.yaml.j2; do
+    for f in {{ justfile_directory() }}/talos/nodes/controlplane/*.yaml.j2; do
         node=$(basename "$f" .yaml.j2)
         just log info "Applying node config" "node" "$node"
         just --yes talos apply-node "$node" --insecure || true
