@@ -115,13 +115,13 @@ spec:
         nodes:
           - name: "kvrnts-1"
             devices:
-              - name: "REPLACE_ME_KVRNTS1_CEPH_DISK"
+              - name: "/dev/disk/by-id/nvme-CT1000P3SSD8_2318E6D1E1A3"
           - name: "kvrnts-2"
             devices:
-              - name: "REPLACE_ME_KVRNTS2_CEPH_DISK"
+              - name: "/dev/disk/by-id/nvme-CT1000P3SSD8_2318E6D1EDC2"
           - name: "kvrnts-3"
             devices:
-              - name: "REPLACE_ME_KVRNTS3_CEPH_DISK"
+              - name: "/dev/disk/by-id/nvme-CT1000P3SSD8_2318E6D1E249"
     cephBlockPools:
       - name: ceph-blockpool
         spec:
