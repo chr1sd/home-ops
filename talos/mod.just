@@ -43,16 +43,16 @@ talosconfig:
         --output "{{ justfile_directory() }}/talosconfig" --force
     talosctl --talosconfig "{{ justfile_directory() }}/talosconfig" \
         config endpoint 10.13.17.22 10.13.17.23 10.13.17.24
-    # Default nodes (all six) so `talosctl` without -n and the reset recipe work
+    # Default nodes (all three) so `talosctl` without -n and the reset recipe work
     talosctl --talosconfig "{{ justfile_directory() }}/talosconfig" \
-        config node 10.13.17.22 10.13.17.23 10.13.17.24 10.13.17.19 10.13.17.20 10.13.17.21
+        config node 10.13.17.22 10.13.17.23 10.13.17.24
     just log info "Wrote talosconfig" "path" "{{ justfile_directory() }}/talosconfig"
 
 [doc("Render a node's full machine config to stdout")]
 render node:
     #!/usr/bin/env bash
     set -euo pipefail
-    role=$(test -f "{{ source_directory() }}/nodes/controlplane/{{ node }}.yaml.j2" && echo controlplane || echo worker)
+    role=controlplane # every kvrnts node is a combined control-plane + worker
     schematic=$(just talos schematic-id)
     talosctl machineconfig patch \
         <(just template "{{ source_directory() }}/machineconfig.yaml.j2" -D schematic="$schematic") \
@@ -63,7 +63,7 @@ render node:
 diff node:
     #!/usr/bin/env bash
     set -euo pipefail
-    role=$(test -f "{{ source_directory() }}/nodes/controlplane/{{ node }}.yaml.j2" && echo controlplane || echo worker)
+    role=controlplane # every kvrnts node is a combined control-plane + worker
     ip=$(minijinja-cli "{{ source_directory() }}/nodes/${role}/{{ node }}.yaml.j2" | yq 'select(.kind == "LinkConfig") | .addresses[0].address' | cut -d/ -f1)
     just talos render "{{ node }}" | talosctl -n "$ip" apply-config --dry-run --mode=auto -f /dev/stdin
 
@@ -72,7 +72,7 @@ diff node:
 apply-node node *args:
     #!/usr/bin/env bash
     set -euo pipefail
-    role=$(test -f "{{ source_directory() }}/nodes/controlplane/{{ node }}.yaml.j2" && echo controlplane || echo worker)
+    role=controlplane # every kvrnts node is a combined control-plane + worker
     ip=$(minijinja-cli "{{ source_directory() }}/nodes/${role}/{{ node }}.yaml.j2" | yq 'select(.kind == "LinkConfig") | .addresses[0].address' | cut -d/ -f1)
     just talos render "{{ node }}" | talosctl -n "$ip" apply-config -f /dev/stdin {{ args }}
 
@@ -81,7 +81,7 @@ apply-node node *args:
 upgrade-node node:
     #!/usr/bin/env bash
     set -euo pipefail
-    role=$(test -f "{{ source_directory() }}/nodes/controlplane/{{ node }}.yaml.j2" && echo controlplane || echo worker)
+    role=controlplane # every kvrnts node is a combined control-plane + worker
     ip=$(minijinja-cli "{{ source_directory() }}/nodes/${role}/{{ node }}.yaml.j2" | yq 'select(.kind == "LinkConfig") | .addresses[0].address' | cut -d/ -f1)
     schematic=$(just talos schematic-id)
     talosctl -n "$ip" upgrade --image="factory.talos.dev/metal-installer/${schematic}:{{ talos_version }}" --timeout=10m

@@ -2,17 +2,17 @@
 apiVersion: v1alpha1
 kind: HostnameConfig
 auto: "off"
-hostname: duwerk-2
+hostname: kvrnts-2
 ---
 apiVersion: v1alpha1
 kind: LinkConfig
 name: bond0
-mtu: 1500
+mtu: 9000
 addresses:
-  - address: 10.13.17.20/24
+  - address: 10.13.17.23/24
 routes:
   - gateway: 10.13.17.1
 ---
 machine:
   install:
-    disk: /dev/disk/by-id/ata-Acer_SSD_RE100_2.5_512G_ASBB34310200151
+    disk: REPLACE_ME_KVRNTS2_OS_DISK

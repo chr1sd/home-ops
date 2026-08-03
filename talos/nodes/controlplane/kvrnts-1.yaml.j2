@@ -2,12 +2,12 @@
 apiVersion: v1alpha1
 kind: HostnameConfig
 auto: "off"
-hostname: troll-1
+hostname: kvrnts-1
 ---
 apiVersion: v1alpha1
 kind: LinkConfig
 name: bond0
-mtu: 1500
+mtu: 9000
 addresses:
   - address: 10.13.17.22/24
 routes:
@@ -15,4 +15,4 @@ routes:
 ---
 machine:
   install:
-    disk: /dev/disk/by-id/nvme-Acer_FA100_256GB_ASBD24310200195
+    disk: REPLACE_ME_KVRNTS1_OS_DISK
