@@ -95,13 +95,15 @@ waiting to be told what to be.
     > ⭐ If your hardware differs (AMD, no iGPU, different storage drivers), edit
     > `talos/schematic.yaml.j2` first — the ID changes with its contents.
 
-2. **Download the installer ISO** from the [Talos Image Factory](https://factory.talos.dev),
-   substituting your schematic ID and the Talos version from
-   [`talos/mod.just`](mod.just) (`talos_version`, currently `v1.13.7`):
+2. **Download the installer ISO** from the [Talos Image Factory](https://factory.talos.dev).
+   The `download-image` recipe resolves the current schematic ID and `talos_version`
+   from [`talos/mod.just`](mod.just) automatically:
 
     ```sh
-    curl -fLO "https://factory.talos.dev/image/$(just talos schematic-id)/v1.13.7/metal-amd64.iso"
+    just talos download-image
     ```
+
+    It writes `talos/talos-<version>-<schematic>.iso` (gitignored).
 
 3. **Flash the ISO** to a USB stick (e.g. with [balenaEtcher](https://etcher.balena.io))
    and boot each machine from it. The machine boots Talos into maintenance mode.
