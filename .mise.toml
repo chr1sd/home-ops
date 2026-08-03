@@ -1,6 +1,8 @@
 [env]
 _.python.venv = { path = "{{config_root}}/.venv", create = true }
+JUST_UNSTABLE = "1"
 KUBECONFIG = "{{config_root}}/kubeconfig"
+MINIJINJA_CONFIG_FILE = "{{config_root}}/.minijinja.toml"
 TALOSCONFIG = "{{config_root}}/talos/clusterconfig/talosconfig"
 
 [tools]
@@ -12,7 +14,8 @@ TALOSCONFIG = "{{config_root}}/talos/clusterconfig/talosconfig"
 "aqua:cue-lang/cue" = "0.17.1"
 "aqua:fluxcd/flux2" = "2.9.3"
 "vfox:mise-plugins/vfox-1password" = "2.34.0"
-"aqua:go-task/task" = "3.52.0"
+"aqua:casey/just" = "1.57.0"
+"aqua:charmbracelet/gum" = "0.17.0"
 "aqua:helm/helm" = "4.2.3"
 "aqua:helmfile/helmfile" = "1.7.2"
 "aqua:jqlang/jq" = "1.8.1"
