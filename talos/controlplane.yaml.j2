@@ -26,7 +26,7 @@ cluster:
   serviceAccount:
     key: op://k8s/talos/CLUSTER_SERVICEACCOUNT_KEY
   secretboxEncryptionSecret: op://k8s/talos/CLUSTER_SECRETBOXENCRYPTIONSECRET
-  allowSchedulingOnControlPlanes: false
+  allowSchedulingOnControlPlanes: true
   apiServer:
     # renovate: datasource=docker depName=registry.k8s.io/kube-apiserver
     image: registry.k8s.io/kube-apiserver:v1.36.3
