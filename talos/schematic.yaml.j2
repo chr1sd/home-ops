@@ -2,7 +2,9 @@ customization:
   extraKernelArgs:
     - -selinux
     - apparmor=0
-    - i915.enable_guc=3
+    - i915.enable_guc=3 # Iris Xe HW transcode (GuC/HuC firmware)
+    # MS01 (i9-12900H) Iris Xe uses i915, not xe. If the iGPU is not auto-claimed
+    # on boot, add: i915.force_probe=<device-id> (confirm id via lspci / /dev/dri).
     - init_on_alloc=0
     - init_on_free=0
     - intel_iommu=on
