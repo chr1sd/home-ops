@@ -1,0 +1,39 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/helmfile
+
+# Bootstraps cluster-wide Custom Resource Definitions (CRDs) by extracting them
+# from upstream Helm charts. These releases are never reconciled with helmfile
+# apply/sync — only their CRDs are rendered (--include-crds) and applied with
+# kubectl by the bootstrap `crds` stage.
+#
+# Installing CRDs out-of-band ensures they exist before Flux reconciles any
+# workload that references them, avoiding dependsOn chains on every Kustomization
+# that consumes a CRD-backed resource. Chart + version come from each app's
+# ocirepository.yaml, so this always matches steady state.
+
+helmDefaults:
+  args:
+    - --include-crds
+    - --no-hooks
+
+bases:
+  - default.yaml
+
+defaultInherit: default
+
+releases:
+  # DNSEndpoint (external-dns) — used by network/cloudflare-tunnel
+  - name: cloudflare-dns
+    namespace: network
+
+  # Gateway API + gateway.envoyproxy.io CRDs (EnvoyProxy, ClientTrafficPolicy, ...)
+  - name: envoy-gateway
+    namespace: network
+
+  # Grafana operator CRDs (GrafanaDashboard, GrafanaDatasource, Grafana)
+  - name: grafana
+    namespace: observability
+
+  # prometheus-operator CRDs (ServiceMonitor, PrometheusRule, Alertmanager, ...)
+  - name: kube-prometheus-stack
+    namespace: observability

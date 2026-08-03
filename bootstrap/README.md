@@ -234,11 +234,16 @@ The command runs these stages in order (defined in [`bootstrap/mod.just`](mod.ju
 6. **secrets** — Applies the three bootstrap secrets, rendering
    `bootstrap/kustomize/apps` through `op inject`. This is what lets 1Password Connect
    and Flux start.
-7. **crds** — Applies the CRDs from
-   [`bootstrap/helmfile.d/00-crds.yaml`](helmfile.d/00-crds.yaml) out-of-band, so Helm
-   releases that reference them don't fail.
+7. **crds** — Extracts and applies CRDs out-of-band from
+   [`bootstrap/helmfile/crds.yaml`](helmfile/crds.yaml) (envoy-gateway, grafana-operator,
+   kube-prometheus-stack, external-dns), so any resource that references them — Gateway
+   API objects, `GrafanaDashboard`s, `ServiceMonitor`s — applies cleanly instead of
+   failing until its controller catches up.
 8. **apps** — `helmfile sync` of the minimal chain Flux needs before it can take over:
-   `cilium → coredns → spegel → cert-manager → flux-operator → flux-instance`.
+   `cilium → coredns → spegel → cert-manager → external-secrets → onepassword-connect →
+flux-operator → flux-instance`. Chart, version, and values for each come straight from
+   that app's manifests under `kubernetes/apps/`, so bootstrap installs exactly what Flux
+   will reconcile.
 
 Once `flux-instance` is healthy, Flux connects to Git and reconciles everything under
 `kubernetes/`. From here the cluster manages itself.
