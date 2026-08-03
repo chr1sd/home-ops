@@ -113,15 +113,15 @@ spec:
         config:
           osdsPerDevice: "1"
         nodes:
-          - name: "duwerk-1"
+          - name: "kvrnts-1"
             devices:
-              - name: "/dev/disk/by-id/nvme-Acer_SSD_FA100_1TB_ASBD42440400189"
-          - name: "duwerk-2"
+              - name: "REPLACE_ME_KVRNTS1_CEPH_DISK"
+          - name: "kvrnts-2"
             devices:
-              - name: "/dev/disk/by-id/nvme-Acer_SSD_FA100_1TB_ASBD42440400204"
-          - name: "duwerk-3"
+              - name: "REPLACE_ME_KVRNTS2_CEPH_DISK"
+          - name: "kvrnts-3"
             devices:
-              - name: "/dev/disk/by-id/nvme-Acer_SSD_FA100_1TB_ASBD42440400293"
+              - name: "REPLACE_ME_KVRNTS3_CEPH_DISK"
     cephBlockPools:
       - name: ceph-blockpool
         spec:
