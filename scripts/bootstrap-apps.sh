@@ -23,7 +23,7 @@ function wait_for_nodes() {
     done
 }
 
-# Namespaces to be applied before the SOPS secrets are installed
+# Namespaces to be applied before the bootstrap secrets are installed
 function apply_namespaces() {
     log debug "Applying namespaces"
 
@@ -53,33 +53,20 @@ function apply_namespaces() {
     done
 }
 
-# SOPS secrets to be applied before the helmfile charts are installed
-function apply_sops_secrets() {
-    log debug "Applying secrets"
+# Root secrets applied before the helmfile charts are installed. These come from
+# 1Password (op inject) — the onepassword-connect credentials that External
+# Secrets needs before it can manage everything else. No SOPS.
+function apply_bootstrap_secrets() {
+    log debug "Applying bootstrap secrets"
 
-    local -r secrets=(
-        "${ROOT_DIR}/bootstrap/github-deploy-key.sops.yaml"
-    )
-
-    for secret in "${secrets[@]}"; do
-        if [ ! -f "${secret}" ]; then
-            log warn "File does not exist" "file=${secret}"
-            continue
-        fi
-
-        # Check if the secret resources are up-to-date
-        if sops exec-file "${secret}" "kubectl --namespace flux-system diff --filename {}" &>/dev/null; then
-            log info "Secret resource is up-to-date" "resource=$(basename "${secret}" ".sops.yaml")"
-            continue
-        fi
-
-        # Apply secret resources
-        if sops exec-file "${secret}" "kubectl --namespace flux-system apply --server-side --filename {}" &>/dev/null; then
-            log info "Secret resource applied successfully" "resource=$(basename "${secret}" ".sops.yaml")"
-        else
-            log error "Failed to apply secret resource" "resource=$(basename "${secret}" ".sops.yaml")"
-        fi
-    done
+    if kustomize build "${ROOT_DIR}/bootstrap/kustomize/apps" \
+        | op inject \
+        | kubectl apply --server-side --filename - &>/dev/null;
+    then
+        log info "Bootstrap secrets applied successfully"
+    else
+        log error "Failed to apply bootstrap secrets"
+    fi
 }
 
 # CRDs to be applied before the helmfile charts are installed
@@ -127,12 +114,12 @@ function sync_helm_releases() {
 
 function main() {
     check_env KUBECONFIG TALOSCONFIG
-    check_cli helmfile kubectl kustomize sops talhelper yq
+    check_cli helmfile kubectl kustomize op yq
 
     # Apply resources and Helm releases
     wait_for_nodes
     apply_namespaces
-    apply_sops_secrets
+    apply_bootstrap_secrets
     apply_crds
     sync_helm_releases
 

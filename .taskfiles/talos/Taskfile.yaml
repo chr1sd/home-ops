@@ -43,18 +43,19 @@ tasks:
       vars: [NODE]
 
   apply-node:
-    desc: Apply a node's rendered config [NODE=required] [MODE=auto]
+    desc: Apply a node's rendered config [NODE=required] [MODE=auto] [INSECURE=false]
     dir: "{{.TALOS_DIR}}"
     vars:
       MODE: '{{.MODE | default "auto"}}'
+      INSECURE: '{{.INSECURE | default "false"}}'
     cmd: |
       role=$(test -f "nodes/controlplane/{{.NODE}}.yaml.j2" && echo controlplane || echo worker)
       ip=$(minijinja-cli -a none "nodes/${role}/{{.NODE}}.yaml.j2" | yq 'select(.kind == "LinkConfig") | .addresses[0].address' | cut -d/ -f1)
-      task talos:render NODE={{.NODE}} | talosctl -n "$ip" apply-config --mode={{.MODE}} -f /dev/stdin
+      task talos:render NODE={{.NODE}} | talosctl -n "$ip" apply-config --mode={{.MODE}} {{if eq .INSECURE "true"}}--insecure{{end}} -f /dev/stdin
     requires:
       vars: [NODE]
     preconditions:
-      - msg: "op CLI not signed in (run: op signin)"
+      - msg: "op CLI not signed in (run: eval $(op signin))"
         sh: op whoami
 
   upgrade-node:
