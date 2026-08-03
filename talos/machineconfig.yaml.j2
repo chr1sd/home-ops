@@ -121,6 +121,12 @@ cluster:
       - "10.244.0.0/16"
     serviceSubnets:
       - "10.96.0.0/12"
+  discovery:
+    enabled: true
+    registries:
+      kubernetes:
+        disabled: true
+      service: {}
 ---
 # eno1 e1000e offload fix (applies to all nodes)
 apiVersion: v1alpha1
