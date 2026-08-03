@@ -4,8 +4,10 @@ kind: HostnameConfig
 auto: "off"
 hostname: kvrnts-1
 ---
+# Address-only patch that merges into the base BondConfig/bond0 (must be the
+# same kind+name as the base doc — a LinkConfig/bond0 would conflict).
 apiVersion: v1alpha1
-kind: LinkConfig
+kind: BondConfig
 name: bond0
 addresses:
   - address: 10.13.17.22/24
