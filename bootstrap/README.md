@@ -147,14 +147,17 @@ waiting to be told what to be.
     op whoami   # confirm you're signed in
     ```
 
-> [!IMPORTANT]
-> The bootstrap authenticates to Talos with a `talosconfig` (mise points `TALOSCONFIG` at
-> `talos/clusterconfig/talosconfig`). This file holds an admin client certificate signed
-> by the Talos machine CA (the same CA stored in 1Password as `MACHINE_CA_*`). It is
-> gitignored and must be present for the `etcd` and `kubeconfig` stages.
-> **STUB — regenerating `talosconfig` from 1Password on a brand-new workstation is not
-> yet automated.** If you still have your existing `talosconfig`, keep it; otherwise this
-> is the one manual gap to solve before a from-scratch rebuild on a fresh machine.
+4. **Generate your `talosconfig`** from 1Password (skip if you already have it at the
+   repo root):
+
+    ```sh
+    just talos talosconfig
+    ```
+
+    This mints an admin `talosconfig` — the credential `talosctl` uses to reach the
+    Talos API — from the cluster CA stored in the 1Password `talos` item. It's written to
+    the repo root and gitignored (mise points `TALOSCONFIG` there). The `etcd` and
+    `kubeconfig` bootstrap stages need it.
 
 ---
 

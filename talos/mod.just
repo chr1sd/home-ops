@@ -18,6 +18,23 @@ default:
 schematic-id:
     @curl -sX POST --data-binary @<(minijinja-cli "{{ source_directory() }}/schematic.yaml.j2") https://factory.talos.dev/schematics | jq -r '.id'
 
+[doc('Generate talosconfig at the repo root from the 1Password talos secrets')]
+talosconfig:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    tmp=$(mktemp -d)
+    trap 'rm -rf "$tmp"' EXIT
+    # Reconstruct the secrets bundle from 1Password, then mint a fresh admin
+    # talosconfig signed by the existing cluster CA (no cluster access needed).
+    just template "{{ source_directory() }}/talossecret.yaml.j2" > "$tmp/secrets.yaml"
+    talosctl gen config kubernetes https://10.13.17.17:6443 \
+        --with-secrets "$tmp/secrets.yaml" \
+        --output-types talosconfig \
+        --output "{{ justfile_directory() }}/talosconfig" --force
+    talosctl --talosconfig "{{ justfile_directory() }}/talosconfig" \
+        config endpoint 10.13.17.22 10.13.17.23 10.13.17.24
+    just log info "Wrote talosconfig" "path" "{{ justfile_directory() }}/talosconfig"
+
 [doc("Render a node's full machine config to stdout")]
 render node:
     #!/usr/bin/env bash

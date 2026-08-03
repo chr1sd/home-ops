@@ -3,7 +3,7 @@ _.python.venv = { path = "{{config_root}}/.venv", create = true }
 JUST_UNSTABLE = "1"
 KUBECONFIG = "{{config_root}}/kubeconfig"
 MINIJINJA_CONFIG_FILE = "{{config_root}}/.minijinja.toml"
-TALOSCONFIG = "{{config_root}}/talos/clusterconfig/talosconfig"
+TALOSCONFIG = "{{config_root}}/talosconfig"
 
 [tools]
 "python" = "3.14.6"
