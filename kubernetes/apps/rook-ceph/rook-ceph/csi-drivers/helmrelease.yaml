@@ -1,0 +1,52 @@
+---
+# yaml-language-server: $schema=https://homelab-schemas-epg.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: ceph-csi-drivers
+spec:
+  interval: 1h
+  timeout: 15m
+  # rook v1.20 no longer deploys CSI drivers; the ceph-csi-drivers chart creates
+  # the OperatorConfig + Driver CRs that the ceph-csi-operator (bundled by the
+  # rook-ceph operator chart) reconciles into the RBD/CephFS provisioners.
+  chart:
+    spec:
+      chart: ceph-csi-drivers
+      version: 1.0.1
+      sourceRef:
+        kind: HelmRepository
+        name: ceph-csi-operator
+        namespace: rook-ceph
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    # Rook-provided values: driver names MUST carry the `rook-ceph.` prefix to
+    # match the existing StorageClasses/provisioner (rook-ceph.rbd.csi.ceph.com).
+    operatorConfig:
+      namespace: rook-ceph
+      driverSpecDefaults:
+        imageSet:
+          name: rook-csi-operator-image-set-configmap
+        nodePlugin:
+          priorityClassName: system-node-critical
+        controllerPlugin:
+          priorityClassName: system-cluster-critical
+    drivers:
+      rbd:
+        enabled: true
+        name: rook-ceph.rbd.csi.ceph.com
+      cephfs:
+        enabled: true
+        name: rook-ceph.cephfs.csi.ceph.com
+      nfs:
+        enabled: false
+        name: rook-ceph.nfs.csi.ceph.com
+      nvmeof:
+        enabled: false
+        name: rook-ceph.nvmeof.csi.ceph.com
