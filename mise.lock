@@ -534,24 +534,38 @@ version = "1.13.8"
 backend = "aqua:siderolabs/talos"
 
 [tools."aqua:siderolabs/talos"."platforms.linux-arm64"]
+checksum = "sha256:255ed9ccd2cfa26c619c5d445c013e4b6bf9e7d5a5aecbd72145db01a531ec60"
+url = "https://github.com/siderolabs/talos/releases/download/v1.13.8/talosctl-linux-arm64"
 provenance = "cosign"
 
 [tools."aqua:siderolabs/talos"."platforms.linux-arm64-musl"]
+checksum = "sha256:255ed9ccd2cfa26c619c5d445c013e4b6bf9e7d5a5aecbd72145db01a531ec60"
+url = "https://github.com/siderolabs/talos/releases/download/v1.13.8/talosctl-linux-arm64"
 provenance = "cosign"
 
 [tools."aqua:siderolabs/talos"."platforms.linux-x64"]
+checksum = "sha256:406b56f9e4ff03b1557cc941b1f163aec8a6ebb36e28f0bbbe6d083589529261"
+url = "https://github.com/siderolabs/talos/releases/download/v1.13.8/talosctl-linux-amd64"
 provenance = "cosign"
 
 [tools."aqua:siderolabs/talos"."platforms.linux-x64-musl"]
+checksum = "sha256:406b56f9e4ff03b1557cc941b1f163aec8a6ebb36e28f0bbbe6d083589529261"
+url = "https://github.com/siderolabs/talos/releases/download/v1.13.8/talosctl-linux-amd64"
 provenance = "cosign"
 
 [tools."aqua:siderolabs/talos"."platforms.macos-arm64"]
+checksum = "sha256:ede53ce2c8508fe3a95b80a3039ad8a07940a8d6a611d6a49d0154edfca766b8"
+url = "https://github.com/siderolabs/talos/releases/download/v1.13.8/talosctl-darwin-arm64"
 provenance = "cosign"
 
 [tools."aqua:siderolabs/talos"."platforms.macos-x64"]
+checksum = "sha256:7f4819ac5b7e338ebb84eda0ad7e727627df3e9be36af4c9817ce3e095f97f65"
+url = "https://github.com/siderolabs/talos/releases/download/v1.13.8/talosctl-darwin-amd64"
 provenance = "cosign"
 
 [tools."aqua:siderolabs/talos"."platforms.windows-x64"]
+checksum = "sha256:73707b3f7a0882f99167dda5348777d61ca0b3529f07a333c53c371139fbbddb"
+url = "https://github.com/siderolabs/talos/releases/download/v1.13.8/talosctl-windows-amd64.exe"
 provenance = "cosign"
 
 [[tools."aqua:yannh/kubeconform"]]
