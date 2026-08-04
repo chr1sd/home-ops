@@ -8,6 +8,7 @@ components:
 resources:
   - ./echo/ks.yaml
   - ./stirling-pdf/ks.yaml
+  - ./qbittorrent/ks.yaml
   - ./qui/ks.yaml
   - ./radarr/ks.yaml
   - ./sonarr/ks.yaml
