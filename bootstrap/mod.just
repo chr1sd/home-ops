@@ -70,11 +70,20 @@ namespaces:
         kubectl create namespace "$ns" --dry-run=client -o yaml | kubectl apply --server-side -f -
     done
 
-# Apply the 1Password-connect + git deploy-key root secrets (op inject)
+# Apply bootstrap root secrets: 1Password-connect creds via op inject, plus the
+# Flux git deploy-key created imperatively (its multi-line SSH private key can't
+# be spliced into YAML by op inject — the key's newlines break the document).
 [private]
 secrets:
-    @just log info "Applying bootstrap secrets"
-    @kustomize build {{ justfile_directory() }}/bootstrap/kustomize/apps | just template - | kubectl apply --server-side -f -
+    #!/usr/bin/env bash
+    set -euo pipefail
+    just log info "Applying bootstrap secrets"
+    kustomize build "{{ justfile_directory() }}/bootstrap/kustomize/apps" | just template - | kubectl apply --server-side -f -
+    kubectl create secret generic github-deploy-key \
+        --namespace flux-system \
+        --from-literal=identity="$(op read op://k8s/github-deploy-key/identity)" \
+        --from-literal=known_hosts="$(op read op://k8s/github-deploy-key/known_hosts)" \
+        --dry-run=client -o yaml | kubectl apply --server-side -f -
 
 # Extract CRDs from the charts and apply them out-of-band, before any consumer
 [private]
