@@ -31,6 +31,10 @@ spec:
     operatorConfig:
       namespace: rook-ceph
       driverSpecDefaults:
+        # Enable the csi-snapshotter sidecar (VolumeSnapshot support). rook v1.20's
+        # csi-operator defaults this to "none"; pre-v1.20 shipped it on. kopiur (and
+        # any CSI snapshot user) needs it or VolumeSnapshots never become readyToUse.
+        snapshotPolicy: volumeSnapshot
         imageSet:
           name: rook-csi-operator-image-set-configmap
         nodePlugin:
