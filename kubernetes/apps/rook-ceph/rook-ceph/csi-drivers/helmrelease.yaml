@@ -31,10 +31,6 @@ spec:
     operatorConfig:
       namespace: rook-ceph
       driverSpecDefaults:
-        # Enable the csi-snapshotter sidecar (VolumeSnapshot support). rook v1.20's
-        # csi-operator defaults this to "none"; pre-v1.20 shipped it on. kopiur (and
-        # any CSI snapshot user) needs it or VolumeSnapshots never become readyToUse.
-        snapshotPolicy: volumeSnapshot
         imageSet:
           name: rook-csi-operator-image-set-configmap
         nodePlugin:
@@ -45,9 +41,15 @@ spec:
       rbd:
         enabled: true
         name: rook-ceph.rbd.csi.ceph.com
+        # Enable the csi-snapshotter sidecar. This is a PER-DRIVER value that
+        # overrides driverSpecDefaults; the rbd chart default is "none", so
+        # without this VolumeSnapshots on ceph-block never become readyToUse and
+        # kopiur backups time out staging. (cephfs already defaults to volumeSnapshot.)
+        snapshotPolicy: volumeSnapshot
       cephfs:
         enabled: true
         name: rook-ceph.cephfs.csi.ceph.com
+        snapshotPolicy: volumeSnapshot
       nfs:
         enabled: false
         name: rook-ceph.nfs.csi.ceph.com
