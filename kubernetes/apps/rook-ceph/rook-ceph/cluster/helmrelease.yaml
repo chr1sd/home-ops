@@ -176,12 +176,12 @@ spec:
                     matchLabels:
                       app.kubernetes.io/name: ceph-mds
                       app.kubernetes.io/part-of: *cephFileSystemName
-          resources:
-            requests:
-              cpu: 100m
-              memory: 1Gi
-            limits:
-              memory: 4Gi
+            resources:
+              requests:
+                cpu: 100m
+                memory: 1Gi
+              limits:
+                memory: 4Gi
         storageClass:
           enabled: true
           isDefault: false
