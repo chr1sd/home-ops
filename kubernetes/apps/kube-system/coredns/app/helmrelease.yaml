@@ -61,15 +61,17 @@ spec:
           - name: log
             configBlock: |-
               class error
+    # Spread replicas across nodes when possible; all kvrnts nodes are combined
+    # control-plane + worker, so no node-role exclusion (that stranded CoreDNS).
     affinity:
-      nodeAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-          nodeSelectorTerms:
-            - matchExpressions:
-                - key: node-role.kubernetes.io/control-plane
-                  operator: DoesNotExist
-                - key: node-role.kubernetes.io/master
-                  operator: DoesNotExist
+      podAntiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              topologyKey: kubernetes.io/hostname
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/name: coredns
     tolerations:
       - key: CriticalAddonsOnly
         operator: Exists
