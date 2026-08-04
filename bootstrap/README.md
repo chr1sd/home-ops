@@ -65,6 +65,22 @@ three control-plane nodes. The gateway is `10.13.17.1`.
 > with `talosctl get disks -n <ip> --insecure` once a node is in maintenance mode
 > (Stage 1).
 
+**Networking.** Two things must be true on the network before you start, or the cluster
+will fail in confusing ways:
+
+- **Jumbo frames (MTU 9000) must be enabled end-to-end** — on the switch (globally) and
+  on the NAS's bonded interface — because the node bonds run MTU 9000. If the switch
+  silently drops oversized frames, small packets work but large ones (TLS handshakes,
+  etcd peer sync) are black-holed: node 1 comes up fine, but nodes 2/3 fail to join etcd
+  with `EOF fetching cluster info` / `TLS handshake timeout`. Verify from a node once it's
+  up: `ping -M do -s 8972 <nas-ip>` must succeed.
+- **The nodes bond their two 10GbE ports with LACP (802.3ad).** UniFi (and many switches)
+  have **no LACP fallback**, so an Aggregate port carries no traffic to a host that isn't
+  yet speaking LACP — which a node in maintenance mode is not. Keep the switch ports as
+  **normal** ports during bootstrap and flip them to Aggregate _after_ the config is
+  applied (Stage 1). ⭐ If your switch has LACP fallback, or you use active-backup
+  bonding, you can skip that dance.
+
 **Tools.** Everything is pinned in [`.mise.toml`](../.mise.toml) and installed by
 [mise](https://mise.jdx.dev). You do not install tools by hand. The set includes
 `talosctl`, `just`, `minijinja-cli`, the 1Password CLI (`op`), `kubectl`, `helmfile`,
@@ -120,6 +136,22 @@ waiting to be told what to be.
 > Note each node's real install-disk ID (`talosctl get disks -n <ip> --insecure`) and
 > make sure it matches what's in `talos/nodes/<node>.yaml.j2`. Installing to the wrong
 > disk is the most common bare-metal mistake.
+
+> [!NOTE]
+> **LACP switch ports (if your switch has no fallback).** Keep each node's two 10GbE
+> ports as **normal** ports for now, and give the cluster VLAN a **dynamic DHCP range** —
+> in maintenance mode the bond isn't formed, so the node grabs an ordinary lease (its MAC
+> won't match any reservation; it just needs any IP with internet to pull the installer).
+> The static IP comes from the Talos config after install. You flip the ports to
+> **Aggregate/LACP** in Stage 4, right after applying each node's config.
+
+> [!CAUTION]
+> **The Ceph disks must be empty.** `ceph-volume` only consumes raw disks — a leftover
+> partition table (even a tiny "Microsoft reserved partition" from a used drive) makes
+> rook silently skip the disk and create **zero OSDs**. Check with
+> `talosctl get discoveredvolumes -n <ip> --insecure`; if the intended Ceph disk shows
+> any partitions, wipe it: `talosctl -n <ip> wipe disk <dev> --drop-partition`. (Talos
+> refuses to wipe the in-use OS disk, so this is safe.)
 
 ---
 
@@ -220,6 +252,17 @@ just bootstrap cluster
 > Do not interrupt it. If it does fail partway, every stage is safe to re-run — fix the
 > problem and run `just bootstrap cluster` again.
 
+> [!NOTE]
+> **LACP nodes:** as the **nodes** stage applies each node, that node reboots into its
+> config and its bond comes up _down_ (no LACP partner yet) — so it goes unreachable.
+> Flip that node's two switch ports to **Aggregate/LACP** now; the bond negotiates within
+> a second or two and the node returns on its static IP (`talosctl -n <ip> get links`
+> should show `bond0` up with a real partner MAC, not `00:00:00:00:00:00`). The **etcd**
+> stage then reaches the controller and proceeds. Bring the control-plane nodes up **one
+> at a time** and let each become an etcd voter before the next — etcd admits only one
+> learner at a time (`talosctl -n 10.13.17.22 etcd members` → `LEARNER=false`), so two
+> joining at once leaves one stuck and the other rejected.
+
 The command runs these stages in order (defined in [`bootstrap/mod.just`](mod.just)):
 
 1. **nodes** — Renders each node's Talos config from the `talos/` templates (with
@@ -276,6 +319,25 @@ kopiur doctor
 > `flux get kustomizations -A` is the single best "is the cluster done converging?"
 > check. If some show `Ready=False`, give it time, then inspect with
 > `flux get hr -A` and `kubectl describe` the failing resource.
+
+---
+
+## Gotchas
+
+Things that have bitten a rebuild and aren't obvious from the errors:
+
+- **App PVCs stuck `Pending` / no CSI provisioner.** rook v1.20 no longer ships the CSI
+  drivers itself — the separate `ceph-csi-drivers` chart (in
+  [`kubernetes/apps/rook-ceph/rook-ceph/csi-drivers`](../kubernetes/apps/rook-ceph/rook-ceph/csi-drivers))
+  creates the `Driver`/`OperatorConfig` CRs the bundled ceph-csi-operator turns into
+  provisioners. If PVCs hang, confirm `kubectl get csidriver` lists
+  `rook-ceph.rbd.csi.ceph.com` and the `*-ctrlplugin` pods are Running.
+- **kopiur snapshots fail `StagingTimedOut`.** The RBD driver's `snapshotPolicy` must be
+  `volumeSnapshot` (set in the `ceph-csi-drivers` HelmRelease) — rook v1.20 defaults it to
+  `none`, which omits the `csi-snapshotter` sidecar so VolumeSnapshots never become
+  `readyToUse`. Confirm the rbd `*-ctrlplugin` pod includes a `csi-snapshotter` container.
+  If a backlog of failed snapshots is throttling the provisioner, delete them so the
+  pipeline runs clean.
 
 ---
 
