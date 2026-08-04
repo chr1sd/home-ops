@@ -10,6 +10,12 @@ spec:
     name: envoy-gateway
   interval: 1h
   values:
+    # CRDs are managed separately: Gateway API CRDs by the gateway-api-crds
+    # HelmRelease (wiremind), the gateway.envoyproxy.io CRDs by the bootstrap
+    # crds stage. Letting this chart also apply Gateway API CRDs conflicts with
+    # the newer wiremind set (tcproutes storedVersion v1 cannot be removed).
+    crds:
+      enabled: false
     global:
       imageRegistry: mirror.gcr.io
     config:
