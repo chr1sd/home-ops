@@ -9,8 +9,6 @@ spec:
     kind: OCIRepository
     name: qbittorrent
   interval: 1h
-  # Suspended until the config PVC is hydrated with the NAS data — remove after migration
-  suspend: true
   values:
     controllers:
       qbittorrent:
