@@ -730,38 +730,38 @@ version = "3.14.6"
 backend = "core:python"
 
 [tools.python."platforms.linux-arm64"]
-checksum = "sha256:44f86d58f3bbc1aa6c95ee90f03226e0fdbd22475a98c4410e5a20042b7f40d3"
-url = "https://github.com/astral-sh/python-build-standalone/releases/download/20260728/cpython-3.14.6+20260728-aarch64-unknown-linux-gnu-install_only_stripped.tar.gz"
+checksum = "sha256:8ad1ec529cd1708245e8661a463245fc1479c43cbfd66e58b095456ebf77180a"
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20260804/cpython-3.14.6+20260804-aarch64-unknown-linux-gnu-install_only_stripped.tar.gz"
 provenance = "github-attestations"
 
 [tools.python."platforms.linux-arm64-musl"]
-checksum = "sha256:a5795f2142de95396204f7a43ec7f830cf384ca479a67f6fae820407c432711e"
-url = "https://github.com/astral-sh/python-build-standalone/releases/download/20260728/cpython-3.14.6+20260728-aarch64-unknown-linux-musl-install_only_stripped.tar.gz"
+checksum = "sha256:85dbb537dc5d6679edabfb61cefdf2511d26cb8669662c4563202b0990e79b4a"
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20260804/cpython-3.14.6+20260804-aarch64-unknown-linux-musl-install_only_stripped.tar.gz"
 provenance = "github-attestations"
 
 [tools.python."platforms.linux-x64"]
-checksum = "sha256:d6254462d5fe066810a472d286861f6a18f66400008bfa9688e202a5672e88cb"
-url = "https://github.com/astral-sh/python-build-standalone/releases/download/20260728/cpython-3.14.6+20260728-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz"
+checksum = "sha256:ba960817e542642021135db330d875f410f4e14c64a62e2ae5faf3697ada08b2"
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20260804/cpython-3.14.6+20260804-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz"
 provenance = "github-attestations"
 
 [tools.python."platforms.linux-x64-musl"]
-checksum = "sha256:9d5d3101158b5cb692e8468967a344ae5187c90bd7f3608f71e2708accc3be68"
-url = "https://github.com/astral-sh/python-build-standalone/releases/download/20260728/cpython-3.14.6+20260728-x86_64-unknown-linux-musl-install_only_stripped.tar.gz"
+checksum = "sha256:cbedbddcc6b2de99310015e629df67aeb732f622bbf258ec5d310757f85ab7ac"
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20260804/cpython-3.14.6+20260804-x86_64-unknown-linux-musl-install_only_stripped.tar.gz"
 provenance = "github-attestations"
 
 [tools.python."platforms.macos-arm64"]
-checksum = "sha256:f4b47659e2da4b97f38cefdf5ad19f0042946099d843cde60de308708e5b1ac5"
-url = "https://github.com/astral-sh/python-build-standalone/releases/download/20260728/cpython-3.14.6+20260728-aarch64-apple-darwin-install_only_stripped.tar.gz"
+checksum = "sha256:e0d4e5066aef3248c22e08a07546bfd5edeaca904c91fadc296be720998ec2ec"
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20260804/cpython-3.14.6+20260804-aarch64-apple-darwin-install_only_stripped.tar.gz"
 provenance = "github-attestations"
 
 [tools.python."platforms.macos-x64"]
-checksum = "sha256:00a22363402a1a15d4fb1327c8259a91118258d5463d10a97d3e56c1f18195f6"
-url = "https://github.com/astral-sh/python-build-standalone/releases/download/20260728/cpython-3.14.6+20260728-x86_64-apple-darwin-install_only_stripped.tar.gz"
+checksum = "sha256:78ded4c4f0b6a931240f09bd20608533bb40dd71c1ff953c7267359075ca8b16"
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20260804/cpython-3.14.6+20260804-x86_64-apple-darwin-install_only_stripped.tar.gz"
 provenance = "github-attestations"
 
 [tools.python."platforms.windows-x64"]
-checksum = "sha256:19ab713e908d476afbf2b662f72cf6d85c5de6ed44a1b28815ecfbea37b20d54"
-url = "https://github.com/astral-sh/python-build-standalone/releases/download/20260728/cpython-3.14.6+20260728-x86_64-pc-windows-msvc-install_only_stripped.tar.gz"
+checksum = "sha256:ada613a2af32c04cf7c54726243c56d76f0e59f5f61d2f28371d3b9d8efad566"
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20260804/cpython-3.14.6+20260804-x86_64-pc-windows-msvc-install_only_stripped.tar.gz"
 provenance = "github-attestations"
 
 [[tools."vfox:mise-plugins/vfox-1password"]]
