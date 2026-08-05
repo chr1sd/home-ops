@@ -46,7 +46,7 @@ metrics:
     title: Memory
 
   - name: cluster_power_usage
-    query: avg(upsAdvOutputActivePower)
+    query: sum(unpoller_device_outlet_ac_power_consumption)
     suffix: w
     colors:
       - { color: green, min: 0, max: 500 }
