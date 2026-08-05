@@ -1,5 +1,4 @@
 [env]
-_.python.venv = { path = "{{config_root}}/.venv", create = true }
 JUST_UNSTABLE = "1"
 KUBECONFIG = "{{config_root}}/kubeconfig"
 MINIJINJA_CONFIG_FILE = "{{config_root}}/.minijinja.toml"
@@ -7,12 +6,8 @@ TALOSCONFIG = "{{config_root}}/talosconfig"
 FLATE_PATH = '{{config_root}}/kubernetes/flux/cluster'
 
 [tools]
-"python" = "3.14.6"
-"pipx:makejinja" = "2.8.2"
 "aqua:cilium/cilium-cli" = "0.19.7"
 "aqua:cli/cli" = "2.97.0"
-"aqua:cloudflare/cloudflared" = "2026.7.3"
-"aqua:cue-lang/cue" = "0.17.1"
 "aqua:fluxcd/flux2" = "2.9.3"
 "vfox:mise-plugins/vfox-1password" = "2.34.0"
 "aqua:casey/just" = "1.58.0"
@@ -24,10 +19,10 @@ FLATE_PATH = '{{config_root}}/kubernetes/flux/cluster'
 "aqua:kubernetes/kubectl" = "1.35.0"
 "aqua:mikefarah/yq" = "4.53.3"
 "aqua:siderolabs/talos" = "1.13.8"
-"aqua:yannh/kubeconform" = "0.8.0"
 "aqua:evilmartians/lefthook" = "2.1.10"
 "aqua:koalaman/shellcheck" = "0.11.0"
 "github:woodruffw/zizmor" = "v1.29.0"
 "node" = "24.19.0"
 "npm:oxfmt" = "0.62.0"
 "github:mitsuhiko/minijinja" = "2.22.0"
+"aqua:rhysd/actionlint" = "1.7.12"
