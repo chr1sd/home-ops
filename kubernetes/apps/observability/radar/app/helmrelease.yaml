@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: radar
-      version: 1.8.7
+      version: 1.9.0
       sourceRef:
         kind: HelmRepository
         name: skyhook
