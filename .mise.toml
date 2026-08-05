@@ -5,6 +5,9 @@ MINIJINJA_CONFIG_FILE = "{{config_root}}/.minijinja.toml"
 TALOSCONFIG = "{{config_root}}/talosconfig"
 FLATE_PATH = '{{config_root}}/kubernetes/flux/cluster'
 
+[hooks]
+postinstall = "lefthook install"
+
 [tools]
 "aqua:cilium/cilium-cli" = "0.19.7"
 "aqua:cli/cli" = "2.97.0"
