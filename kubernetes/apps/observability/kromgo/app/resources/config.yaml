@@ -45,15 +45,14 @@ metrics:
       - { color: red, min: 76, max: 9999 }
     title: Memory
 
-  # i don't have these metrics yet
-  # - name: cluster_power_usage
-  #   query: avg(upsAdvOutputActivePower)
-  #   suffix: w
-  #   colors:
-  #     - { color: green, min: 0, max: 500 }
-  #     - { color: orange, min: 501, max: 750 }
-  #     - { color: red, min: 751, max: 9999 }
-  #   title: Power
+  - name: cluster_power_usage
+    query: avg(upsAdvOutputActivePower)
+    suffix: w
+    colors:
+      - { color: green, min: 0, max: 500 }
+      - { color: orange, min: 501, max: 750 }
+      - { color: red, min: 751, max: 9999 }
+    title: Power
 
   - name: cluster_age_days
     query: round((time() - min(kube_node_created) ) / 86400)
