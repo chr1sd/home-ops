@@ -7,7 +7,7 @@ TALOSCONFIG = "{{config_root}}/talosconfig"
 FLATE_PATH = '{{config_root}}/kubernetes/flux/cluster'
 
 [tools]
-"python" = "3.14.6"
+"python" = "3.14.7"
 "pipx:makejinja" = "2.8.2"
 "aqua:cilium/cilium-cli" = "0.19.7"
 "aqua:cli/cli" = "2.97.0"
