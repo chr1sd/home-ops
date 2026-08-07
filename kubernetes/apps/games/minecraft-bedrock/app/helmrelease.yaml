@@ -39,6 +39,9 @@ spec:
       enabled: true
     extraEnv:
       TZ: America/New_York
+      # Migrated server.properties had this false, which stops BDS answering
+      # unconnected pings — mc-monitor probes never pass without it
+      ENABLE_LAN_VISIBILITY: "true"
     serviceAnnotations:
       lbipam.cilium.io/ips: "10.13.17.51"
       external-dns.alpha.kubernetes.io/hostname: "minecraft-bedrock.dovis.me"

@@ -21,8 +21,11 @@ spec:
       limits:
         cpu: 2000m
         memory: 8Gi
-    securityContext:
+    # fsGroup is pod-level only; the chart's `securityContext` value renders
+    # into the container spec, where fsGroup is rejected by the API server
+    podSecurityContext:
       runAsUser: 1000
+      runAsGroup: 1000
       fsGroup: 1000
     persistence:
       dataDir:
@@ -37,12 +40,14 @@ spec:
     extraEnv:
       TZ: America/New_York
       ENABLE_ROLLING_LOGS: true
-      MEMORY: ""
     serviceAnnotations:
       lbipam.cilium.io/ips: "10.13.17.50"
       external-dns.alpha.kubernetes.io/hostname: "minecraft.dovis.me"
     minecraftServer:
       eula: true
+      # Empty so the JVM sizes itself from jvmXXOpts MaxRAMPercentage instead
+      # of -Xmx; was previously a duplicate MEMORY entry via extraEnv
+      memory: ""
       difficulty: normal
       type: VANILLA
       mode: survival
