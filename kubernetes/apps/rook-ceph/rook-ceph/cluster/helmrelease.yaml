@@ -68,8 +68,10 @@ spec:
             enabled: true
           - name: pg_autoscaler
             enabled: true
+          # Leaks a watcher thread per orchestrator call, OOMKilling the active mgr.
+          # Re-enable once ceph/ceph#70071 ships (tracked in rook/rook#17786).
           - name: rook
-            enabled: true
+            enabled: false
       resources:
         mgr:
           requests:
