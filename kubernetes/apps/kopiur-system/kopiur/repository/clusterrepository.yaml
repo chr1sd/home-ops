@@ -34,6 +34,10 @@ spec:
     # The fork's KopiaMaintenance owned the maintenance lease for 211 days;
     # take it over rather than waiting for the stale lease to expire
     takeoverPolicy: Force
+    # A run wedged on dead NFSv4 state hangs forever (0 CPU, D-state unlinks);
+    # kill it after 6h so the next scheduled run gets a fresh mount
+    failurePolicy:
+      activeDeadlineSeconds: 21600
   # Busy repo (21 apps x hourly): let epochs close sooner than kopia's 24h
   # default so index-blob compaction keeps up (TooManyIndexBlobs warning)
   parameters:
