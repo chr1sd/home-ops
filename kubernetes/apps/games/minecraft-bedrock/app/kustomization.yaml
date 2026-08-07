@@ -6,9 +6,9 @@ resources:
   # MIGRATION PHASE 1: helper pod only — world data gets copied into the PVC
   # before the game ever starts. PHASE 2: uncomment these two, re-comment
   # helper-pod, commit again.
-  # - ./helmrelease.yaml
-  # - ./ocirepository.yaml
-  - ./helper-pod.yaml
+  - ./helmrelease.yaml
+  - ./ocirepository.yaml
+  # - ./helper-pod.yaml
   # World migration (same flow as minecraft-java). On the old server, stop the
   # container first (LevelDB corrupts if copied hot), then:
   #   tar czf mc-bedrock-migrate.tgz worlds server.properties allowlist.json permissions.json
