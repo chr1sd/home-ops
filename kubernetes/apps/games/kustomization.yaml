@@ -7,3 +7,4 @@ components:
   - ../../components/common
 resources:
   - ./minecraft/ks.yaml
+  - ./minecraft-bedrock/ks.yaml

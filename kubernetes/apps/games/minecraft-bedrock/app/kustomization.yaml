@@ -1,0 +1,22 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  # MIGRATION PHASE 1: helper pod only — world data gets copied into the PVC
+  # before the game ever starts. PHASE 2: uncomment these two, re-comment
+  # helper-pod, commit again.
+  # - ./helmrelease.yaml
+  # - ./ocirepository.yaml
+  - ./helper-pod.yaml
+  # World migration (same flow as minecraft-java). On the old server, stop the
+  # container first (LevelDB corrupts if copied hot), then:
+  #   tar czf mc-bedrock-migrate.tgz worlds server.properties allowlist.json permissions.json
+  # Once the PVC exists, enable helper-pod below and reconcile, then:
+  #   kubectl cp mc-bedrock-migrate.tgz games/minecraft-bedrock-migrate:/mc-bedrock-migrate.tgz
+  #   kubectl -n games exec -it minecraft-bedrock-migrate -- sh
+  #   cd /data && tar xzf /mc-bedrock-migrate.tgz && chown -R 1000:1000 /data
+  # Player data lives inside worlds/<name>/db (LevelDB) — no separate folder.
+  # Verify helmrelease levelName matches the folder name under /data/worlds/.
+  # Skip: bedrock_server binary, *_how_to.html, symbols.debug, release-notes,
+  # premium_cache, minecraftpe, treatments, packet-statistics, backup-pre-*
