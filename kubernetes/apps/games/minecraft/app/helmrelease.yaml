@@ -21,8 +21,6 @@ spec:
       limits:
         cpu: 2000m
         memory: 8Gi
-    # fsGroup is pod-level only; the chart's `securityContext` value renders
-    # into the container spec, where fsGroup is rejected by the API server
     podSecurityContext:
       runAsUser: 1000
       runAsGroup: 1000
@@ -45,8 +43,6 @@ spec:
       external-dns.alpha.kubernetes.io/hostname: "minecraft.dovis.me"
     minecraftServer:
       eula: true
-      # Empty so the JVM sizes itself from jvmXXOpts MaxRAMPercentage instead
-      # of -Xmx; was previously a duplicate MEMORY entry via extraEnv
       memory: ""
       difficulty: normal
       type: VANILLA
