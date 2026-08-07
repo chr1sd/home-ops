@@ -115,9 +115,6 @@ spec:
             readOnly: true
       tmp:
         type: emptyDir
-        sizeLimit: 10Gi
-        globalMounts:
-          - path: /tmp
       transcode:
         type: emptyDir
         medium: Memory
