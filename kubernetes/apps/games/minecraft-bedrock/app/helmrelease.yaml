@@ -39,7 +39,6 @@ spec:
       enabled: true
     extraEnv:
       TZ: America/New_York
-      ENABLE_LAN_VISIBILITY: "true"
     serviceAnnotations:
       lbipam.cilium.io/ips: "10.13.17.51"
       external-dns.alpha.kubernetes.io/hostname: "minecraft-bedrock.dovis.me"
@@ -50,6 +49,7 @@ spec:
       levelName: "Bedrock level"
       gameMode: survival
       difficulty: normal
+      enableLanVisibility: true
       maxPlayers: 10
       serviceType: LoadBalancer
       serverPort: 19132
