@@ -1,0 +1,60 @@
+---
+apiVersion: inference.llmkube.dev/v1alpha1
+kind: Model
+metadata:
+  name: qwen3-27b
+spec:
+  source: https://huggingface.co/unsloth/Qwen3.6-27B-MTP-GGUF/resolve/main/Qwen3.6-27B-UD-Q4_K_XL.gguf
+  format: gguf
+  quantization: UD-Q4_K_XL
+  hardware:
+    accelerator: cuda
+    gpu:
+      enabled: true
+      vendor: nvidia
+      count: 1
+      layers: 99
+---
+apiVersion: inference.llmkube.dev/v1alpha1
+kind: InferenceService
+metadata:
+  name: qwen3-27b
+spec:
+  modelRef: qwen3-27b
+  runtime: llamacpp
+  image: ghcr.io/ggml-org/llama.cpp:server-cuda@sha256:27cf25ef1ee83a21f7b57896e98b4375067554b485fec1dddbaba8ceee5a831a
+  replicas: 1
+  runtimeClassName: nvidia
+  nodeSelector:
+    topology.kubernetes.io/gpus: nvidia
+  tolerations:
+    - key: llm-workload
+      operator: Exists
+      effect: NoSchedule
+  env:
+    - name: NVIDIA_DRIVER_CAPABILITIES
+      value: compute,utility
+  contextSize: 131072
+  flashAttention: true
+  jinja: true
+  parallelSlots: 1
+  batchSize: 4096
+  uBatchSize: 512
+  cacheTypeK: q8_0
+  cacheTypeV: q8_0
+  reasoningBudget: 16384
+  resources:
+    gpu: 1
+    cpu: 500m
+    memory: 16Gi
+  extraArgs:
+    - --alias
+    - qwen3-27b
+    - --cont-batching
+    - --spec-type
+    - draft-mtp
+    - --spec-draft-p-min
+    - "0.75"
+    - --spec-draft-n-max
+    - "3"
+    - --cache-prompt

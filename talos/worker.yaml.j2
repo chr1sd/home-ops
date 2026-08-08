@@ -1,0 +1,5 @@
+---
+# Worker-only patch. Workers hold no CA private keys — the base machineconfig's
+# machine.ca.crt / cluster.ca.crt are all a worker needs to join and verify.
+machine:
+  type: worker

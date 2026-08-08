@@ -14,15 +14,19 @@ kubernetes_version := "v1.36.3"
 default:
     @just --list talos
 
-[doc('Print the Image Factory schematic ID')]
-schematic-id:
-    @curl -sX POST --data-binary @<(minijinja-cli "{{ source_directory() }}/schematic.yaml.j2") https://factory.talos.dev/schematics | jq -r '.id'
-
-[doc('Download the Talos ISO matching the current schematic')]
-download-image:
+[doc('Print the Image Factory schematic ID (role: controlplane|worker)')]
+schematic-id role='controlplane':
     #!/usr/bin/env bash
     set -euo pipefail
-    id=$(just talos schematic-id)
+    file=schematic.yaml.j2
+    [[ "{{ role }}" == "worker" ]] && file=worker-schematic.yaml.j2
+    curl -sX POST --data-binary @<(minijinja-cli "{{ source_directory() }}/${file}") https://factory.talos.dev/schematics | jq -r '.id'
+
+[doc('Download the Talos ISO matching the current schematic (role: controlplane|worker)')]
+download-image role='controlplane':
+    #!/usr/bin/env bash
+    set -euo pipefail
+    id=$(just talos schematic-id {{ role }})
     curl -fL --remove-on-error --progress-bar \
         -o "{{ source_directory() }}/talos-{{ talos_version }}-${id:0:8}.iso" \
         "https://factory.talos.dev/image/${id}/{{ talos_version }}/metal-amd64.iso"
@@ -52,8 +56,9 @@ talosconfig:
 render node:
     #!/usr/bin/env bash
     set -euo pipefail
-    role=controlplane # every kvrnts node is a combined control-plane + worker
-    schematic=$(just talos schematic-id)
+    role=controlplane # kvrnts-1/2/3 are combined control-plane + worker
+    [[ -f "{{ source_directory() }}/nodes/worker/{{ node }}.yaml.j2" ]] && role=worker
+    schematic=$(just talos schematic-id "$role")
     talosctl machineconfig patch \
         <(just template "{{ source_directory() }}/machineconfig.yaml.j2" -D schematic="$schematic") \
         --patch @<(just template "{{ source_directory() }}/${role}.yaml.j2") \
@@ -63,7 +68,8 @@ render node:
 diff node:
     #!/usr/bin/env bash
     set -euo pipefail
-    role=controlplane # every kvrnts node is a combined control-plane + worker
+    role=controlplane # kvrnts-1/2/3 are combined control-plane + worker
+    [[ -f "{{ source_directory() }}/nodes/worker/{{ node }}.yaml.j2" ]] && role=worker
     ip=$(minijinja-cli "{{ source_directory() }}/nodes/${role}/{{ node }}.yaml.j2" | yq 'select(.kind == "BondConfig") | .addresses[0].address' | cut -d/ -f1)
     just talos render "{{ node }}" | talosctl -n "$ip" apply-config --dry-run --mode=auto -f /dev/stdin
 
@@ -72,7 +78,8 @@ diff node:
 apply-node node *args:
     #!/usr/bin/env bash
     set -euo pipefail
-    role=controlplane # every kvrnts node is a combined control-plane + worker
+    role=controlplane # kvrnts-1/2/3 are combined control-plane + worker
+    [[ -f "{{ source_directory() }}/nodes/worker/{{ node }}.yaml.j2" ]] && role=worker
     ip=$(minijinja-cli "{{ source_directory() }}/nodes/${role}/{{ node }}.yaml.j2" | yq 'select(.kind == "BondConfig") | .addresses[0].address' | cut -d/ -f1)
     just talos render "{{ node }}" | talosctl -n "$ip" apply-config -f /dev/stdin {{ args }}
 
@@ -81,9 +88,10 @@ apply-node node *args:
 upgrade-node node:
     #!/usr/bin/env bash
     set -euo pipefail
-    role=controlplane # every kvrnts node is a combined control-plane + worker
+    role=controlplane # kvrnts-1/2/3 are combined control-plane + worker
+    [[ -f "{{ source_directory() }}/nodes/worker/{{ node }}.yaml.j2" ]] && role=worker
     ip=$(minijinja-cli "{{ source_directory() }}/nodes/${role}/{{ node }}.yaml.j2" | yq 'select(.kind == "BondConfig") | .addresses[0].address' | cut -d/ -f1)
-    schematic=$(just talos schematic-id)
+    schematic=$(just talos schematic-id "$role")
     talosctl -n "$ip" upgrade --image="factory.talos.dev/metal-installer/${schematic}:{{ talos_version }}" --timeout=10m
 
 [confirm('Upgrade Kubernetes across the cluster? [y/N]')]

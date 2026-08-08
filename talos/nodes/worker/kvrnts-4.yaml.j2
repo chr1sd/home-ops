@@ -1,0 +1,66 @@
+---
+# LLM inference node: 2x RTX 3090, AI workloads only (tainted at registration).
+# PLACEHOLDERS below are marked TODO(llm-node) — fill them from maintenance mode:
+#   talosctl -n <dhcp-ip> get disks --insecure
+#   talosctl -n <dhcp-ip> get links --insecure
+apiVersion: v1alpha1
+kind: HostnameConfig
+auto: "off"
+hostname: kvrnts-4
+---
+# Alias the primary NIC by driver so the config survives interface renames.
+# TODO(llm-node): set the real driver from `talosctl get links` (e.g. igc, ixgbe, r8169)
+apiVersion: v1alpha1
+kind: LinkAliasConfig
+name: lan%d
+selector:
+  match: link.driver == "TODO-DRIVER"
+---
+# Single-member active-backup bond: keeps this node's shape (and the mod.just
+# IP lookup, which reads BondConfig) identical to the rest of the fleet, and
+# leaves room to add a second link later without re-plumbing addresses.
+apiVersion: v1alpha1
+kind: BondConfig
+name: bond0
+links:
+  - lan0
+bondMode: active-backup
+miimon: 100
+addresses:
+  # TODO(llm-node): confirm .25 is free (or pick another) before first apply
+  - address: 10.13.17.25/24
+routes:
+  - gateway: 10.13.17.1
+---
+machine:
+  install:
+    # TODO(llm-node): OS disk from `talosctl get disks` (model or serial)
+    diskSelector:
+      model: "TODO-OS-DISK-MODEL"
+  kernel:
+    modules:
+      - name: nvidia
+      - name: nvidia_uvm
+      - name: nvidia_drm
+      - name: nvidia_modeset
+  nodeLabels:
+    topology.kubernetes.io/gpus: nvidia
+  kubelet:
+    extraConfig:
+      # AI-only node: nothing schedules here without tolerating this taint
+      # (nvidia-device-plugin and llmkube InferenceServices carry it)
+      registerWithTaints:
+        - key: llm-workload
+          value: "true"
+          effect: NoSchedule
+---
+# Node-local model/scratch storage — GGUF blobs and llama.cpp scratch stay off
+# Ceph. Mounts under /var/mnt/local-hostpath for openebs-hostpath consumption.
+# TODO(llm-node): match the data disk (not the OS disk) and size from `get disks`
+apiVersion: v1alpha1
+kind: UserVolumeConfig
+name: local-hostpath
+provisioning:
+  diskSelector:
+    match: disk.model == "TODO-DATA-DISK-MODEL"
+  minSize: 500GB
