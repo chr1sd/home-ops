@@ -1,0 +1,10 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ./qwen3-27b.yaml
+# The second 3090 is free: add another Model+InferenceService here (e.g. a
+# coder/reviewer model) with gpu count: 1, or bump this one to count: 2 to
+# split a ~70B model across both cards. InferenceService pods stay Pending
+# until the GPU worker node has joined the cluster — that is expected.

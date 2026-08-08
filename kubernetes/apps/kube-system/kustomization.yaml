@@ -17,3 +17,4 @@ resources:
   - ./gateway-api-crds/ks.yaml
   - ./multus/ks.yaml
   - ./node-feature-discovery/ks.yaml
+  - ./nvidia-device-plugin/ks.yaml
