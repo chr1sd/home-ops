@@ -41,20 +41,16 @@ The goal here is to deepen my understanding of k8s, become the GitOps mindset, a
 
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f916/512.gif" alt="🤖" width="30" height="30"> Hardware
 
-| System                        | Role          | CPU            | RAM        | Graphics       | Disk (boot)      | Disk (storage)                  |
-| ----------------------------- | ------------- | -------------- | ---------- | -------------- | ---------------- | ------------------------------- |
-| (3x) HP EliteDesk 800 G3 Mini | Control Plane | Intel i5-6500T | 16GB DDR4  | Intel HD 530   | 256GB SSD        | —                               |
-| (3x) HP EliteDesk 800 G3 Mini | Worker        | Intel i5-6500T | 64GB DDR4  | Intel HD 530   | 512GB SSD        | 1TB NVMe                        |
-| Custom Server                 | AI Workloads  | Intel i7-6700K | 64GB DDR4  | 2x RTX3090     | 256GB SSD        | 512GB SSD                       |
-| HL15 2.0                      | NAS           | AMD Epyc 7452  | 256GB DDR4 | Intel ARC A310 | 512GB SSD Mirror | ZFS RaidZ2 Pool (12x 8TB Disks) |
-
-All of this is connected to a [Ubiquiti](https://ui.com) network with VLANS configured for IoT, Management, DMZ, and Cameras.
+| System                | Role                 | CPU             | RAM        | Graphics       | Disk (boot)                  | Disk (storage)                  |
+| --------------------- | -------------------- | --------------- | ---------- | -------------- | ---------------------------- | ------------------------------- |
+| Minisforum MS-01 (3x) | Control Plane/Worker | Intel i9-12900H | 96GB DDR5  | Intel Iris XE  | Samsung PM983 960GB M.2 NVME | Crucial 1TB M.2 NVME            |
+| HL15 2.0              | NAS                  | AMD Epyc 7452   | 256GB DDR4 | Intel ARC A310 | 512GB NVME Mirror            | ZFS RaidZ2 Pool (12x 8TB Disks) |
 
 ---
 
-## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f512/512.gif" alt="🔒" width="30" height="30"> Talos Linux
+## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f512/512.gif" alt="🔒" width="30" height="30"> Operating System
 
-[Talos](https://www.talos.dev) is an immutable, API driven operating system designed specifically for Kubernetes. Talos is configured declaritively and is a great choice for a GitOps driven workflow.
+I'm running [Talos Linux](https://www.talos.dev), which is an immutable, API driven operating system designed specifically for Kubernetes. Talos is configured declaritively and is a great choice for a GitOps driven workflow.
 
 ---
 
@@ -64,11 +60,9 @@ For me, a home lab about tinkering and learning. So I set off to learn [Kubernet
 
 ---
 
-## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f30f/512.gif" alt="🌏" width="30" height="30"> Networking: Cilium
+## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f30f/512.gif" alt="🌏" width="30" height="30"> Networking
 
-Networking in my cluster is handled by [Cilium](https://cilium.io/).
-
-I'm using [Envoy Gateway](https://gateway.envoyproxy.io) to manage application traffic coming into the cluster.
+My homelab network stack consists of [Ubiquiti](https://ui.com) equipment with VLANS configured for IoT, Management, DMZ, and Cameras. Networking in my cluster is handled by [Cilium](https://cilium.io/). I'm using [Envoy Gateway](https://gateway.envoyproxy.io) to manage application traffic coming into the cluster.
 
 ---
 
