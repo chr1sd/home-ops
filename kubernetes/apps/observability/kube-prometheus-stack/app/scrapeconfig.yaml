@@ -12,3 +12,19 @@ spec:
     - action: replace
       targetLabel: job
       replacement: node-exporter
+---
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: smartctl-exporter
+spec:
+  staticConfigs:
+    - targets:
+        - lil-nas.dovis.me:9633
+  metricsPath: /metrics
+  scrapeInterval: 60s
+  scrapeTimeout: 30s
+  relabelings:
+    - action: replace
+      targetLabel: job
+      replacement: smartctl-exporter
