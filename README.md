@@ -120,6 +120,7 @@ flowchart TD
     style FluxLoop fill:#EFF6FF,stroke:#93C5FD,color:#1E3A8A
 ```
 
+</details>
 ---
 
 I made a [Youtube video](https://youtu.be/aeUKOpeoiUs) that gives a general overview of my configuration and the core components.
