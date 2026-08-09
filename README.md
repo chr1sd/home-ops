@@ -95,15 +95,15 @@ flowchart TD
 
     subgraph FluxLoop["Flux — runs inside the cluster, never sleeps"]
         Pull("Pull the latest manifests") --> Diff{"Does the cluster<br/>match Git?"}
-        Diff -->|"yes — in sync"| Wait("Wait for the next check")
+        Diff -->|" yes — in sync "| Wait("Wait for the next check")
         Wait -.-> Pull
-        Diff -->|"no — out of sync"| Apply("Apply what changed")
+        Diff -->|" no — out of sync "| Apply("Apply what changed")
     end
 
-    Git -->|"Flux checks ~every minute"| Pull
+    Git -->|" Flux checks ~every minute "| Pull
     Apply --> K8s("Kubernetes updates<br/>pods, services and config")
-    K8s -->|"cluster now matches Git"| Diff
-    Drift("Manual kubectl edit") -.->|"drift! Flux puts it back"| Diff
+    K8s -->|" cluster now matches Git "| Diff
+    Drift("Manual kubectl edit") -.->|" drift! Flux puts it back "| Diff
 
     classDef human fill:#A7F3D0,stroke:#047857,stroke-width:2px,color:#000
     classDef git fill:#DDD6FE,stroke:#6D28D9,stroke-width:2px,color:#000
