@@ -72,15 +72,13 @@ To keep a pulse on the cluster, I'm using: [Prometheus](https://prometheus.io), 
 
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f48e/512.gif" alt="💎" width="30" height="30"> Storage: Rook + Ceph
 
-Persistent storage is provided by [Rook-Ceph](https://rook.io/), utilizing the 1TB NVMe drives on each worker.
+Persistent storage is provided by [Rook-Ceph](https://rook.io/), utilizing the 1TB NVMe drives on each node. Volumes are replicated across each node so if an app is rescheduled to a different node it will have access to it's data.
 
 ---
 
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/2699_fe0f/512.gif" alt="⚙️" width="30" height="30"> GitOps with Flux
 
-The backbone of this cluster is [Flux CD](https://fluxcd.io/) — a GitOps controller that reconciles my entire Kubernetes state from a Git repository.
-
-My ultimate goal is to have Flux and [Renovate](https://www.mend.io/renovate/) handle most of the deployments and updates to the cluster.
+The backbone of this cluster is [Flux CD](https://fluxcd.io/) — a GitOps controller that reconciles my entire Kubernetes state from a Git repository Flux and [Renovate](https://www.mend.io/renovate/) handle most of the deployments and updates to the cluster.
 
 ### How does it work?
 
