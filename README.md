@@ -91,7 +91,7 @@ The core idea: **Git is the single source of truth**. Flux continuously compares
 flowchart TD
     %% MEANING: the GitOps loop — Git is the source of truth, Flux reconciles the cluster to match it
 
-    Dev(["You — edit YAML and git push"]) --> Git[("Git repository<br/>single source of truth")]
+    Dev("You — edit YAML and git push") --> Git[("Git repository<br/>single source of truth")]
 
     subgraph FluxLoop["Flux — runs inside the cluster, never sleeps"]
         Pull("Pull the latest manifests") --> Diff{"Does the cluster<br/>match Git?"}
