@@ -121,6 +121,7 @@ flowchart TD
 ```
 
 </details>
+
 ---
 
 I made a [Youtube video](https://youtu.be/aeUKOpeoiUs) that gives a general overview of my configuration and the core components.
