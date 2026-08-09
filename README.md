@@ -120,10 +120,6 @@ flowchart TD
     style FluxLoop fill:#EFF6FF,stroke:#93C5FD,color:#1E3A8A
 ```
 
-> **The magic of GitOps:** if someone manually tweaks a resource directly on the cluster, Flux detects the drift and reverts it back to what Git says it should be. The cluster always converges to Git — not the other way around.
-
-</details>
-
 ---
 
 I made a [Youtube video](https://youtu.be/aeUKOpeoiUs) that gives a general overview of my configuration and the core components.
