@@ -33,9 +33,7 @@
 
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f44b/512.gif" alt="👋" width="30" height="30"> Welcome
 
-Welcome to the (Kubernetes) Humble Home Lab repo. The source of truth for my bare metal cluster running on Talos Linux.
-
-The goal here is to deepen my understanding of k8s, become the GitOps mindset, and share what I learn along the way.
+Welcome to the (Kubernetes) Humble Home Lab repo. The source of truth for my bare metal cluster running on Talos Linux. The goal here is to deepen my understanding of k8s, become the GitOps mindset, and share what I learn along the way.
 
 ---
 
