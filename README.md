@@ -89,29 +89,35 @@ The core idea: **Git is the single source of truth**. Flux continuously compares
 
 ```mermaid
 flowchart TD
-    Dev["👩‍💻 You push YAML to Git"] --> Git[("📂 Git Repo
-    Source of Truth")]
-    Git -->|"Flux polls ~every 1 min"| Fetch["Flux fetches
-    latest manifests"]
-    Fetch --> Diff{"Cluster state = Git state?"}
-    Diff -->|"✅ Already in sync"| Idle["Flux idles"]
-    Idle -.->|"next poll"| Fetch
-    Diff -->|"❌ Out of sync"| Apply["Flux applies manifests to Kubernetes"]
-    Apply --> Cluster["☸️ Kubernetes creates / updates resources"]
-    Cluster -->|"sync complete"| Diff
-    Drift["⚠️ Someone manually changes the cluster"] -.->|"causes drift"| Diff
+    %% MEANING: the GitOps loop — Git is the source of truth, Flux reconciles the cluster to match it
 
-    classDef gitNode fill:#6e40c9,stroke:#4a2d8c,color:#fff
-    classDef fluxNode fill:#326ce5,stroke:#1e4db3,color:#fff
-    classDef k8sNode fill:#81D4FA,stroke:#0277BD,color:#000
-    classDef devNode fill:#2ea44f,stroke:#1a7036,color:#fff
-    classDef driftNode fill:#FFE082,stroke:#F57C00,color:#000
+    Dev(["You — edit YAML and git push"]) --> Git[("Git repository<br/>single source of truth")]
 
-    class Git gitNode
-    class Fetch,Diff,Idle fluxNode
-    class Apply,Cluster k8sNode
-    class Dev devNode
-    class Drift driftNode
+    subgraph FluxLoop["Flux — runs inside the cluster, never sleeps"]
+        Pull("Pull the latest manifests") --> Diff{"Does the cluster<br/>match Git?"}
+        Diff -->|"yes — in sync"| Wait("Wait for the next check")
+        Wait -.-> Pull
+        Diff -->|"no — out of sync"| Apply("Apply what changed")
+    end
+
+    Git -->|"Flux checks ~every minute"| Pull
+    Apply --> K8s("Kubernetes updates<br/>pods, services and config")
+    K8s -->|"cluster now matches Git"| Diff
+    Drift("Manual kubectl edit") -.->|"drift! Flux puts it back"| Diff
+
+    classDef human fill:#A7F3D0,stroke:#047857,stroke-width:2px,color:#000
+    classDef git fill:#DDD6FE,stroke:#6D28D9,stroke-width:2px,color:#000
+    classDef flux fill:#BFDBFE,stroke:#1D4ED8,stroke-width:2px,color:#000
+    classDef k8s fill:#A5F3FC,stroke:#0E7490,stroke-width:2px,color:#000
+    classDef warn fill:#FDE68A,stroke:#B45309,stroke-width:2px,color:#000
+
+    class Dev human
+    class Git git
+    class Pull,Diff,Wait,Apply flux
+    class K8s k8s
+    class Drift warn
+
+    style FluxLoop fill:#EFF6FF,stroke:#93C5FD,color:#1E3A8A
 ```
 
 > **The magic of GitOps:** if someone manually tweaks a resource directly on the cluster, Flux detects the drift and reverts it back to what Git says it should be. The cluster always converges to Git — not the other way around.
