@@ -108,9 +108,9 @@ spec:
       media:
         type: nfs
         server: lil-nas.dovis.me
-        path: /mnt/seagate-data
+        path: /mnt/seagate-data/data
         globalMounts:
-          - path: /data
+          - path: /data/media
             subPath: media
             readOnly: true
       tmp:
