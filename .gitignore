@@ -3,6 +3,7 @@
 *.key
 *.decrypted~*
 *.crt
+*.pem
 /cloudflare-tunnel.json
 /github-push-token.txt
 # Kubernetes
