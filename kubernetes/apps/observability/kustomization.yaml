@@ -11,7 +11,7 @@ resources:
   - ./gatus/ks.yaml
   - ./victoria-logs/ks.yaml
   - ./fluent-bit/ks.yaml
-  - ./keda/ks.yaml
+  - ./prometheus-adapter/ks.yaml
   - ./smartctl-exporter/ks.yaml
   - ./kromgo/ks.yaml
   - ./blackbox-exporter/ks.yaml

@@ -11,7 +11,7 @@ spec:
   components:
     - ../../../../components/common
     - ../../../../components/kopiur
-    - ../../../../components/nfs-scaler
+    - ../../../../components/zeroscaler
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
