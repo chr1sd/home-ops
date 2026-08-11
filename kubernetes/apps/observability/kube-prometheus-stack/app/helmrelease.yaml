@@ -14,6 +14,7 @@ spec:
     defaultRules:
       disabled:
         NodeMemoryHighUtilization: true
+        KubeHpaMaxedOut: true
     alertmanager:
       route:
         main:
