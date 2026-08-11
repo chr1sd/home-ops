@@ -33,3 +33,4 @@ resources:
   - ./sabnzbd/ks.yaml
   - ./miniflux/ks.yaml
   - ./nextflux/ks.yaml
+  - ./deduparr/ks.yaml
