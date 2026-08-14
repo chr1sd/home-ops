@@ -11,8 +11,11 @@
 
 </div>
 
+<div align="center">
+
 <img src="https://github.com/user-attachments/assets/97ad9f96-fe2c-4a11-a083-1200f1242da9" align="center" width="800px" height="149px"/>
 
+</div>
 </br>
 
 <div align="center">
