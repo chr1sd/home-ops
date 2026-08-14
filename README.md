@@ -13,6 +13,8 @@
 
 <img src="https://github.com/user-attachments/assets/97ad9f96-fe2c-4a11-a083-1200f1242da9" align="center" width="800px" height="149px"/>
 
+</br>
+
 <div align="center">
 
 [![Discord](https://img.shields.io/discord/673534664354430999?style=for-the-badge&label&logo=discord&logoColor=white&color=blue)](https://discord.gg/home-operations)&nbsp;&nbsp;
