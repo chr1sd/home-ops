@@ -1,0 +1,36 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: snmp-exporter
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: snmp-exporter
+  interval: 30m
+  values:
+    fullnameOverride: snmp-exporter
+    extraArgs:
+      - --config.file=/etc/snmp_exporter/snmp.yml
+      - --config.file=/etc/snmp_exporter/auths/ups-auths.yml
+    extraSecretMounts:
+      - name: ups-auths
+        mountPath: /etc/snmp_exporter/auths
+        secretName: snmp-exporter-secret
+        readOnly: true
+        defaultMode: 420
+    serviceMonitor:
+      enabled: true
+      params:
+        - name: ups
+          module:
+            - apcups
+          target: 10.13.37.86
+          auth:
+            - ups_v3
+      path: /snmp
+      scrapeTimeout: 10s
+      relabelings:
+        - sourceLabels:
+            - __param_target
+          targetLabel: instance

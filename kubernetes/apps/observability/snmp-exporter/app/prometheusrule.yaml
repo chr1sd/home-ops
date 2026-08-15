@@ -1,0 +1,44 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: snmp-exporter-rules
+spec:
+  groups:
+    - name: snmp-exporter.rules
+      rules:
+        - alert: UPSOnBattery
+          annotations:
+            summary: |
+              UPS {{ $labels.instance }} is running on battery.
+              Ops box begins staged shutdown at 10m on battery.
+          expr: upsBasicBatteryTimeOnBattery_seconds > 60
+          for: 1m
+          labels:
+            severity: critical
+        - alert: UPSLowRuntime
+          annotations:
+            summary: |
+              UPS {{ $labels.instance }} has less than 10 minutes
+              of battery runtime remaining.
+          expr: upsAdvBatteryRunTimeRemaining_seconds < 600
+          for: 1m
+          labels:
+            severity: critical
+        - alert: UPSReplaceBattery
+          annotations:
+            summary: |
+              UPS {{ $labels.instance }} battery needs to be replaced.
+          expr: upsAdvBattery_needsreplacing > 0
+          for: 5m
+          labels:
+            severity: critical
+        - alert: UPSMetricsAbsent
+          annotations:
+            summary: |
+              No UPS metrics for 10 minutes — management card, snmp-exporter,
+              or its scrape config is broken. Power events are currently invisible.
+          expr: absent(upsBasicBatteryTimeOnBattery_seconds)
+          for: 10m
+          labels:
+            severity: warning
