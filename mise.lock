@@ -274,43 +274,43 @@ checksum = "sha256:38cbdab1c7d4f0412d571c3aeefc700bcdc7b663be481832a11dfed01ee67
 url = "https://get.helm.sh/helm-v4.2.4-windows-amd64.tar.gz"
 
 [[tools."aqua:helmfile/helmfile"]]
-version = "1.7.3"
+version = "1.7.4"
 backend = "aqua:helmfile/helmfile"
 
 [tools."aqua:helmfile/helmfile"."platforms.linux-arm64"]
-checksum = "sha256:4a2346df40362f49f395e47d5d6a16a29322b5c6968720c1bde60d101ae97e3b"
-url = "https://github.com/helmfile/helmfile/releases/download/v1.7.3/helmfile_1.7.3_linux_arm64.tar.gz"
-url_api = "https://api.github.com/repos/helmfile/helmfile/releases/assets/501926213"
+checksum = "sha256:0292f57a4638a21e775b0ce8bde37ee3fdd65dbbdbe0e5b9a06718f1dd04c7fa"
+url = "https://github.com/helmfile/helmfile/releases/download/v1.7.4/helmfile_1.7.4_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/helmfile/helmfile/releases/assets/516813268"
 
 [tools."aqua:helmfile/helmfile"."platforms.linux-arm64-musl"]
-checksum = "sha256:4a2346df40362f49f395e47d5d6a16a29322b5c6968720c1bde60d101ae97e3b"
-url = "https://github.com/helmfile/helmfile/releases/download/v1.7.3/helmfile_1.7.3_linux_arm64.tar.gz"
-url_api = "https://api.github.com/repos/helmfile/helmfile/releases/assets/501926213"
+checksum = "sha256:0292f57a4638a21e775b0ce8bde37ee3fdd65dbbdbe0e5b9a06718f1dd04c7fa"
+url = "https://github.com/helmfile/helmfile/releases/download/v1.7.4/helmfile_1.7.4_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/helmfile/helmfile/releases/assets/516813268"
 
 [tools."aqua:helmfile/helmfile"."platforms.linux-x64"]
-checksum = "sha256:23d7df593f704ab1709b3020c8c8083b1517c9e780b5010e756a7d36bd901552"
-url = "https://github.com/helmfile/helmfile/releases/download/v1.7.3/helmfile_1.7.3_linux_amd64.tar.gz"
-url_api = "https://api.github.com/repos/helmfile/helmfile/releases/assets/501926166"
+checksum = "sha256:f96ef0a015df06b29d7f38bf0ca08821018ae25eb96bf2c7abd3affa1b84e112"
+url = "https://github.com/helmfile/helmfile/releases/download/v1.7.4/helmfile_1.7.4_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/helmfile/helmfile/releases/assets/516813296"
 
 [tools."aqua:helmfile/helmfile"."platforms.linux-x64-musl"]
-checksum = "sha256:23d7df593f704ab1709b3020c8c8083b1517c9e780b5010e756a7d36bd901552"
-url = "https://github.com/helmfile/helmfile/releases/download/v1.7.3/helmfile_1.7.3_linux_amd64.tar.gz"
-url_api = "https://api.github.com/repos/helmfile/helmfile/releases/assets/501926166"
+checksum = "sha256:f96ef0a015df06b29d7f38bf0ca08821018ae25eb96bf2c7abd3affa1b84e112"
+url = "https://github.com/helmfile/helmfile/releases/download/v1.7.4/helmfile_1.7.4_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/helmfile/helmfile/releases/assets/516813296"
 
 [tools."aqua:helmfile/helmfile"."platforms.macos-arm64"]
-checksum = "sha256:b69933ab364b010c320d1c858265d1845735784d8b317211e046cf74e22c6e80"
-url = "https://github.com/helmfile/helmfile/releases/download/v1.7.3/helmfile_1.7.3_darwin_arm64.tar.gz"
-url_api = "https://api.github.com/repos/helmfile/helmfile/releases/assets/501926219"
+checksum = "sha256:e1490d371fecc1f2d9aae914ef34058f3cb2363c9ee63350b37a85c3994d71d9"
+url = "https://github.com/helmfile/helmfile/releases/download/v1.7.4/helmfile_1.7.4_darwin_arm64.tar.gz"
+url_api = "https://api.github.com/repos/helmfile/helmfile/releases/assets/516813297"
 
 [tools."aqua:helmfile/helmfile"."platforms.macos-x64"]
-checksum = "sha256:b1be552f6ff68c7c10f064dec657e4297bc581eecf1ed66ff433964e17d9eb36"
-url = "https://github.com/helmfile/helmfile/releases/download/v1.7.3/helmfile_1.7.3_darwin_amd64.tar.gz"
-url_api = "https://api.github.com/repos/helmfile/helmfile/releases/assets/501926217"
+checksum = "sha256:7a0951fcc5bb991d7ea3a0c80e35754eb3981dcadba19795edbec7cba2518ae2"
+url = "https://github.com/helmfile/helmfile/releases/download/v1.7.4/helmfile_1.7.4_darwin_amd64.tar.gz"
+url_api = "https://api.github.com/repos/helmfile/helmfile/releases/assets/516813301"
 
 [tools."aqua:helmfile/helmfile"."platforms.windows-x64"]
-checksum = "sha256:7c57c0199fe2d02fcc6b7c23fa3e247a49380d09ceacab4fb45097a2adcfdfb6"
-url = "https://github.com/helmfile/helmfile/releases/download/v1.7.3/helmfile_1.7.3_windows_amd64.tar.gz"
-url_api = "https://api.github.com/repos/helmfile/helmfile/releases/assets/501926164"
+checksum = "sha256:f1637850f5d5c311bbadea2f99afec9ab6d4999eeba225c1d787b09ae077bd73"
+url = "https://github.com/helmfile/helmfile/releases/download/v1.7.4/helmfile_1.7.4_windows_amd64.tar.gz"
+url_api = "https://api.github.com/repos/helmfile/helmfile/releases/assets/516813271"
 
 [[tools."aqua:jqlang/jq"]]
 version = "1.8.1"
