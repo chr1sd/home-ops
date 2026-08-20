@@ -441,7 +441,7 @@ url = "https://dl.k8s.io/1.35.0/bin/darwin/amd64/kubectl"
 url = "https://dl.k8s.io/1.35.0/bin/windows/amd64/kubectl.exe"
 
 [[tools."aqua:mikefarah/yq"]]
-version = "4.53.5"
+version = "4.53.6"
 backend = "aqua:mikefarah/yq"
 
 [tools."aqua:mikefarah/yq"."platforms.linux-arm64"]
