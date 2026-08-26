@@ -24,6 +24,8 @@ spec:
               sonarr__APP__THEME: dark
               sonarr__AUTH__METHOD: External
               sonarr__AUTH__REQUIRED: DisabledForLocalAddresses
+              SONARR__SERVER__ALLOWEDHOSTS: sonarr.dovis.me,sonarr.default.svc.cluster.local
+              SONARR__SERVER__TRUSTEDNETWORKS: 10.244.0.0/16
               sonarr__LOG__DBENABLED: "False"
               sonarr__LOG__LEVEL: info
               sonarr__SERVER__PORT: &port 80
