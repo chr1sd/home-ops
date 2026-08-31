@@ -11,7 +11,7 @@ postinstall = "lefthook install"
 [tools]
 "aqua:cilium/cilium-cli" = "0.20.0"
 "aqua:cli/cli" = "2.98.0"
-"aqua:fluxcd/flux2" = "2.9.4"
+"aqua:fluxcd/flux2" = "2.9.5"
 "vfox:mise-plugins/vfox-1password" = "2.34.0"
 "aqua:casey/just" = "1.58.0"
 "aqua:charmbracelet/gum" = "2.0.0"
