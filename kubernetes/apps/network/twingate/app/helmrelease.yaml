@@ -26,7 +26,7 @@ spec:
   values:
     image:
       repository: docker.io/twingate/connector
-      tag: 1.91.0@sha256:ce7a6f131bcf81b62baf89c5a7480ca4d755b71c55d41cf2dc38c328a097a4e6
+      tag: 1.92.0@sha256:b7049dbf2c105c837cd0cd199fb4d07b1799e45a6de2481bcfc4e0fb51074539
       pullPolicy: IfNotPresent
     connector:
       logLevel: "info"
