@@ -149,12 +149,23 @@
       commitMessageTopic: "dashboard {{depName}}",
       addLabels: ["renovate/grafana-dashboard"],
     },
+    {
+      matchDatasources: ["custom.talos-factory"],
+      semanticCommitScope: "container",
+      commitMessageTopic: "{{depName}}",
+      addLabels: ["renovate/talos"],
+    },
   ],
   customDatasources: {
     "grafana-dashboards": {
       defaultRegistryUrlTemplate: "https://grafana.com/api/dashboards/{{packageName}}/revisions",
       format: "json",
       transformTemplates: ['{"releases": [$.items.{"version": $string(revision)}]}'],
+    },
+    "talos-factory": {
+      defaultRegistryUrlTemplate: "https://factory.talos.dev/versions",
+      format: "json",
+      transformTemplates: ['{"releases": [$.{"version": $}]}'],
     },
   },
   customManagers: [
@@ -189,6 +200,15 @@
         "datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)\\n.+/(?<currentValue>(v|\\d)[^/]+)",
       ],
       datasourceTemplate: "{{#if datasource}}{{{datasource}}}{{else}}github-releases{{/if}}",
+    },
+    {
+      description: "Process Talos Factory installer images",
+      customType: "regex",
+      managerFilePatterns: ["/talos\\/.*\\.yaml(?:\\.j2)?$/"],
+      matchStrings: ["factory\\.talos\\.dev\\/[^/]+\\/[^:]+:(?<currentValue>v\\S+)"],
+      datasourceTemplate: "custom.talos-factory",
+      versioningTemplate: "semver",
+      depNameTemplate: "siderolabs/talos",
     },
   ],
 }
