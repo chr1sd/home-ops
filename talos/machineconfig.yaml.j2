@@ -14,7 +14,7 @@ machine:
     - "10.13.17.17"
   install:
     # renovate: datasource=docker depName=ghcr.io/siderolabs/installer
-    image: factory.talos.dev/metal-installer/{{ schematic }}:v1.13.8
+    image: factory.talos.dev/metal-installer/{{ schematic }}:v1.14.0
     wipe: false
     grubUseUKICmdline: true
   kubelet:
