@@ -13,12 +13,12 @@ machine:
     - "127.0.0.1"
     - "10.13.17.17"
   install:
-    image: factory.talos.dev/metal-installer/{{ schematic }}:v1.14.0
+    image: factory.talos.dev/metal-installer/{{ schematic }}:v1.13.10
     wipe: false
     grubUseUKICmdline: true
   kubelet:
     # renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
-    image: ghcr.io/siderolabs/kubelet:v1.36.3
+    image: ghcr.io/siderolabs/kubelet:v1.36.4
     defaultRuntimeSeccompProfileEnabled: true
     disableManifestsDirectory: true
     extraConfig:
