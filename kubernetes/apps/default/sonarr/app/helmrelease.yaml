@@ -20,16 +20,15 @@ spec:
               repository: ghcr.io/home-operations/sonarr
               tag: 4.0.19.3009@sha256:67815effd2ea18398ffc2011d974b8b1cd3939eec5aa74688ffbf371ff65dd84
             env:
-              sonarr__APP__INSTANCENAME: Sonarr
-              sonarr__APP__THEME: dark
-              sonarr__AUTH__METHOD: External
-              sonarr__AUTH__REQUIRED: DisabledForLocalAddresses
-              SONARR__SERVER__ALLOWEDHOSTS: "*"
-              sonarr__LOG__DBENABLED: "False"
-              sonarr__LOG__LEVEL: info
-              sonarr__SERVER__PORT: &port 80
+              SONARR__APP__INSTANCENAME: Sonarr
+              SONARR__APP__THEME: dark
+              SONARR__AUTH__METHOD: External
+              SONARR__AUTH__REQUIRED: Enabled
+              SONARR__LOG__DBENABLED: "False"
+              SONARR__LOG__LEVEL: info
+              SONARR__SERVER__PORT: &port 80
               SONARR__UPDATE__MECHANISM: docker
-              sonarr__UPDATE__BRANCH: develop
+              SONARR__UPDATE__BRANCH: develop
               TZ: America/New_York
             envFrom:
               - secretRef:
