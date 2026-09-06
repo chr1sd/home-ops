@@ -63,6 +63,7 @@ spec:
       webhooks:
         annotations:
           gatus.home-operations.com/endpoint: |-
+            path: /webhook/gatus
             conditions: ["[STATUS] == 404"]
         hostnames:
           - n8n-webhook.dovis.me
