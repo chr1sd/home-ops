@@ -5,7 +5,7 @@ metadata:
   name: postgres17
   annotations:
     lbipam.cilium.io/ips: 10.13.17.65
-    external-dns.alpha.kubernetes.io/hostname: postgres.dovis.me
+    external-dns.kubernetes.io/hostname: postgres.dovis.me
 spec:
   type: ClusterIP
   selector:
