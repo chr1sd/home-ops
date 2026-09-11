@@ -60,6 +60,19 @@ spec:
         urlPrefix: /
         ssl: false
         prometheusEndpoint: http://prometheus-operated.observability.svc.cluster.local:9090
+      healthCheck:
+        # Ceph 20.2.4 (CVE-2025-30156) warns while any CephX key still uses AES.
+        # CSI keys must stay AES until node kernels reach 7.0 (Talos 1.14 ships 6.18),
+        # so these warnings cannot be cleared yet. Flip to `unmute` after full migration.
+        muteHealthWarning:
+          AUTH_INSECURE_ROTATING_SERVICE_KEY_TYPE:
+            policy: mute
+          AUTH_INSECURE_CLIENT_KEY_TYPE:
+            policy: mute
+          AUTH_INSECURE_KEYS_ALLOWED:
+            policy: mute
+          AUTH_INSECURE_KEYS_CREATABLE:
+            policy: mute
       mgr:
         modules:
           - name: diskprediction_local
@@ -109,6 +122,15 @@ spec:
             memory: 64Mi
           limits:
             memory: 256Mi
+      security:
+        cephx:
+          # Rotate mon/mgr/osd/mds keys to AES256K (clears AUTH_INSECURE_SERVICE_KEY_TYPE
+          # HEALTH_ERR). Bump keyGeneration to rotate again. CSI keys stay AES (kernel < 7.0).
+          daemon:
+            keyRotationPolicy: KeyGeneration
+            keyGeneration: 2
+          csi:
+            keyType: aes
       storage:
         useAllNodes: false
         useAllDevices: false
