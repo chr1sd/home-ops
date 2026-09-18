@@ -1,8 +1,14 @@
 ---
-# Base machine config applied to every node.
+# Base machine config applied to every node (Talos 1.14 multi-document layout).
 # Secrets are 1Password references resolved by `op inject` at render time.
 # {{ schematic }}, {{ talos_version }} and {{ kubernetes_version }} are passed via
 # `minijinja-cli -D ...` from talos/mod.just (the single source of truth for versions).
+#
+# The v1alpha1 document is still mandatory. It carries what has no dedicated
+# document yet (machine identity/PKI, etcd, diskQuotaSupport) plus the
+# control-plane Kubernetes settings not yet migrated (see controlplane.yaml.j2).
+# clusterName + controlPlane.endpoint stay here on purpose: they can only move
+# to KubeClusterConfig together with serviceAccount (siderolabs/talos#14338).
 version: v1alpha1
 debug: false
 persist: true
@@ -13,106 +19,143 @@ machine:
   certSANs:
     - "127.0.0.1"
     - "10.13.17.17"
-  install:
-    image: factory.talos.dev/metal-installer/{{ schematic }}:{{ talos_version }}
-    wipe: false
-    grubUseUKICmdline: true
-  kubelet:
-    image: ghcr.io/siderolabs/kubelet:{{ kubernetes_version }}
-    defaultRuntimeSeccompProfileEnabled: true
-    disableManifestsDirectory: true
-    extraConfig:
-      serializeImagePulls: false
-    nodeIP:
-      validSubnets:
-        - "10.13.17.0/24"
-  network:
-    disableSearchDomain: true
-    nameservers:
-      - "10.13.17.1"
-      - "1.1.1.1"
-  files:
-    - op: create
-      path: /etc/cri/conf.d/20-customization.part
-      content: |
-        [plugins."io.containerd.cri.v1.images"]
-          discard_unpacked_layers = false
-        [plugins."io.containerd.cri.v1.runtime"]
-          device_ownership_from_security_context = true
-    - op: overwrite
-      path: /etc/nfsmount.conf
-      permissions: 0o644
-      content: |
-        [ NFSMount_Global_Options ]
-        nfsvers=4.2
-        hard=True
-        nconnect=16
-        noatime=True
-        rsize=4194304
-        wsize=4194304
-  time:
-    disabled: false
-    servers:
-      - 162.159.200.1
-      - 162.159.200.123
-  sysctls:
-    fs.inotify.max_user_instances: "8192"
-    fs.inotify.max_user_watches: "1048576"
-    net.core.default_qdisc: "fq"
-    net.core.netdev_max_backlog: "50000"
-    net.core.rmem_max: "67108864"
-    net.core.somaxconn: "65535"
-    net.core.wmem_max: "67108864"
-    net.ipv4.ip_local_port_range: "1024 65535"
-    net.ipv4.neigh.default.gc_thresh1: "4096"
-    net.ipv4.neigh.default.gc_thresh2: "8192"
-    net.ipv4.neigh.default.gc_thresh3: "16384"
-    net.ipv4.ping_group_range: "0 2147483647"
-    net.ipv4.tcp_congestion_control: "bbr"
-    net.ipv4.tcp_fastopen: "3"
-    net.ipv4.tcp_fin_timeout: "15"
-    net.ipv4.tcp_max_syn_backlog: "65535"
-    net.ipv4.tcp_mtu_probing: "1"
-    net.ipv4.tcp_notsent_lowat: "131072"
-    net.ipv4.tcp_rmem: "4096 131072 67108864"
-    net.ipv4.tcp_slow_start_after_idle: "0"
-    net.ipv4.tcp_tw_reuse: "1"
-    net.ipv4.tcp_window_scaling: "1"
-    net.ipv4.tcp_wmem: "4096 16384 67108864"
-    sunrpc.tcp_max_slot_table_entries: "128"
-    sunrpc.tcp_slot_table_entries: "128"
-    user.max_user_namespaces: "11255"
   features:
     diskQuotaSupport: true
-    kubePrism:
-      enabled: true
-      port: 7445
-    hostDNS:
-      enabled: true
-      forwardKubeDNSToHost: true
 cluster:
-  id: op://k8s/talos/CLUSTER_ID
-  secret: op://k8s/talos/CLUSTER_SECRET
   token: op://k8s/talos/CLUSTER_TOKEN
   ca:
     crt: op://k8s/talos/CLUSTER_CA_CRT
   clusterName: kubernetes
   controlPlane:
     endpoint: https://10.13.17.17:6443
-  network:
-    cni:
-      name: none
-    dnsDomain: cluster.local
-    podSubnets:
-      - "10.244.0.0/16"
-    serviceSubnets:
-      - "10.96.0.0/12"
-  discovery:
-    enabled: true
-    registries:
-      kubernetes:
-        disabled: true
-      service: {}
+---
+# was: machine.install (per-node diskSelector lives in nodes/controlplane/<node>.yaml.j2).
+# wipe defaults to true in this document, so it is set explicitly.
+apiVersion: v1alpha1
+kind: UnattendedInstallConfig
+installer:
+  image: factory.talos.dev/metal-installer/{{ schematic }}:{{ talos_version }}
+provisioning:
+  wipe: false
+---
+# was: machine.kubelet (disableManifestsDirectory is hard-coded true in KubeletConfig)
+apiVersion: v1alpha1
+kind: KubeletConfig
+image: ghcr.io/siderolabs/kubelet:{{ kubernetes_version }}
+defaultRuntimeSeccompProfileEnabled: true
+config:
+  serializeImagePulls: false
+---
+# was: machine.kubelet.nodeIP + cluster.allowSchedulingOnControlPlanes.
+# No `taints` block = schedulable control planes. Labels merge from controlplane.yaml.j2.
+apiVersion: v1alpha1
+kind: KubeNodeConfig
+nodeIP:
+  validSubnets:
+    - "10.13.17.0/24"
+---
+# was: machine.network.nameservers / disableSearchDomain + machine.features.hostDNS
+apiVersion: v1alpha1
+kind: ResolverConfig
+nameservers:
+  - address: 10.13.17.1
+  - address: 1.1.1.1
+searchDomains:
+  disableDefault: true
+hostDNS:
+  enabled: true
+  forwardKubeDNSToHost: true
+---
+# was: machine.files[/etc/cri/conf.d/20-customization.part]
+# (`customization` is a reserved name for the legacy file; changes restart CRI)
+apiVersion: v1alpha1
+kind: CRICustomizationConfig
+name: containerd
+content: |
+  [plugins."io.containerd.cri.v1.images"]
+    discard_unpacked_layers = false
+  [plugins."io.containerd.cri.v1.runtime"]
+    device_ownership_from_security_context = true
+---
+# was: machine.files[/etc/nfsmount.conf] (name is relative to /etc)
+apiVersion: v1alpha1
+kind: EtcFileConfig
+name: nfsmount.conf
+mode: 0o644
+contents: |
+  [ NFSMount_Global_Options ]
+  nfsvers=4.2
+  hard=True
+  nconnect=16
+  noatime=True
+  rsize=4194304
+  wsize=4194304
+---
+# was: machine.time. NTS is on by default and requires hostnames; 162.159.200.1/.123
+# are Cloudflare's NTP anycast IPs, so the hostname for the same service is used.
+apiVersion: v1alpha1
+kind: TimeSyncConfig
+ntp:
+  servers:
+    - time.cloudflare.com
+  useNTS: true
+---
+# was: machine.sysctls
+apiVersion: v1alpha1
+kind: SysctlConfig
+params:
+  fs.inotify.max_user_instances: "8192"
+  fs.inotify.max_user_watches: "1048576"
+  net.core.default_qdisc: "fq"
+  net.core.netdev_max_backlog: "50000"
+  net.core.rmem_max: "67108864"
+  net.core.somaxconn: "65535"
+  net.core.wmem_max: "67108864"
+  net.ipv4.ip_local_port_range: "1024 65535"
+  net.ipv4.neigh.default.gc_thresh1: "4096"
+  net.ipv4.neigh.default.gc_thresh2: "8192"
+  net.ipv4.neigh.default.gc_thresh3: "16384"
+  net.ipv4.ping_group_range: "0 2147483647"
+  net.ipv4.tcp_congestion_control: "bbr"
+  net.ipv4.tcp_fastopen: "3"
+  net.ipv4.tcp_fin_timeout: "15"
+  net.ipv4.tcp_max_syn_backlog: "65535"
+  net.ipv4.tcp_mtu_probing: "1"
+  net.ipv4.tcp_notsent_lowat: "131072"
+  net.ipv4.tcp_rmem: "4096 131072 67108864"
+  net.ipv4.tcp_slow_start_after_idle: "0"
+  net.ipv4.tcp_tw_reuse: "1"
+  net.ipv4.tcp_window_scaling: "1"
+  net.ipv4.tcp_wmem: "4096 16384 67108864"
+  sunrpc.tcp_max_slot_table_entries: "128"
+  sunrpc.tcp_slot_table_entries: "128"
+  user.max_user_namespaces: "11255"
+---
+# was: machine.features.kubePrism (omit the document to disable KubePrism)
+apiVersion: v1alpha1
+kind: KubePrismConfig
+port: 7445
+---
+# was: cluster.id / cluster.secret (same base64 values)
+apiVersion: v1alpha1
+kind: DiscoveryIdentityConfig
+clusterID: op://k8s/talos/CLUSTER_ID
+clusterSecret: op://k8s/talos/CLUSTER_SECRET
+---
+# was: cluster.discovery (service registry; the Kubernetes registry stays disabled)
+apiVersion: v1alpha1
+kind: DiscoveryServiceConfig
+name: default
+endpoint: https://discovery.talos.dev/
+---
+# was: cluster.network (cni: none => no KubeFlannelCNIConfig document; Cilium is deployed by Flux)
+apiVersion: v1alpha1
+kind: KubeNetworkConfig
+dnsDomain: cluster.local
+podSubnets:
+  - "10.244.0.0/16"
+serviceSubnets:
+  - "10.96.0.0/12"
 ---
 # Bond members: alias both Intel X710 SFP+ ports (i40e driver) as sfp0/sfp1,
 # independent of predictable interface names. The MS01 onboard 2.5GbE NICs use
