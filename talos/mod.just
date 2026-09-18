@@ -1,14 +1,16 @@
 set shell := ['bash', '-euo', 'pipefail', '-c']
 
 # Talos machine configs are rendered from Jinja templates in this dir, with
-# secrets resolved from 1Password at render time (see the root `template` helper):
+# secrets resolved from 1Password at render time (see the root `template` helper).
+# talos_version / kubernetes_version below are the single source of truth for image
+# tags (Renovate bumps them here; the templates receive them via -D):
 #   just template <tmpl> | ... -> talosctl machineconfig patch
 # No talhelper, no SOPS. Requires: minijinja-cli, op (signed in), talosctl, yq, jq, curl.
 
-# renovate: datasource=docker depName=ghcr.io/siderolabs/installer
-talos_version := "v1.13.8"
+# renovate: datasource=custom.talos-factory depName=siderolabs/talos
+talos_version := "v1.14.1"
 # renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
-kubernetes_version := "v1.36.3"
+kubernetes_version := "v1.37.0"
 
 [private]
 default:
@@ -55,8 +57,8 @@ render node:
     role=controlplane # every kvrnts node is a combined control-plane + worker
     schematic=$(just talos schematic-id)
     talosctl machineconfig patch \
-        <(just template "{{ source_directory() }}/machineconfig.yaml.j2" -D schematic="$schematic") \
-        --patch @<(just template "{{ source_directory() }}/${role}.yaml.j2") \
+        <(just template "{{ source_directory() }}/machineconfig.yaml.j2" -D schematic="$schematic" -D talos_version="{{ talos_version }}" -D kubernetes_version="{{ kubernetes_version }}") \
+        --patch @<(just template "{{ source_directory() }}/${role}.yaml.j2" -D kubernetes_version="{{ kubernetes_version }}") \
         --patch @<(just template "{{ source_directory() }}/nodes/${role}/{{ node }}.yaml.j2")
 
 [doc("Dry-run a node's rendered config against what is applied")]

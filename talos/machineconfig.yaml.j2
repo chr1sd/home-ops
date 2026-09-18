@@ -1,7 +1,8 @@
 ---
 # Base machine config applied to every node.
 # Secrets are 1Password references resolved by `op inject` at render time.
-# {{ schematic }} is passed via `minijinja-cli -D schematic=<id>`.
+# {{ schematic }}, {{ talos_version }} and {{ kubernetes_version }} are passed via
+# `minijinja-cli -D ...` from talos/mod.just (the single source of truth for versions).
 version: v1alpha1
 debug: false
 persist: true
@@ -13,12 +14,11 @@ machine:
     - "127.0.0.1"
     - "10.13.17.17"
   install:
-    image: factory.talos.dev/metal-installer/{{ schematic }}:v1.14.1
+    image: factory.talos.dev/metal-installer/{{ schematic }}:{{ talos_version }}
     wipe: false
     grubUseUKICmdline: true
   kubelet:
-    # renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
-    image: ghcr.io/siderolabs/kubelet:v1.36.4
+    image: ghcr.io/siderolabs/kubelet:{{ kubernetes_version }}
     defaultRuntimeSeccompProfileEnabled: true
     disableManifestsDirectory: true
     extraConfig:

@@ -184,6 +184,7 @@
       customType: "regex",
       managerFilePatterns: [
         "/(^|/).+\\.env(?:\\.j2)?$/",
+        "/(^|/).+\\.just$/",
         "/(^|/).+\\.sh(?:\\.j2)?$/",
         "/(^|/).+\\.ya?ml(?:\\.j2)?$/",
       ],
@@ -198,17 +199,11 @@
         // # renovate: datasource=docker depName=ghcr.io/prometheus-operator/prometheus-operator
         // https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.80.0/example/prometheus-operator-crd/monitoring.coreos.com_alertmanagerconfigs.yaml
         "datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)\\n.+/(?<currentValue>(v|\\d)[^/]+)",
+        // # renovate: datasource=custom.talos-factory depName=siderolabs/talos
+        // talos_version := "v1.14.1"
+        'datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)\\n.+:=\\s*"?(?<currentValue>[^"\\s]+)"?',
       ],
       datasourceTemplate: "{{#if datasource}}{{{datasource}}}{{else}}github-releases{{/if}}",
-    },
-    {
-      description: "Process Talos Factory installer images",
-      customType: "regex",
-      managerFilePatterns: ["/talos\\/.*\\.yaml(?:\\.j2)?$/"],
-      matchStrings: ["factory\\.talos\\.dev\\/[^/]+\\/[^:]+:(?<currentValue>v\\S+)"],
-      datasourceTemplate: "custom.talos-factory",
-      versioningTemplate: "semver",
-      depNameTemplate: "siderolabs/talos",
     },
   ],
 }
