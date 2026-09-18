@@ -14,6 +14,9 @@ addresses:
 routes:
   - gateway: 10.13.17.1
 ---
-machine:
-  install:
-    disk: /dev/disk/by-id/nvme-SAMSUNG_MZ1LB960HAJQ-00007_S435NA0MC21033
+# was: machine.install.disk (merges into the base UnattendedInstallConfig)
+apiVersion: v1alpha1
+kind: UnattendedInstallConfig
+provisioning:
+  diskSelector:
+    match: '"/dev/disk/by-id/nvme-SAMSUNG_MZ1LB960HAJQ-00007_S435NA0MC21033" in disk.symlinks'

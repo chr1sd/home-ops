@@ -1,21 +1,14 @@
 ---
 # Control-plane-only patch. NOTE: machine.ca / cluster.ca / aggregatorCA / etcd.ca
 # each merge as a UNIT — crt must be repeated alongside key or the crt gets blanked.
+# cluster.apiServer/controllerManager/scheduler/proxy/coreDNS/secretboxEncryptionSecret
+# are deliberately still v1alpha1: moving them means KubeAPIServerConfig PLUS
+# KubeAuthenticationConfig + KubeAuthorizerConfig node/rbac in one apply (next slice).
 machine:
   type: controlplane
   ca:
     crt: op://k8s/talos/MACHINE_CA_CRT
     key: op://k8s/talos/MACHINE_CA_KEY
-  features:
-    kubernetesTalosAPIAccess:
-      enabled: true
-      allowedRoles:
-        - os:admin
-      allowedKubernetesNamespaces:
-        - actions-runner-system
-        - system-upgrade
-  nodeLabels:
-    node.kubernetes.io/exclude-from-external-load-balancers: ""
 cluster:
   ca:
     crt: op://k8s/talos/CLUSTER_CA_CRT
@@ -26,7 +19,6 @@ cluster:
   serviceAccount:
     key: op://k8s/talos/CLUSTER_SERVICEACCOUNT_KEY
   secretboxEncryptionSecret: op://k8s/talos/CLUSTER_SECRETBOXENCRYPTIONSECRET
-  allowSchedulingOnControlPlanes: true
   apiServer:
     image: registry.k8s.io/kube-apiserver:{{ kubernetes_version }}
     certSANs:
@@ -80,6 +72,23 @@ cluster:
     image: registry.k8s.io/kube-scheduler:{{ kubernetes_version }}
     extraArgs:
       bind-address: 0.0.0.0
+---
+# was: machine.nodeLabels (merges into the base KubeNodeConfig). The v1alpha1
+# bridge added the control-plane role label automatically; KubeNodeConfig does not.
+apiVersion: v1alpha1
+kind: KubeNodeConfig
+labels:
+  node-role.kubernetes.io/control-plane: ""
+  node.kubernetes.io/exclude-from-external-load-balancers: ""
+---
+# was: machine.features.kubernetesTalosAPIAccess (used by ARC runners and tuppr)
+apiVersion: v1alpha1
+kind: KubeTalosAPIAccessConfig
+allowedRoles:
+  - os:admin
+allowedKubernetesNamespaces:
+  - actions-runner-system
+  - system-upgrade
 ---
 # Layer 2 VIP for the control-plane endpoint (floats across control-plane nodes)
 apiVersion: v1alpha1
