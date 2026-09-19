@@ -27,7 +27,7 @@ spec:
                 custom: true
                 spec:
                   httpGet:
-                    path: /healthz
+                    path: /
                     port: &port 8123
                   initialDelaySeconds: 0
                   periodSeconds: 10
