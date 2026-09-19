@@ -192,6 +192,17 @@ vlanID: 87
 parent: bond0
 mtu: 9000
 ---
+# Tagged IoT VLAN on the bond: exists only to be the macvlan master for the Multus
+# `iot` NetworkAttachmentDefinition (kube-system). No address on the host. MTU 1500
+# because the IoT devices and the UDM VLAN interface are 1500 and the UDM drops
+# oversized DF frames silently.
+apiVersion: v1alpha1
+kind: VLANConfig
+name: bond0.47
+vlanID: 47
+parent: bond0
+mtu: 1500
+---
 # Ring-buffer tuning on the two X710 SFP+ ports (i40e), max 8160 (was 512).
 # Explicit names: predictable + identical across the MS01s. EthernetConfig
 # doesn't document link-alias support, so it targets the physical interfaces.

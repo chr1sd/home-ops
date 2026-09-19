@@ -1,0 +1,34 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/k8s.cni.cncf.io/networkattachmentdefinition_v1.json
+# Second interface on the IoT VLAN for pods that need L2 presence there (mDNS/SSDP
+# discovery). The macvlan master must exist on every node: see the matching
+# VLANConfig in talos/machineconfig.yaml.j2. Pods pick their address via the
+# k8s.v1.cni.cncf.io/networks annotation ("ips"). `sbr` turns the static IP into a
+# source-based route so replies to traffic that arrived on the IoT address leave
+# through the IoT interface instead of the cluster default route.
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: iot
+spec:
+  config: |-
+    {
+      "cniVersion": "1.1.0",
+      "name": "iot",
+      "plugins": [
+        {
+          "type": "macvlan",
+          "master": "bond0.47",
+          "mode": "bridge",
+          "ipam": {
+            "type": "static",
+            "routes": [
+              {"dst": "0.0.0.0/0", "gw": "10.13.47.1"}
+            ]
+          }
+        },
+        {
+          "type": "sbr"
+        }
+      ]
+    }

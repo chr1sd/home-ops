@@ -34,3 +34,4 @@ resources:
   - ./miniflux/ks.yaml
   - ./nextflux/ks.yaml
   - ./ersatztv/ks.yaml
+  - ./home-assistant/ks.yaml
