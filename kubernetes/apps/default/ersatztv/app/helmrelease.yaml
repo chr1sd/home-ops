@@ -1,0 +1,97 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: ersatztv
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: ersatztv
+  interval: 1h
+  dependsOn:
+    - name: intel-device-plugin-gpu
+      namespace: kube-system
+  values:
+    controllers:
+      ersatztv:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              # Unified image: the ffmpeg base ships libva + Intel oneVPL, so no -vaapi tag exists any more
+              repository: ghcr.io/ersatztv/legacy
+              tag: v26.9.0@sha256:c52a8e89e0e4a76364b32b02aa9c55daee69e3b5c7d77bfcd098512cf728d43a
+            env:
+              TZ: America/New_York
+              # Image defaults: ETV_CONFIG_FOLDER=/config, ETV_TRANSCODE_FOLDER=/transcode
+              XDG_DATA_HOME: /config # https://github.com/ErsatzTV/ErsatzTV/issues/327
+              XDG_CACHE_HOME: /cache
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 10
+            resources:
+              requests:
+                cpu: 100m
+                memory: 1Gi
+                gpu.intel.com/i915: 1
+              limits:
+                memory: 8Gi
+                gpu.intel.com/i915: 1
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+    service:
+      app:
+        type: ClusterIP
+        ports:
+          http:
+            port: 8409
+    route:
+      app:
+        hostnames:
+          - "{{ .Release.Name }}.dovis.me"
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+    persistence:
+      config:
+        existingClaim: "{{ .Release.Name }}"
+      media:
+        type: nfs
+        server: lil-nas.dovis.me
+        path: /mnt/seagate-data/data
+        globalMounts:
+          - path: /data/media
+            subPath: media
+            readOnly: true
+      cache:
+        type: emptyDir
+        globalMounts:
+          - path: /cache
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
+      transcode:
+        type: emptyDir
+        medium: Memory
+        sizeLimit: 4Gi
+        globalMounts:
+          - path: /transcode
