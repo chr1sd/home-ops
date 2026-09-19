@@ -33,13 +33,14 @@ sonarr:
           enabled: true
           except:
             - "Sign Languages"
-            - "FLUX Season Pack"
-            - "Kitsune Season Pack"
+            - "Group Tier 1: FLUX"
+            - "Group Tier 2: Kitsune"
         upgrade:
           allowed: true
           until_quality: &remux-2160p Bluray-2160p Remux
           until_score: 10000
         min_format_score: 0
+        min_upgrade_format_score: 50
         qualities:
           - name: *remux-2160p
           - name: Bluray-2160p
@@ -75,6 +76,7 @@ sonarr:
           until_quality: *remux-1080p
           until_score: 10000
         min_format_score: 0
+        min_upgrade_format_score: 50
         qualities:
           - name: *remux-1080p
           - name: Bluray-1080p
@@ -104,6 +106,7 @@ sonarr:
           until_quality: WEBDL-2160p
           until_score: 10000
         min_format_score: 0
+        min_upgrade_format_score: 50
         qualities:
           - name: WEBDL-2160p
             qualities:
@@ -137,6 +140,7 @@ sonarr:
           until_quality: Any Quality
           until_score: 10000
         min_format_score: 0
+        min_upgrade_format_score: 50
         qualities:
           - name: Any Quality
             qualities:
@@ -166,15 +170,13 @@ sonarr:
         score_set: anime-sonarr
         reset_unmatched_scores: &anime_reset_unmatched
           enabled: true
-          except:
-            - "Anime Home Groups"
-            - "FLUX Season Pack"
-            - "Kitsune Season Pack"
+          except: []
         upgrade:
           allowed: true
           until_quality: &anime-bluray-2160p Bluray-2160p
           until_score: 10000
         min_format_score: 0
+        min_upgrade_format_score: 50
         qualities:
           - name: *anime-bluray-2160p
             qualities:
@@ -221,6 +223,7 @@ sonarr:
           until_quality: Bluray-1080p
           until_score: 10000
         min_format_score: 0
+        min_upgrade_format_score: 50
         qualities:
           - *anime-bluray-1080p
           - *anime-web-1080p
@@ -240,6 +243,7 @@ sonarr:
           until_quality: WEBDL-1080p
           until_score: 10000
         min_format_score: 0
+        min_upgrade_format_score: 50
         qualities:
           - *anime-web-2160p
           - *anime-web-1080p
