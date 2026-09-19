@@ -131,6 +131,14 @@ params:
   sunrpc.tcp_slot_table_entries: "128"
   user.max_user_namespaces: "11255"
 ---
+# NFS client readahead. The kernel default is 128 KiB per mount; measured on kvrnts-3
+# against lil-nas (CUBIC, 2x10G LACP) 1024 KiB gives 700-750 MB/s per stream for
+# Plex-style 64 KiB reads vs ~640 at the default, with 1-4 MiB and 16 MiB both worse.
+apiVersion: v1alpha1
+kind: UdevRulesConfig
+rules:
+  - SUBSYSTEM=="bdi", ACTION=="add", KERNEL=="0:*", ATTR{read_ahead_kb}="1024"
+---
 # was: machine.features.kubePrism (omit the document to disable KubePrism)
 apiVersion: v1alpha1
 kind: KubePrismConfig
