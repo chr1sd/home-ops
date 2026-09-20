@@ -12,6 +12,7 @@ resources:
   - ./qui/ks.yaml
   - ./radarr/ks.yaml
   - ./sonarr/ks.yaml
+  - ./lidarr/ks.yaml
   - ./recyclarr/ks.yaml
   - ./bazarr/ks.yaml
   - ./seerr/ks.yaml
