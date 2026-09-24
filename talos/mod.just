@@ -10,7 +10,7 @@ set shell := ['bash', '-euo', 'pipefail', '-c']
 # renovate: datasource=custom.talos-factory depName=siderolabs/talos
 talos_version := "v1.14.1"
 # renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
-kubernetes_version := "v1.37.0"
+kubernetes_version := "v1.37.1"
 
 [private]
 default:
