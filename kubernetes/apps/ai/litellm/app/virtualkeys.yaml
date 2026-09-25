@@ -1,0 +1,24 @@
+---
+# One key per consumer so usage in the LiteLLM UI is attributable. The operator mints
+# the key against the proxy admin API and writes it to <secretName>/<secretKey>.
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMVirtualKey
+metadata:
+  name: open-webui
+spec:
+  proxyRef: litellm
+  keyAlias: Open WebUI
+  secretName: litellm-key-open-webui
+  secretKey: api-key
+---
+# Workstation clients (opencode, Zed, curl). Read it with:
+#   kubectl -n ai get secret litellm-key-workstation -o jsonpath='{.data.api-key}' | base64 -d
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMVirtualKey
+metadata:
+  name: workstation
+spec:
+  proxyRef: litellm
+  keyAlias: Workstation
+  secretName: litellm-key-workstation
+  secretKey: api-key

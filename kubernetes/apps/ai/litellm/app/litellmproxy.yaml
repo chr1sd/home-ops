@@ -1,0 +1,85 @@
+---
+# The single front door for every LLM consumer (vault: Project - AI Node and LLM Stack,
+# phase 5). Clients use stable aliases (models.yaml); this proxy owns the fallbacks.
+# Shape from joryirving/home-ops litellm/litellmproxy.yaml minus SSO, Redis and the
+# cloud providers: one replica needs no Redis, and models are local-only for now.
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMProxy
+metadata:
+  name: litellm
+spec:
+  applyMode: file
+  image: ghcr.io/berriai/litellm-database:v1.102.1@sha256:c38fe5eff11874941a21f5630ceb842f640dee7d5d5cde440b60ed0a71798f33
+  replicas: 1
+  service:
+    port: 4000
+    type: ClusterIP
+  route:
+    hostnames:
+      - litellm.dovis.me
+    parentRefs:
+      - name: envoy-internal
+        namespace: network
+  # Admin API auth for the operator (virtual keys). UI login: user `admin`, password = master key.
+  apiAccess:
+    masterKeyRef:
+      name: litellm
+      key: LITELLM_MASTER_KEY
+  env:
+    - name: LITELLM_LOG
+      value: INFO
+    - name: LITELLM_MODE
+      value: PRODUCTION
+    - name: PROXY_BASE_URL
+      value: https://litellm.dovis.me
+    - name: DATABASE_URL
+      valueFrom:
+        secretKeyRef:
+          name: litellm
+          key: DATABASE_URL
+  envFrom:
+    - secretRef:
+        name: litellm
+  resources:
+    requests:
+      cpu: 100m
+      memory: 1Gi
+    limits:
+      memory: 3Gi
+  livenessProbe:
+    httpGet:
+      path: /
+      port: 4000
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    failureThreshold: 30
+  readinessProbe:
+    httpGet:
+      path: /
+      port: 4000
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    failureThreshold: 3
+  routerSettings:
+    routing_strategy: simple-shuffle
+    cooldown_time: 30
+    enable_pre_call_checks: true
+    # Each lane fails over to the other card; the -chat doors stay non-thinking.
+    fallbacks:
+      - qwen3.8-27b:
+          - gemma-4-12b-it-qat
+      - qwen3.8-27b-chat:
+          - gemma-4-12b-it-qat-chat
+      - gemma-4-12b-it-qat:
+          - qwen3.8-27b
+      - gemma-4-12b-it-qat-chat:
+          - qwen3.8-27b-chat
+  litellmSettings:
+    success_callback:
+      - prometheus
+    failure_callback:
+      - prometheus
+    require_auth_for_metrics_endpoint: false
+  generalSettings:
+    health_check_endpoint: /v1/health
+    store_model_in_db: false

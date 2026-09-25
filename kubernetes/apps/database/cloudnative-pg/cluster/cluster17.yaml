@@ -38,3 +38,8 @@ spec:
         login: true
         passwordSecret:
           name: miniflux-role-secret
+      - name: litellm
+        ensure: present
+        login: true
+        passwordSecret:
+          name: litellm-role-secret

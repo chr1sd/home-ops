@@ -1,0 +1,116 @@
+---
+# Stable aliases. Each local generative model has two doors on ONE llama.cpp server:
+# the bare name runs the vendor thinking recipe, `-chat` is the non-thinking twin
+# (jory's twin-alias pattern; they share weights, KV cache and slots).
+# `max_parallel_requests` MUST equal the backend's `parallelSlots`: above it requests
+# queue invisibly inside llama.cpp, below it VRAM sits idle.
+# Names match the InferenceServices so the operator's autoRegister leaves these alone.
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMModel
+metadata:
+  name: qwen3.8-27b
+spec:
+  modelName: qwen3.8-27b
+  proxyRef: litellm
+  params:
+    model: openai/qwen3.8-27b
+    apiBase: http://qwen3-8-27b.ai.svc.cluster.local:8080/v1
+    apiKey: sk-llmkube-noauth
+    additional:
+      max_parallel_requests: 2
+      allowed_openai_params:
+        - reasoning_effort
+  info:
+    mode: chat
+    maxInputTokens: 122880
+    maxOutputTokens: 24576
+    supportsFunctionCalling: true
+    supportsVision: true
+---
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMModel
+metadata:
+  name: qwen3.8-27b-chat
+spec:
+  modelName: qwen3.8-27b-chat
+  proxyRef: litellm
+  params:
+    model: openai/qwen3.8-27b
+    apiBase: http://qwen3-8-27b.ai.svc.cluster.local:8080/v1
+    apiKey: sk-llmkube-noauth
+    additional:
+      max_parallel_requests: 2
+      temperature: 0.7
+      top_p: 0.8
+      presence_penalty: 1.5
+      reasoning_effort: none
+      allowed_openai_params:
+        - reasoning_effort
+  info:
+    mode: chat
+    maxInputTokens: 122880
+    maxOutputTokens: 16384
+    supportsFunctionCalling: true
+    supportsVision: true
+---
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMModel
+metadata:
+  name: gemma-4-12b-it-qat
+spec:
+  modelName: gemma-4-12b-it-qat
+  proxyRef: litellm
+  params:
+    model: openai/gemma-4-12b-it-qat
+    apiBase: http://gemma-4-12b-it-qat.ai.svc.cluster.local:8080/v1
+    apiKey: sk-llmkube-noauth
+    additional:
+      max_parallel_requests: 2
+      allowed_openai_params:
+        - reasoning_effort
+  info:
+    mode: chat
+    maxInputTokens: 122880
+    maxOutputTokens: 16384
+    supportsFunctionCalling: true
+    supportsVision: true
+---
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMModel
+metadata:
+  name: gemma-4-12b-it-qat-chat
+spec:
+  modelName: gemma-4-12b-it-qat-chat
+  proxyRef: litellm
+  params:
+    model: openai/gemma-4-12b-it-qat
+    apiBase: http://gemma-4-12b-it-qat.ai.svc.cluster.local:8080/v1
+    apiKey: sk-llmkube-noauth
+    additional:
+      max_parallel_requests: 2
+      reasoning_effort: none
+      allowed_openai_params:
+        - reasoning_effort
+  info:
+    mode: chat
+    maxInputTokens: 122880
+    maxOutputTokens: 16384
+    supportsFunctionCalling: true
+    supportsVision: true
+---
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMModel
+metadata:
+  name: embed
+spec:
+  modelName: embed
+  proxyRef: litellm
+  params:
+    model: openai/embed
+    apiBase: http://embed.ai.svc.cluster.local:8080/v1
+    apiKey: sk-llmkube-noauth
+    additional:
+      max_parallel_requests: 8
+  info:
+    mode: embedding
+    maxInputTokens: 32768
