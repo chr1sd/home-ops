@@ -1,0 +1,5 @@
+---
+# Self-hosted runner labels (ARC scale sets in kubernetes/apps/actions-runner-system)
+self-hosted-runner:
+  labels:
+    - home-ops-runners

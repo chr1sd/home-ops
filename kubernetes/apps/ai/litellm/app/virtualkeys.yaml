@@ -22,3 +22,16 @@ spec:
   keyAlias: Workstation
   secretName: litellm-key-workstation
   secretKey: api-key
+---
+# The AI PR review workflow (.github/workflows/ai-pr-review.yaml). Runners live in
+# actions-runner-system and cannot read this namespace's Secrets, so the value is
+# copied once into the repo's Actions secret LITELLM_API_KEY:
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMVirtualKey
+metadata:
+  name: pr-review
+spec:
+  proxyRef: litellm
+  keyAlias: PR Review
+  secretName: litellm-key-pr-review
+  secretKey: api-key

@@ -1,0 +1,90 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: "AI PR Review"
+
+# A local model reviews every non-draft PR. Runs on the in-cluster ARC scale set so it
+# can reach LiteLLM privately (kubernetes/apps/actions-runner-system). Primary reviewer
+# is the GPU 1 lane (gemma-4-12b-it-qat), fallback the GPU 0 lane; both are thinking
+# models, so the token budget must leave room for reasoning AND the JSON verdict.
+# Add the `ai-review` label to force a fresh review. Vault: Project - AI Node and LLM
+# Stack, phase 6; pattern from joryirving/home-ops .github/workflows/ai-pr-review.yaml.
+
+on:
+  pull_request:
+    branches: ["main"]
+    types: [opened, reopened, synchronize, ready_for_review, labeled]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: PR number to (re-)review
+        required: true
+        type: number
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || inputs.pr_number }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+  checks: read
+
+jobs:
+  review-pr:
+    name: AI PR Review
+    if: ${{ (github.event_name == 'pull_request' && !github.event.pull_request.draft) || github.event_name == 'workflow_dispatch' }}
+    runs-on: home-ops-runners
+    timeout-minutes: 30
+
+    steps:
+      - name: Resolve PR head for re-review
+        id: prctx
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ inputs.pr_number }}
+        run: |
+          sha="$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}" --jq '.head.sha')"
+          echo "head_sha=$sha" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+          ref: ${{ github.event.pull_request.head.sha || steps.prctx.outputs.head_sha }}
+
+      # The ARC runner image ships curl, jq and git only; the reviewer also needs gh,
+      # python3 and pgrep (procps).
+      - name: Install reviewer prerequisites
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y --no-install-recommends python3 procps
+          curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+          sudo apt-get update -q
+          sudo apt-get install -y --no-install-recommends gh
+          gh --version
+
+      - name: Review with local models via LiteLLM
+        uses: misospace/pr-reviewer-action@a962cdfc21c378a3b8cf2d8b194c787408e60e6b # v2.5.0
+        with:
+          github_token: ${{ github.token }}
+          pr_number: ${{ github.event.pull_request.number || inputs.pr_number }}
+          force_review: ${{ github.event_name == 'workflow_dispatch' && 'true' || 'false' }}
+          ai_base_url: http://litellm.ai.svc.cluster.local:4000/v1
+          ai_api_format: openai
+          ai_model: gemma-4-12b-it-qat
+          ai_api_key: ${{ secrets.LITELLM_API_KEY }}
+          ai_response_format: json_object
+          ai_max_tokens: "16000"
+          ai_primary_retries: "3"
+          ai_primary_retry_delay_sec: "15"
+          ai_fallback_base_url: http://litellm.ai.svc.cluster.local:4000/v1
+          ai_fallback_api_format: openai
+          ai_fallback_model: qwen3.8-27b
+          ai_fallback_api_key: ${{ secrets.LITELLM_API_KEY }}
+          publish_mode: comment
+          context_limit_mode: normal
+          tool_enable_for_forks: "false"

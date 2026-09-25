@@ -26,6 +26,10 @@ spec:
     maxOutputTokens: 24576
     supportsFunctionCalling: true
     supportsVision: true
+    # Lets `reasoning_effort` pass on the Anthropic /v1/messages route (Claude Code);
+    # without it LiteLLM rejects the -chat twins with UnsupportedParamsError.
+    extra:
+      supports_reasoning: true
 ---
 apiVersion: litellm.home-operations.com/v1alpha1
 kind: LiteLLMModel
@@ -52,6 +56,10 @@ spec:
     maxOutputTokens: 16384
     supportsFunctionCalling: true
     supportsVision: true
+    # Lets `reasoning_effort` pass on the Anthropic /v1/messages route (Claude Code);
+    # without it LiteLLM rejects the -chat twins with UnsupportedParamsError.
+    extra:
+      supports_reasoning: true
 ---
 apiVersion: litellm.home-operations.com/v1alpha1
 kind: LiteLLMModel
@@ -74,6 +82,10 @@ spec:
     maxOutputTokens: 16384
     supportsFunctionCalling: true
     supportsVision: true
+    # Lets `reasoning_effort` pass on the Anthropic /v1/messages route (Claude Code);
+    # without it LiteLLM rejects the -chat twins with UnsupportedParamsError.
+    extra:
+      supports_reasoning: true
 ---
 apiVersion: litellm.home-operations.com/v1alpha1
 kind: LiteLLMModel
@@ -97,6 +109,10 @@ spec:
     maxOutputTokens: 16384
     supportsFunctionCalling: true
     supportsVision: true
+    # Lets `reasoning_effort` pass on the Anthropic /v1/messages route (Claude Code);
+    # without it LiteLLM rejects the -chat twins with UnsupportedParamsError.
+    extra:
+      supports_reasoning: true
 ---
 apiVersion: litellm.home-operations.com/v1alpha1
 kind: LiteLLMModel

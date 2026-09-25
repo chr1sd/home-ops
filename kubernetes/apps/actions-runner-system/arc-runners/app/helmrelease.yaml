@@ -1,0 +1,43 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: home-ops-runners
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: gha-runner-scale-set
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  # One scale set per repo (a personal account cannot register account-level runners).
+  # Jobs use `runs-on: home-ops-runners`. No containerMode: the AI review workflow is a
+  # composite action that runs inside the runner container, so no dind and no work PVC.
+  # Add `containerMode.type: dind` later for image builds (CI/CD project phase 4).
+  values:
+    githubConfigUrl: https://github.com/chr1sd/home-ops
+    githubConfigSecret: arc-github-app
+    runnerScaleSetName: home-ops-runners
+    minRunners: 0
+    maxRunners: 2
+    controllerServiceAccount:
+      name: arc-controller-gha-rs-controller
+      namespace: actions-runner-system
+    template:
+      spec:
+        containers:
+          - name: runner
+            image: ghcr.io/actions/actions-runner:2.337.0@sha256:e5496277be5d09bc968b3d64911b74e219ac4a3f2edce956a3ecf9271bea1ef4
+            command: ["/home/runner/run.sh"]
+            resources:
+              requests:
+                cpu: 250m
+                memory: 512Mi
+              limits:
+                memory: 4Gi
