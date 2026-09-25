@@ -3,8 +3,6 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - ./qwen3-27b.yaml
-# The second 3090 is free: add another Model+InferenceService here (e.g. a
-# coder/reviewer model) with gpu count: 1, or bump this one to count: 2 to
-# split a ~70B model across both cards. InferenceService pods stay Pending
-# until the GPU worker node has joined the cluster — that is expected.
+  - ./qwen3.8-27b.yaml
+# GPU 1 is free: the reviewer lane (gemma-4-12b-it-qat) and embeddings land here in
+# phase 5 of the vault plan, each as another Model + InferenceService with gpu count 1.
