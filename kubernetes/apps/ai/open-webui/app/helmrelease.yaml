@@ -1,0 +1,93 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: open-webui
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: open-webui
+  interval: 1h
+  values:
+    controllers:
+      open-webui:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/open-webui/open-webui
+              tag: v0.11.4@sha256:9591b13f13843c7721c2b8eaf7382846c81b3ffe126526d1888d1fed50c6a33f
+            env:
+              TZ: America/New_York
+              WEBUI_URL: https://chat.dovis.me
+              # Phase 4: talk straight to the llmkube InferenceService (OpenAI-compatible,
+              # no auth — the key is a required-but-unchecked placeholder). Phase 5 repoints
+              # this at LiteLLM with a real virtual key.
+              ENABLE_OPENAI_API: true
+              OPENAI_API_BASE_URL: http://qwen3-8-27b.ai.svc.cluster.local:8080/v1
+              OPENAI_API_KEY: none
+              ENABLE_OLLAMA_API: false
+              # First account to sign up becomes admin; later sign-ups land as "pending"
+              # (DEFAULT_USER_ROLE default) until an admin approves them.
+              ENABLE_SIGNUP: true
+              ENABLE_WEBSOCKET_SUPPORT: "true"
+            probes:
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: &port 8080
+                  # first boot pulls the RAG embedding model before /health answers
+                  failureThreshold: 60
+                  periodSeconds: 5
+                  timeoutSeconds: 5
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: *port
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 6
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: *port
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 6
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 100m
+                memory: 512Mi
+              limits:
+                memory: 2Gi
+    service:
+      app:
+        ports:
+          http:
+            port: *port
+    route:
+      app:
+        hostnames:
+          - chat.dovis.me
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+    persistence:
+      config:
+        existingClaim: "{{ .Release.Name }}"
+        globalMounts:
+          - path: /app/backend/data
