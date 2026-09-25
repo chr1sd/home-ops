@@ -35,12 +35,6 @@ spec:
           name: rook-csi-operator-image-set-configmap
         nodePlugin:
           priorityClassName: system-node-critical
-          # Node plugins must run on every node that mounts Ceph volumes, including
-          # the tainted GPU worker (llmkube's model cache is a CephFS RWX PVC).
-          tolerations:
-            - key: llm-workload
-              operator: Exists
-              effect: NoSchedule
         controllerPlugin:
           priorityClassName: system-cluster-critical
     drivers:
@@ -52,10 +46,21 @@ spec:
         # without this VolumeSnapshots on ceph-block never become readyToUse and
         # kopiur backups time out staging. (cephfs already defaults to volumeSnapshot.)
         snapshotPolicy: volumeSnapshot
+        # Node plugins must run on every node that mounts Ceph volumes, including the
+        # tainted GPU worker (llmkube's model cache is a CephFS RWX PVC). PER-DRIVER as
+        # well: the chart renders `nodePlugin.tolerations: []` into each Driver, which
+        # overrides a driverSpecDefaults toleration.
+        nodePlugin:
+          tolerations: &gpuNodeTolerations
+            - key: llm-workload
+              operator: Exists
+              effect: NoSchedule
       cephfs:
         enabled: true
         name: rook-ceph.cephfs.csi.ceph.com
         snapshotPolicy: volumeSnapshot
+        nodePlugin:
+          tolerations: *gpuNodeTolerations
       nfs:
         enabled: false
         name: rook-ceph.nfs.csi.ceph.com
