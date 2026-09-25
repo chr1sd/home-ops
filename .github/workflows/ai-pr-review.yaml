@@ -88,5 +88,7 @@ jobs:
           ai_fallback_model: qwen3.8-27b
           ai_fallback_api_key: ${{ secrets.LITELLM_API_KEY }}
           publish_mode: comment
+          # Required for publish_mode=comment; without it the review is computed and dropped.
+          publish_review_comment: "true"
           context_limit_mode: normal
           tool_enable_for_forks: "false"
