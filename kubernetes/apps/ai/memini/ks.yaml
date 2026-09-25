@@ -1,0 +1,34 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/kustomization-kustomize-v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app memini
+  namespace: &namespace ai
+spec:
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  components:
+    - ../../../../components/kopiur
+  dependsOn:
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
+    # its LiteLLM virtual key (Secret litellm-key-memini) and the embed/rerank aliases
+    - name: litellm
+      namespace: ai
+  interval: 1h
+  path: ./kubernetes/apps/ai/memini/app
+  postBuild:
+    substitute:
+      APP: *app
+      KOPIUR_CAPACITY: 5Gi
+  prune: true
+  retryInterval: 2m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  targetNamespace: *namespace
+  timeout: 5m
+  wait: false

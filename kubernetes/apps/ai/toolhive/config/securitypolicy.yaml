@@ -1,0 +1,21 @@
+---
+# API-key auth on the LAN route (Envoy Gateway apiKeyAuth). Clients send
+# `x-api-key: <key>`; sanitize strips the header before it reaches the gateway pod.
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: mcp-gateway-api-key
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: mcp-gateway
+  apiKeyAuth:
+    credentialRefs:
+      - group: ""
+        kind: Secret
+        name: mcp-gateway-api-keys
+    extractFrom:
+      - headers:
+          - x-api-key
+    sanitize: true

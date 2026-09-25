@@ -6,3 +6,4 @@ resources:
   - ./qwen3.8-27b.yaml # GPU 0: general / coding / vision
   - ./gemma-4-12b-it-qat.yaml # GPU 1: reviewer lane
   - ./embed.yaml # CPU on the MS01s: embeddings
+  - ./rerank.yaml # CPU on the MS01s: reranker for memini recall

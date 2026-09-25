@@ -1,0 +1,33 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: toolhive-operator
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: toolhive-operator
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  # Stacklok ToolHive: runs MCP servers as pods (MCPServer), fronts external ones
+  # (MCPRemoteProxy) and aggregates a group behind one endpoint (VirtualMCPServer).
+  values:
+    operator:
+      replicaCount: 1
+      resources:
+        requests:
+          cpu: 50m
+          memory: 256Mi
+        limits:
+          cpu: 500m
+          memory: 1Gi
+      gc:
+        gomemlimit: 450MiB
+        gogc: 75
