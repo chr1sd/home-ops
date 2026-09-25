@@ -55,16 +55,18 @@ jobs:
           persist-credentials: false
           ref: ${{ github.event.pull_request.head.sha || steps.prctx.outputs.head_sha }}
 
-      # The ARC runner image ships curl, jq and git only; the reviewer also needs gh,
-      # python3 and pgrep (procps).
-      - name: Install reviewer prerequisites
+      # The ARC runner image already has curl, jq, git, python3 and pgrep; only gh is
+      # missing. A static release binary avoids apt (the pod has no IPv6 route and
+      # archive.ubuntu.com resolves to AAAA records, which broke apt-get update).
+      - name: Install gh
+        env:
+          GH_VERSION: 2.101.0
+          GH_SHA256: 9bca2d1c16825f109907a23307628a2f0698fbf99662b73a5cf0b020293072b8
         run: |
-          sudo apt-get update -q
-          sudo apt-get install -y --no-install-recommends python3 procps
-          curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
-          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-          sudo apt-get update -q
-          sudo apt-get install -y --no-install-recommends gh
+          curl -fsSL -o /tmp/gh.tgz "https://github.com/cli/cli/releases/download/v${GH_VERSION}/gh_${GH_VERSION}_linux_amd64.tar.gz"
+          echo "${GH_SHA256}  /tmp/gh.tgz" | sha256sum -c -
+          tar -xzf /tmp/gh.tgz -C /tmp
+          sudo install -m 0755 "/tmp/gh_${GH_VERSION}_linux_amd64/bin/gh" /usr/local/bin/gh
           gh --version
 
       - name: Review with local models via LiteLLM
@@ -86,5 +88,7 @@ jobs:
           ai_fallback_model: qwen3.8-27b
           ai_fallback_api_key: ${{ secrets.LITELLM_API_KEY }}
           publish_mode: comment
+          # Required for publish_mode=comment; without it the review is computed and dropped.
+          publish_review_comment: "true"
           context_limit_mode: normal
           tool_enable_for_forks: "false"
