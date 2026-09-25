@@ -1,3 +1,8 @@
+# Image Factory schematic for GPU workers (kvrnts-4). Same kernel args as the
+# control-plane schematic minus the Iris Xe (i915) lines; NVIDIA open kernel modules +
+# container toolkit instead of i915. The base UnattendedInstallConfig installer image
+# must be rendered with THIS schematic's ID (mod.just does that per role) or the node
+# installs without the NVIDIA modules.
 customization:
   extraKernelArgs:
     - -selinux
@@ -13,6 +18,6 @@ customization:
     - talos.auditd.disabled=1
   systemExtensions:
     officialExtensions:
-      - siderolabs/nvidia-open-gpu-kernel-modules-production
-      - siderolabs/nvidia-container-toolkit-production
       - siderolabs/intel-ucode
+      - siderolabs/nvidia-container-toolkit-production
+      - siderolabs/nvidia-open-gpu-kernel-modules-production

@@ -1,5 +1,46 @@
 ---
-# Worker-only patch. Workers hold no CA private keys — the base machineconfig's
-# machine.ca.crt / cluster.ca.crt are all a worker needs to join and verify.
+# Worker-only patch: the counterpart of controlplane.yaml.j2, selected by mod.just
+# when nodes/worker/<node>.yaml.j2 exists. Workers hold no CA private keys — the
+# base machineconfig's machine.ca.crt / cluster.ca.crt are all a worker needs to
+# join and verify the control plane. Networking is per node (nodes/worker/*.yaml.j2).
 machine:
   type: worker
+---
+# was: machine.kernel.modules. The nvidia open modules come from the worker
+# schematic's system extensions (worker-schematic.yaml.j2); one document per module.
+apiVersion: v1alpha1
+kind: KernelModuleConfig
+name: nvidia
+---
+apiVersion: v1alpha1
+kind: KernelModuleConfig
+name: nvidia_uvm
+---
+apiVersion: v1alpha1
+kind: KernelModuleConfig
+name: nvidia_drm
+---
+apiVersion: v1alpha1
+kind: KernelModuleConfig
+name: nvidia_modeset
+---
+# was: machine.nodeLabels (merges into the base KubeNodeConfig). GPU workloads and
+# the nvidia-device-plugin DaemonSet select on this label. Workers apply labels with
+# kubelet credentials, and NodeRestriction rejects kubernetes.io-suffixed prefixes
+# (jory's topology.kubernetes.io/gpus was refused here), so this uses the label
+# NVIDIA's own NFD/GPU Operator tooling sets.
+apiVersion: v1alpha1
+kind: KubeNodeConfig
+labels:
+  nvidia.com/gpu.present: "true"
+---
+# was: machine.kubelet.extraConfig.registerWithTaints (merges into the base
+# KubeletConfig). AI-only node: nothing schedules here unless it tolerates this
+# taint (nvidia-device-plugin, nvidia-power-limit and llmkube InferenceServices do).
+apiVersion: v1alpha1
+kind: KubeletConfig
+config:
+  registerWithTaints:
+    - key: llm-workload
+      value: "true"
+      effect: NoSchedule

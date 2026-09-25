@@ -26,7 +26,7 @@ spec:
   replicas: 1
   runtimeClassName: nvidia
   nodeSelector:
-    topology.kubernetes.io/gpus: nvidia
+    nvidia.com/gpu.present: "true"
   tolerations:
     - key: llm-workload
       operator: Exists
