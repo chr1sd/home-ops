@@ -79,3 +79,7 @@ spec:
           - backendRefs:
               - identifier: app
                 port: *port
+# these are some comments
+# i'm only putting them here
+# to see if you recognize they are comments
+# and to see how you handle them
