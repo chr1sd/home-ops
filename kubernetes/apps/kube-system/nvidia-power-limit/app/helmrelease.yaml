@@ -1,0 +1,65 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: nvidia-power-limit
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: nvidia-power-limit
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    controllers:
+      nvidia-power-limit:
+        # One pod per GPU node: caps every card's power limit at boot, then sleeps so
+        # the DaemonSet re-applies on every node restart. The RTX 3090 defaults to 350 W;
+        # 300 W costs a few percent of tok/s and cuts heat and PSU load noticeably.
+        # Pattern from joryirving/home-ops kube-system/nvidia-power-limit.
+        type: daemonset
+        containers:
+          app:
+            image:
+              repository: docker.io/library/debian
+              tag: 13-slim@sha256:a99cfc517144bc59b1978475ec53b46ecabec7e43635402ee5b77cc54cd1b20a
+            env:
+              # nvidia-container-runtime injects nvidia-smi and the driver libs for `all`
+              NVIDIA_VISIBLE_DEVICES: all
+              NVIDIA_DRIVER_CAPABILITIES: utility
+              POWER_LIMIT_WATTS: "300"
+            command:
+              - /bin/bash
+              - -c
+              - |
+                set -euo pipefail
+                nvidia-smi -pm 1
+                nvidia-smi -pl "${POWER_LIMIT_WATTS}"
+                nvidia-smi --query-gpu=index,name,power.limit,power.max_limit --format=csv
+                exec sleep infinity
+            securityContext:
+              # nvidia-smi -pl needs root and raw device access
+              privileged: true
+              runAsNonRoot: false
+              runAsUser: 0
+              runAsGroup: 0
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+              limits:
+                memory: 64Mi
+    defaultPodOptions:
+      runtimeClassName: nvidia
+      nodeSelector:
+        nvidia.com/gpu.present: "true"
+      tolerations:
+        - key: llm-workload
+          operator: Exists
+          effect: NoSchedule

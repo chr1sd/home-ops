@@ -1,0 +1,46 @@
+---
+# LLM inference node: i7-6700K, 64 GB, 2x RTX 3090. AI workloads only — worker.yaml.j2
+# taints it at registration. Hardware facts below came from maintenance mode:
+#   talosctl -n <dhcp-ip> get links --insecure
+#   talosctl -n <dhcp-ip> get disks --insecure
+apiVersion: v1alpha1
+kind: HostnameConfig
+auto: "off"
+hostname: kvrnts-4
+---
+# Alias the NIC by permanent MAC so the config survives PCI renames — two GPUs can
+# shift the topology, as jory's eGPU did. TP-Link PCIe card, Realtek RTL8125 2.5GbE
+# (pciID 10EC:8125, driver r8169, enumerated as enp4s0, links at 2500 Mbit).
+apiVersion: v1alpha1
+kind: LinkAliasConfig
+name: lan0
+selector:
+  match: mac(link.permanent_addr) == "a8:29:48:24:ac:0d"
+---
+# Single-member active-backup bond: gives this node the same bond0 shape as the MS01s
+# (mod.just reads BondConfig for the node IP) and leaves room for a second link later.
+# Full document, not an address-only patch — the MS01 bond lives in controlplane.yaml.j2.
+# MTU 9000 matches the rest of the cluster subnet (the switch is already jumbo; the r8169
+# driver allows up to 16K on RTL8125). No EthernetConfig ring tuning for this NIC: r8169
+# has fixed 256/256 descriptor rings and no set_ringparam, so the X710-style rings block
+# in controlplane.yaml.j2 has no equivalent here.
+apiVersion: v1alpha1
+kind: BondConfig
+name: bond0
+links:
+  - lan0
+bondMode: active-backup
+miimon: 100
+mtu: 9000
+addresses:
+  - address: 10.13.17.25/24
+routes:
+  - gateway: 10.13.17.1
+---
+# was: machine.install.disk (merges into the base UnattendedInstallConfig).
+# Kingston SNV3S 1 TB NVMe, matched by serial (unique; the MS01s match by-id symlink).
+apiVersion: v1alpha1
+kind: UnattendedInstallConfig
+provisioning:
+  diskSelector:
+    match: disk.serial == "50026B76878F13C2"

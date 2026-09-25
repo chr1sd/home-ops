@@ -1,0 +1,28 @@
+---
+# yaml-language-server: $schema=https://kube-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: llmkube
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: llmkube
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    modelCache:
+      enabled: true
+      mode: shared
+      accessMode: ReadWriteMany
+      storageClass: ceph-filesystem
+      size: 200Gi
+    prometheus:
+      inferencePodMonitor:
+        enabled: true

@@ -16,19 +16,38 @@ kubernetes_version := "v1.37.0"
 default:
     @just --list talos
 
-[doc('Print the Image Factory schematic ID')]
-schematic-id:
-    @curl -sX POST --data-binary @<(minijinja-cli "{{ source_directory() }}/schematic.yaml.j2") https://factory.talos.dev/schematics | jq -r '.id'
+# Node role: a node is a worker when nodes/worker/<node>.yaml.j2 exists, otherwise a
+# combined control-plane + worker (every kvrnts MS01). The role picks the role patch
+# (<role>.yaml.j2), the node file directory and the Image Factory schematic.
+[private]
+role node:
+    @[[ -f "{{ source_directory() }}/nodes/worker/{{ node }}.yaml.j2" ]] && echo worker || echo controlplane
 
-[doc('Download the Talos ISO matching the current schematic')]
-download-image:
+# Node IP as declared in its BondConfig (every node has a bond0, even single-link workers)
+[private]
+node-ip node:
     #!/usr/bin/env bash
     set -euo pipefail
-    id=$(just talos schematic-id)
+    role=$(just talos role "{{ node }}")
+    minijinja-cli "{{ source_directory() }}/nodes/${role}/{{ node }}.yaml.j2" | yq 'select(.kind == "BondConfig") | .addresses[0].address' | cut -d/ -f1
+
+[doc('Print the Image Factory schematic ID (role: controlplane | worker)')]
+schematic-id role='controlplane':
+    #!/usr/bin/env bash
+    set -euo pipefail
+    file=schematic.yaml.j2
+    [[ "{{ role }}" == "worker" ]] && file=worker-schematic.yaml.j2
+    curl -sX POST --data-binary @<(minijinja-cli "{{ source_directory() }}/${file}") https://factory.talos.dev/schematics | jq -r '.id'
+
+[doc('Download the Talos ISO matching the current schematic (role: controlplane | worker)')]
+download-image role='controlplane':
+    #!/usr/bin/env bash
+    set -euo pipefail
+    id=$(just talos schematic-id "{{ role }}")
     curl -fL --remove-on-error --progress-bar \
-        -o "{{ source_directory() }}/talos-{{ talos_version }}-${id:0:8}.iso" \
+        -o "{{ source_directory() }}/talos-{{ talos_version }}-{{ role }}-${id:0:8}.iso" \
         "https://factory.talos.dev/image/${id}/{{ talos_version }}/metal-amd64.iso"
-    just log info "Downloaded ISO" "schematic" "${id:0:8}" "version" "{{ talos_version }}"
+    just log info "Downloaded ISO" "role" "{{ role }}" "schematic" "${id:0:8}" "version" "{{ talos_version }}"
 
 [doc('Generate talosconfig at the repo root from the 1Password talos secrets')]
 talosconfig:
@@ -54,8 +73,8 @@ talosconfig:
 render node:
     #!/usr/bin/env bash
     set -euo pipefail
-    role=controlplane # every kvrnts node is a combined control-plane + worker
-    schematic=$(just talos schematic-id)
+    role=$(just talos role "{{ node }}")
+    schematic=$(just talos schematic-id "$role")
     talosctl machineconfig patch \
         <(just template "{{ source_directory() }}/machineconfig.yaml.j2" -D schematic="$schematic" -D talos_version="{{ talos_version }}" -D kubernetes_version="{{ kubernetes_version }}") \
         --patch @<(just template "{{ source_directory() }}/${role}.yaml.j2" -D kubernetes_version="{{ kubernetes_version }}") \
@@ -65,8 +84,7 @@ render node:
 diff node:
     #!/usr/bin/env bash
     set -euo pipefail
-    role=controlplane # every kvrnts node is a combined control-plane + worker
-    ip=$(minijinja-cli "{{ source_directory() }}/nodes/${role}/{{ node }}.yaml.j2" | yq 'select(.kind == "BondConfig") | .addresses[0].address' | cut -d/ -f1)
+    ip=$(just talos node-ip "{{ node }}")
     just talos render "{{ node }}" | talosctl -n "$ip" apply-config --dry-run --mode=auto -f /dev/stdin
 
 [confirm('Apply Talos config to the node? [y/N]')]
@@ -74,8 +92,7 @@ diff node:
 apply-node node *args:
     #!/usr/bin/env bash
     set -euo pipefail
-    role=controlplane # every kvrnts node is a combined control-plane + worker
-    ip=$(minijinja-cli "{{ source_directory() }}/nodes/${role}/{{ node }}.yaml.j2" | yq 'select(.kind == "BondConfig") | .addresses[0].address' | cut -d/ -f1)
+    ip=$(just talos node-ip "{{ node }}")
     just talos render "{{ node }}" | talosctl -n "$ip" apply-config -f /dev/stdin {{ args }}
 
 [confirm('Upgrade Talos on the node? [y/N]')]
@@ -83,9 +100,8 @@ apply-node node *args:
 upgrade-node node:
     #!/usr/bin/env bash
     set -euo pipefail
-    role=controlplane # every kvrnts node is a combined control-plane + worker
-    ip=$(minijinja-cli "{{ source_directory() }}/nodes/${role}/{{ node }}.yaml.j2" | yq 'select(.kind == "BondConfig") | .addresses[0].address' | cut -d/ -f1)
-    schematic=$(just talos schematic-id)
+    ip=$(just talos node-ip "{{ node }}")
+    schematic=$(just talos schematic-id "$(just talos role "{{ node }}")")
     talosctl -n "$ip" upgrade --image="factory.talos.dev/metal-installer/${schematic}:{{ talos_version }}" --timeout=10m
 
 [confirm('Upgrade Kubernetes across the cluster? [y/N]')]
