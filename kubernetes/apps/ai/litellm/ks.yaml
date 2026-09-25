@@ -3,26 +3,19 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app open-webui
+  name: &app litellm
   namespace: &namespace ai
 spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  components:
-    - ../../../../components/kopiur
   dependsOn:
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
-    # the virtual-key Secret the Deployment reads is minted by the litellm Kustomization
-    - name: litellm
+    - name: litellm-operator
       namespace: ai
+    - name: cloudnative-pg-cluster
+      namespace: database
   interval: 1h
-  path: ./kubernetes/apps/ai/open-webui/app
-  postBuild:
-    substitute:
-      APP: *app
-      KOPIUR_CAPACITY: 10Gi
+  path: ./kubernetes/apps/ai/litellm/app
   prune: true
   retryInterval: 2m
   sourceRef:

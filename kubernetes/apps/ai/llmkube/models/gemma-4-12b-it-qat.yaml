@@ -1,0 +1,112 @@
+---
+# GPU 1 lane: reviewer model (jory's Foreman reviewer choice; he serves it from LM Studio,
+# so the llama.cpp settings below mirror the qwen3.8-27b lane with Google's recommended
+# Gemma sampling: temp 1.0, top-p 0.95, top-k 64). 6.7 GB of weights leaves plenty of
+# KV headroom; Gemma's sliding-window layers keep 131k affordable. Drop to 65536 if the
+# first start does not fit.
+apiVersion: inference.llmkube.dev/v1alpha1
+kind: Model
+metadata:
+  name: gemma-4-12b-it-qat
+spec:
+  source: hf://unsloth/gemma-4-12B-it-qat-GGUF
+  files:
+    - gemma-4-12B-it-qat-UD-Q4_K_XL.gguf
+    - mmproj-F16.gguf
+  mmproj: mmproj-F16.gguf
+  format: gguf
+  quantization: UD-Q4_K_XL
+  hardware:
+    accelerator: cuda
+    gpu:
+      enabled: true
+      vendor: nvidia
+      count: 1
+      layers: 99
+---
+apiVersion: inference.llmkube.dev/v1alpha1
+kind: InferenceService
+metadata:
+  name: gemma-4-12b-it-qat
+spec:
+  modelRef: gemma-4-12b-it-qat
+  runtime: llamacpp
+  image: ghcr.io/ggml-org/llama.cpp:server-cuda@sha256:014f721265464f38ccb247c1338d07d852c4bae7509a4b4734d07a2bbadc765c
+  rolloutPolicy:
+    waitForIdle: false # https://github.com/defilantech/LLMKube/pull/1794
+    idleTimeoutSeconds: 86400
+  runtimeClassName: nvidia
+  nodeSelector:
+    nvidia.com/gpu.present: "true"
+  tolerations:
+    - key: llm-workload
+      operator: Exists
+      effect: NoSchedule
+  env:
+    - name: NVIDIA_DRIVER_CAPABILITIES
+      value: compute,utility
+  contextSize: 131072
+  flashAttention: true
+  jinja: true
+  parallelSlots: 2
+  batchSize: 4096
+  uBatchSize: 1024
+  cacheTypeK: q8_0
+  cacheTypeV: q8_0
+  resources:
+    gpu: 1
+    cpu: "500m"
+    memory: 16Gi
+  extraArgs:
+    - --alias
+    - gemma-4-12b-it-qat
+    - --no-mmproj-offload
+    - --image-min-tokens
+    - "1024"
+    - --cont-batching
+    - --cache-prompt
+    - --cache-ram
+    - "8192"
+    - --kv-unified
+    - --temp
+    - "1"
+    - --top-p
+    - "0.95"
+    - --top-k
+    - "64"
+    - --min-p
+    - "0"
+    - --repeat-penalty
+    - "1"
+    - --threads
+    - "4"
+    - --threads-batch
+    - "8"
+    - --load-mode
+    - none
+    - --n-predict
+    - "16384"
+  endpoint:
+    port: 8080
+    type: ClusterIP
+  probeOverrides:
+    startup:
+      httpGet:
+        path: /health
+        port: 8080
+      periodSeconds: 10
+      failureThreshold: 360
+    liveness:
+      httpGet:
+        path: /health
+        port: 8080
+      initialDelaySeconds: 30
+      periodSeconds: 30
+      failureThreshold: 6
+    readiness:
+      httpGet:
+        path: /health
+        port: 8080
+      initialDelaySeconds: 20
+      periodSeconds: 10
+      failureThreshold: 6

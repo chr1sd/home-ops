@@ -6,3 +6,5 @@ resources:
   - ./service.yaml
   - ./miniflux-role-secret.yaml
   - ./miniflux-db.yaml
+  - ./litellm-role-secret.yaml
+  - ./litellm-db.yaml

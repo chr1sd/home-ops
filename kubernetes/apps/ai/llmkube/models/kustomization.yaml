@@ -3,6 +3,6 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - ./qwen3.8-27b.yaml
-# GPU 1 is free: the reviewer lane (gemma-4-12b-it-qat) and embeddings land here in
-# phase 5 of the vault plan, each as another Model + InferenceService with gpu count 1.
+  - ./qwen3.8-27b.yaml # GPU 0: general / coding / vision
+  - ./gemma-4-12b-it-qat.yaml # GPU 1: reviewer lane
+  - ./embed.yaml # CPU on the MS01s: embeddings

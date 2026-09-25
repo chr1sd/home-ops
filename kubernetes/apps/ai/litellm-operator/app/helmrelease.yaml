@@ -1,0 +1,35 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: litellm-operator
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: litellm-operator
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    controller:
+      logLevel: info
+      leaderElection:
+        enabled: true
+    llmkube:
+      # Every Ready InferenceService in the namespace becomes a LiteLLMModel named
+      # after it (params.model openai/<modelRef>, apiBase from its endpoint). A
+      # hand-written LiteLLMModel with the same name is left alone, so aliases that
+      # need extra params (max_parallel_requests, -chat twins) live in litellm/app.
+      autoRegister: true
+    resources:
+      requests:
+        cpu: 25m
+        memory: 128Mi
+      limits:
+        memory: 512Mi
