@@ -35,6 +35,12 @@ spec:
           name: rook-csi-operator-image-set-configmap
         nodePlugin:
           priorityClassName: system-node-critical
+          # Node plugins must run on every node that mounts Ceph volumes, including
+          # the tainted GPU worker (llmkube's model cache is a CephFS RWX PVC).
+          tolerations:
+            - key: llm-workload
+              operator: Exists
+              effect: NoSchedule
         controllerPlugin:
           priorityClassName: system-cluster-critical
     drivers:
