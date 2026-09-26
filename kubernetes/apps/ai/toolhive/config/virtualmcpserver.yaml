@@ -17,6 +17,101 @@ spec:
       conflictResolution: prefix
       conflictResolutionConfig:
         prefixFormat: "{workload}_"
+      # Advertise only what is listed below; a new backend contributes nothing until it
+      # gets an entry here. Filters are exact ORIGINAL tool names (no globs, prefix is
+      # added after). Hidden tools stay routable for composite tools, so this is about
+      # prompt size and clarity, not security — RBAC and read-only flags do that.
+      defaultToolVisibility: deny
+      tools:
+        # kubectl-mcp-server bundles tools for kind, helm, vCluster, KubeVirt, CAPI,
+        # Istio, KEDA, Velero, Argo Rollouts, Kyverno... none of which exist here, plus
+        # write/exec tools that --read-only refuses. Keep the read + diagnose set only.
+        - workload: kubectl
+          filter:
+            # inventory
+            - get_namespaces
+            - get_nodes
+            - get_nodes_summary
+            - get_pods
+            - get_deployments
+            - get_statefulsets
+            - get_daemonsets
+            - get_replicasets
+            - get_jobs
+            - get_services
+            - get_endpoints
+            - get_ingress
+            - get_configmaps
+            - get_service_accounts
+            - get_rbac_roles
+            - get_cluster_roles
+            - get_hpa
+            - get_pdb
+            - get_priority_classes
+            - get_resource_quotas
+            - get_resource_quotas_usage
+            - get_limit_ranges
+            - get_admission_webhooks
+            - get_pvcs
+            - get_persistent_volumes
+            - get_storage_classes
+            - get_crds
+            - list_crds
+            - check_crd_exists
+            - get_api_resources
+            - get_api_versions
+            - get_cluster_info
+            - get_cluster_version
+            # describe / explain / events / logs
+            - kubectl_describe
+            - kubectl_explain
+            - get_events
+            - get_pod_events
+            - get_pod_conditions
+            - get_logs
+            - get_previous_logs
+            - node_logs_tool
+            # metrics (metrics-server)
+            - get_node_metrics
+            - get_pod_metrics
+            - get_resource_usage
+            - node_top_tool
+            - node_stats_summary_tool
+            - get_resource_trends
+            - get_idle_resources
+            - get_overprovisioned_resources
+            - get_resource_recommendations
+            - optimize_resource_requests
+            - get_cost_analysis
+            - get_namespace_cost_allocation
+            # diagnosis
+            - health_check
+            - check_pod_health
+            - diagnose_pod_crash
+            - detect_pending_pods
+            - get_evicted_pods
+            - trace_service_chain
+            - analyze_pod_security
+            - get_pod_security_info
+            - analyze_network_policies
+            - audit_rbac_permissions
+            - hubble_flows_query_tool
+        # flux-operator-mcp: reads and docs. reconcile/suspend/resume/apply/patch/delete/
+        # install are refused by RBAC today and hidden here; add them back with a Cedar
+        # policy when an agent is trusted to act.
+        - workload: flux
+          filter:
+            - get_flux_instance
+            - get_kubernetes_resources
+            - get_kubernetes_events
+            - get_kubernetes_logs
+            - get_kubernetes_metrics
+            - get_kubernetes_api_versions
+            - trace_kubernetes_resource
+            - search_flux_docs
+            - read_flux_doc
+        # memini: all nine memory tools.
+        - workload: memini
   incomingAuth:
     type: anonymous
   outgoingAuth:
