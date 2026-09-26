@@ -1,0 +1,35 @@
+---
+# One MCP endpoint for every consumer (opencode, Claude Code, later the agents):
+# tools from each group member are exposed with a "<workload>_" prefix. Sessions are
+# in-memory (the CRD's alternative is Redis; a single replica does not need it), and
+# incoming auth is anonymous here because the LAN route is guarded by an Envoy
+# SecurityPolicy API key (securitypolicy.yaml). In-cluster callers reach the Service
+# directly: http://vmcp-mcp-gateway.ai.svc.cluster.local:4483/mcp
+apiVersion: toolhive.stacklok.dev/v1beta1
+kind: VirtualMCPServer
+metadata:
+  name: mcp-gateway
+spec:
+  groupRef:
+    name: mcp-tools
+  config:
+    aggregation:
+      conflictResolution: prefix
+      conflictResolutionConfig:
+        prefixFormat: "{workload}_"
+  incomingAuth:
+    type: anonymous
+  outgoingAuth:
+    source: discovered
+  sessionStorage:
+    provider: memory
+  podTemplateSpec:
+    spec:
+      containers:
+        - name: vmcp
+          resources:
+            requests:
+              cpu: 25m
+              memory: 128Mi
+            limits:
+              memory: 1Gi

@@ -35,3 +35,14 @@ spec:
   keyAlias: PR Review
   secretName: litellm-key-pr-review
   secretKey: api-key
+---
+# memini (memory server) calls embed / rerank / qwen3.8-27b-chat through the proxy.
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMVirtualKey
+metadata:
+  name: memini
+spec:
+  proxyRef: litellm
+  keyAlias: memini
+  secretName: litellm-key-memini
+  secretKey: api-key

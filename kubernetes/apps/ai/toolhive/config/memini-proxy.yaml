@@ -1,0 +1,21 @@
+---
+# memini runs from its own chart (kubernetes/apps/ai/memini) and already speaks MCP
+# over streamable HTTP at :8080/mcp. This proxy pulls it into the mcp-tools group so
+# the gateway exposes its remember/recall tools next to kubectl and flux.
+apiVersion: toolhive.stacklok.dev/v1alpha1
+kind: MCPRemoteProxy
+metadata:
+  name: memini
+spec:
+  remoteUrl: http://memini.ai.svc.cluster.local:8080/mcp
+  allowPrivateEndpoint: true
+  transport: streamable-http
+  proxyPort: 8080
+  resources:
+    requests:
+      cpu: 25m
+      memory: 64Mi
+    limits:
+      memory: 256Mi
+  groupRef:
+    name: mcp-tools

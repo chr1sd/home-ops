@@ -1,0 +1,68 @@
+---
+# flux-operator's official MCP server, read-only: it reuses the kubectl-mcp view roles.
+# flux-mcp-write role (reconcile/suspend); add that when an
+# agent is trusted to act, not just look.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: flux-mcp
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: flux-mcp-readonly
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: kubectl-mcp-readonly
+subjects:
+  - kind: ServiceAccount
+    name: flux-mcp
+    namespace: ai
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: flux-mcp-readonly-explicit
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: kubectl-mcp-readonly-explicit
+subjects:
+  - kind: ServiceAccount
+    name: flux-mcp
+    namespace: ai
+---
+apiVersion: toolhive.stacklok.dev/v1alpha1
+kind: MCPServer
+metadata:
+  name: flux
+spec:
+  image: ghcr.io/controlplaneio-fluxcd/flux-operator-mcp:v0.60.0@sha256:9940c2c46c1bff5af3827cb76f28a1ff347ea8141ed1af42e66ffbd79e8c4bdb
+  transport: streamable-http
+  proxyMode: streamable-http
+  proxyPort: 8080
+  mcpPort: 8000
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  serviceAccount: flux-mcp
+  podTemplateSpec:
+    spec:
+      containers:
+        - name: mcp
+          args:
+            - serve
+            - --transport=http
+            - --port=8000
+          env:
+            - name: RUNTIME_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+  groupRef:
+    name: mcp-tools

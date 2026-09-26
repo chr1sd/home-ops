@@ -1,0 +1,103 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: memini
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: memini
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  # memini: persistent memory for MCP-capable agents (remember/recall over a tiered
+  # store, hybrid vector + keyword retrieval). SQLite on the kopiur PVC; embeddings,
+  # reranking and summarisation all go through LiteLLM. Values from joryirving/home-ops
+  # minus per-client API keys: the server is cluster-internal and reached from the LAN
+  # only through the API-key-guarded MCP gateway (toolhive/config).
+  # HAZARD (jory): MEMINI_EMBED_MODEL must match what the store was created with, or
+  # memini FATALs; MEMINI_REEMBED_ON_MODEL_CHANGE makes a rename re-embed instead.
+  values:
+    fullnameOverride: memini
+    controllers:
+      main:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          main:
+            env:
+              MEMINI_BACKEND: sqlite
+              MEMINI_DEFAULT_NAMESPACE: default
+              MEMINI_EMBED_BASE_URL: http://litellm.ai.svc.cluster.local:4000/v1
+              MEMINI_EMBED_MODEL: embed # Qwen3-Embedding-0.6B, 1024-dim, 32k ctx
+              MEMINI_EMBED_DIMS: "1024"
+              MEMINI_EMBED_QUERY_PREFIX: "Instruct: Given a user message, retrieve relevant past memories\nQuery: "
+              MEMINI_EMBED_MAX_CONCURRENCY: 8
+              MEMINI_RECALL_EMBED_TIMEOUT: 15s
+              MEMINI_WRITE_EMBED_TIMEOUT: 30s
+              MEMINI_WRITE_DEDUP_SCORE: "0.80"
+              MEMINI_WRITE_DEDUP_ACTION: coalesce
+              MEMINI_DEDUP_TIERS: episodic,semantic,procedural
+              MEMINI_DEDUP_SIMILARITY: 0.80
+              MEMINI_SHORT_TERM_CAP: 300
+              MEMINI_ASSESS_BATCH: "5"
+              MEMINI_LLM_BASE_URL: http://litellm.ai.svc.cluster.local:4000/v1
+              MEMINI_LLM_MODEL: qwen3.8-27b-chat
+              MEMINI_LLM_MAX_TOKENS: "8192"
+              MEMINI_DISTILL_TIMEOUT: 600s
+              MEMINI_DISTILL_ON_WRITE: false
+              MEMINI_ASSESSED_SALIENCE_WEIGHT: "0.6"
+              MEMINI_REEMBED_ON_MODEL_CHANGE: true
+              MEMINI_RERANK: http://litellm.ai.svc.cluster.local:4000/v1
+              MEMINI_RERANK_MODEL: rerank
+              MEMINI_RERANK_MAX_CONCURRENCY: 2
+              MEMINI_RERANK_TIMEOUT: 45s
+              MEMINI_RERANK_POOL: "5"
+              MEMINI_RERANK_MAX_DOC_CHARS: "4096"
+              MEMINI_PROMOTE_MIN_ACCESS: "3"
+              MEMINI_DEMOTE_AFTER: 72h
+              MEMINI_TIMEOUT_MS: "55000"
+              MEMINI_EMBED_API_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: litellm-key-memini
+                    key: api-key
+              MEMINI_LLM_API_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: litellm-key-memini
+                    key: api-key
+              MEMINI_RERANK_API_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: litellm-key-memini
+                    key: api-key
+            probes:
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /healthz
+                    port: 8080
+                  initialDelaySeconds: 10
+                  periodSeconds: 10
+                  failureThreshold: 60
+            resources:
+              requests:
+                cpu: 25m
+                memory: 128Mi
+              limits:
+                memory: 512Mi
+    persistence:
+      data:
+        existingClaim: memini
+    serviceMonitor:
+      main:
+        enabled: true

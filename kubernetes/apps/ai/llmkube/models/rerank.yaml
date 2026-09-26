@@ -1,0 +1,72 @@
+---
+# Reranker for memini's recall (CPU, on the MS01s like embed). bge-reranker-v2-m3
+# scores (query, document) pairs; llama.cpp serves it on /v1/rerank in `mode: rerank`.
+# Shape from joryirving/home-ops memini/memini-rerank-1.yaml, single replica.
+apiVersion: inference.llmkube.dev/v1alpha1
+kind: Model
+metadata:
+  name: rerank
+spec:
+  source: hf://gpustack/bge-reranker-v2-m3-GGUF
+  files:
+    - bge-reranker-v2-m3-Q8_0.gguf
+  format: gguf
+  quantization: Q8_0
+  hardware:
+    accelerator: cpu
+---
+apiVersion: inference.llmkube.dev/v1alpha1
+kind: InferenceService
+metadata:
+  name: rerank
+spec:
+  modelRef: rerank
+  runtime: llamacpp
+  image: ghcr.io/ggml-org/llama.cpp:server@sha256:6257697a7f5d034b8fb499ddb07af3e250506352f94102054252a23f3b85e0af
+  rolloutPolicy:
+    waitForIdle: true
+    idleTimeoutSeconds: 86400
+  replicas: 1
+  mode: rerank
+  contextSize: 8192
+  parallelSlots: 4
+  batchSize: 8192
+  uBatchSize: 8192
+  resources:
+    cpu: "2"
+    memory: 4Gi
+  extraArgs:
+    - --alias
+    - rerank
+    - --cont-batching
+    - --kv-unified
+    - --threads
+    - "4"
+    - --threads-batch
+    - "8"
+    - --load-mode
+    - mmap
+  endpoint:
+    port: 8080
+    type: ClusterIP
+  probeOverrides:
+    startup:
+      httpGet:
+        path: /health
+        port: 8080
+      periodSeconds: 10
+      failureThreshold: 60
+    liveness:
+      httpGet:
+        path: /health
+        port: 8080
+      initialDelaySeconds: 30
+      periodSeconds: 30
+      failureThreshold: 6
+    readiness:
+      httpGet:
+        path: /health
+        port: 8080
+      initialDelaySeconds: 10
+      periodSeconds: 10
+      failureThreshold: 6

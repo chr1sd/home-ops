@@ -130,3 +130,22 @@ spec:
   info:
     mode: embedding
     maxInputTokens: 32768
+---
+# Reranker through LiteLLM's /rerank: the `infinity/` provider speaks the same rerank
+# API llama.cpp serves (jory's shape). Hand-written so autoRegister's openai/ projection
+# of the same InferenceService is left alone.
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMModel
+metadata:
+  name: rerank
+spec:
+  modelName: rerank
+  proxyRef: litellm
+  params:
+    model: infinity/rerank
+    apiBase: http://rerank.ai.svc.cluster.local:8080
+    apiKey: sk-llmkube-noauth
+    additional:
+      max_parallel_requests: 4
+  info:
+    mode: rerank
