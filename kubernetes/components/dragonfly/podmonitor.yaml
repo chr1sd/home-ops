@@ -1,0 +1,16 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/monitoring.coreos.com/podmonitor_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: ${APP}-dragonfly
+spec:
+  selector:
+    matchLabels:
+      app: ${APP}-dragonfly
+  podTargetLabels:
+    - app
+  podMetricsEndpoints:
+    # operator exposes /metrics on the admin port (9999)
+    - port: admin
+  fallbackScrapeProtocol: PrometheusText0.0.4

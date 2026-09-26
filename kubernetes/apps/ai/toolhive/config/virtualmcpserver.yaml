@@ -116,8 +116,18 @@ spec:
     type: anonymous
   outgoingAuth:
     source: discovered
+  # Sessions in Dragonfly (components/dragonfly via ks.yaml) instead of process memory:
+  # a vmcp restart no longer invalidates every client's MCP session, so Hermes, Claude
+  # Code and opencode keep working through pod rollouts. Dragonfly needs
+  # --default_lua_flags=allow-undeclared-keys for ToolHive's Lua scripts (kustomization.yaml).
   sessionStorage:
-    provider: memory
+    provider: redis
+    address: toolhive-config-dragonfly.ai.svc.cluster.local:6379
+    db: 0
+    keyPrefix: "toolhive:vmcp:"
+    passwordRef:
+      name: toolhive-config-dragonfly
+      key: password
   podTemplateSpec:
     spec:
       containers:

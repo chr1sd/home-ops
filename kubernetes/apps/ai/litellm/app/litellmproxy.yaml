@@ -1,8 +1,10 @@
 ---
 # The single front door for every LLM consumer (vault: Project - AI Node and LLM Stack,
 # phase 5). Clients use stable aliases (models.yaml); this proxy owns the fallbacks.
-# Shape from joryirving/home-ops litellm/litellmproxy.yaml minus SSO, Redis and the
-# cloud providers: one replica needs no Redis, and models are local-only for now.
+# Shape from joryirving/home-ops litellm/litellmproxy.yaml minus SSO and the cloud
+# providers: models are local-only for now. Redis is the per-app Dragonfly from
+# components/dragonfly (ks.yaml): router state survives restarts and embeddings are
+# cached, and it is the prerequisite for running more than one replica.
 apiVersion: litellm.home-operations.com/v1alpha1
 kind: LiteLLMProxy
 metadata:
@@ -37,6 +39,16 @@ spec:
         secretKeyRef:
           name: litellm
           key: DATABASE_URL
+    # Dragonfly (Service + generated password Secret both named litellm-dragonfly)
+    - name: REDIS_HOST
+      value: litellm-dragonfly
+    - name: REDIS_PORT
+      value: "6379"
+    - name: REDIS_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: litellm-dragonfly
+          key: password
   envFrom:
     - secretRef:
         name: litellm
@@ -61,6 +73,10 @@ spec:
     periodSeconds: 10
     failureThreshold: 3
   routerSettings:
+    # cooldowns / per-key usage counters live in Dragonfly instead of process memory
+    redis_host: os.environ/REDIS_HOST
+    redis_port: os.environ/REDIS_PORT
+    redis_password: os.environ/REDIS_PASSWORD
     routing_strategy: simple-shuffle
     cooldown_time: 30
     enable_pre_call_checks: true
@@ -80,6 +96,19 @@ spec:
     failure_callback:
       - prometheus
     require_auth_for_metrics_endpoint: false
+    # Cache embeddings only: memini and Open WebUI RAG re-embed the same texts, the
+    # result is deterministic, and the CPU embed lane is the slowest thing we run.
+    # Chat completions are never cached.
+    cache: true
+    cache_params:
+      type: redis
+      host: os.environ/REDIS_HOST
+      port: os.environ/REDIS_PORT
+      password: os.environ/REDIS_PASSWORD
+      ttl: 3600
+      supported_call_types:
+        - embedding
+        - aembedding
   generalSettings:
     health_check_endpoint: /v1/health
     store_model_in_db: false
