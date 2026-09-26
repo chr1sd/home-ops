@@ -129,7 +129,7 @@ spec:
       max_parallel_requests: 8
   info:
     mode: embedding
-    maxInputTokens: 32768
+    maxInputTokens: 8192
 ---
 # Reranker through LiteLLM's /rerank: the `infinity/` provider speaks the same rerank
 # API llama.cpp serves (jory's shape). Hand-written so autoRegister's openai/ projection

@@ -29,7 +29,11 @@ spec:
     idleTimeoutSeconds: 86400
   replicas: 1
   mode: embedding
-  contextSize: 32768
+  # Embedding inputs are single passages capped by uBatchSize (2048 tokens), so a large
+  # context only buys KV cache: at 32768 this model idled at 3.6 GiB and OOM-killed on
+  # the first batch inside a 4Gi limit (48 restarts/day). 8192 unified across the slots
+  # idles under 1 GiB — the reranker runs the same way at ~200 MiB.
+  contextSize: 8192
   parallelSlots: 8
   flashAttention: true
   batchSize: 2048
