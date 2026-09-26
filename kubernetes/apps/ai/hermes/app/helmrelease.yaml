@@ -58,6 +58,7 @@ spec:
               HERMES_HOME: /opt/data
               HOME: /opt/data
               TZ: America/New_York
+              HERMES_TIMEZONE: America/New_York
               # The memini plugin reads MEMINI_BASE_URL (jory's HR sets MEMINI_URL, which
               # the plugin ignores and falls back to localhost). memini runs without
               # per-client auth here, so no MEMINI_API_KEY.
@@ -90,6 +91,7 @@ spec:
               HERMES_HOME: /opt/data
               HOME: /opt/data
               TZ: America/New_York
+              HERMES_TIMEZONE: America/New_York
             envFrom:
               - secretRef:
                   name: hermes

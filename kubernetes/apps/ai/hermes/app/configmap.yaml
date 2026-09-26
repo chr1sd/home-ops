@@ -10,6 +10,10 @@ metadata:
   name: hermes-config
 data:
   config.yaml: |
+    # Agent clock, cron schedules and the time injected into the system prompt. The
+    # container's /etc/localtime is UTC, so without this Hermes reasons in UTC even
+    # though the pod exports TZ.
+    timezone: America/New_York
     model:
       default: qwen3.8-27b
       provider: litellm
