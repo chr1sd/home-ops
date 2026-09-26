@@ -1,0 +1,144 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: hermes
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: hermes
+  interval: 1h
+  # Hermes (Nous Research): one gateway process serving Discord + built-in cron, with a
+  # dashboard sidecar. No upstream chart; app-template shape from joryirving/home-ops
+  values:
+    controllers:
+      hermes:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          init:
+            image:
+              repository: docker.io/library/alpine
+              tag: 3.24@sha256:294b683cb724975bec92580e1e685676bd4b50bda910ddb8c51d4cabeaec77e6
+            command:
+              - sh
+              - -c
+              - |
+                set -euo pipefail
+                cp /tmp/config.yaml /opt/data/config.yaml
+                chown 10000:10000 /opt/data/config.yaml
+                # memini MemoryProvider plugin from the standalone mirror
+                # eleboucher/memini-hermes (a release-synced copy of the plugin in
+                # eleboucher/memini). The mirror is untagged, so it is pinned to a commit
+                # and guarded by a .ref marker: restarts stay offline, only a pin change
+                # refetches. Bump the SHA by hand (jory's pin, plugin 0.7.29).
+                MEMINI_PLUGIN_REF=ad5e12b3ade70e0afaa011513aa97920d2b66b46
+                PLUGIN_DIR=/opt/data/plugins/memini
+                if [ "$(cat "$PLUGIN_DIR/.ref" 2>/dev/null)" != "$MEMINI_PLUGIN_REF" ]; then
+                  BASE="https://raw.githubusercontent.com/eleboucher/memini-hermes/$MEMINI_PLUGIN_REF"
+                  if wget -qO /tmp/memini-init.py "$BASE/__init__.py" && wget -qO /tmp/memini-plugin.yaml "$BASE/plugin.yaml"; then
+                    rm -rf "$PLUGIN_DIR"
+                    mkdir -p "$PLUGIN_DIR"
+                    mv /tmp/memini-init.py "$PLUGIN_DIR/__init__.py"
+                    mv /tmp/memini-plugin.yaml "$PLUGIN_DIR/plugin.yaml"
+                    printf '%s' "$MEMINI_PLUGIN_REF" > "$PLUGIN_DIR/.ref"
+                    chown -R 10000:10000 "$PLUGIN_DIR"
+                  else
+                    echo "WARN: memini plugin fetch failed; starting with whatever is present"
+                  fi
+                fi
+        containers:
+          app:
+            image: &image
+              repository: docker.io/nousresearch/hermes-agent
+              tag: v2026.9.24@sha256:fca358f12efd65bfaaca05884166f15c0e2788375ca30d77061ac1ebc96452b7
+            args: ["gateway", "run"]
+            env:
+              HERMES_HOME: /opt/data
+              HOME: /opt/data
+              TZ: America/New_York
+              # The memini plugin reads MEMINI_BASE_URL (jory's HR sets MEMINI_URL, which
+              # the plugin ignores and falls back to localhost). memini runs without
+              # per-client auth here, so no MEMINI_API_KEY.
+              MEMINI_BASE_URL: http://memini.ai.svc.cluster.local:8080
+              MEMINI_NAMESPACE: hermes
+              LITELLM_API_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: litellm-key-hermes
+                    key: api-key
+            envFrom:
+              - secretRef:
+                  name: hermes
+            resources:
+              requests:
+                cpu: 250m
+                memory: 512Mi
+              limits:
+                memory: 2Gi
+            ports:
+              - containerPort: &port 8642
+                name: http
+                protocol: TCP
+          dashboard:
+            image: *image
+            args: ["dashboard", "--host", "0.0.0.0"]
+            env:
+              # same pod = same network namespace; HTTP probe instead of a shared PID ns
+              GATEWAY_HEALTH_URL: http://localhost:8642
+              HERMES_HOME: /opt/data
+              HOME: /opt/data
+              TZ: America/New_York
+            envFrom:
+              - secretRef:
+                  name: hermes
+            resources:
+              requests:
+                cpu: 50m
+                memory: 256Mi
+              limits:
+                memory: 1Gi
+            ports:
+              - containerPort: &dashboard_port 9119
+                name: http
+                protocol: TCP
+    defaultPodOptions:
+      securityContext:
+        fsGroup: 10000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
+    service:
+      app:
+        controller: hermes
+        ports:
+          http:
+            port: *port
+      dashboard:
+        controller: hermes
+        ports:
+          http:
+            port: *dashboard_port
+    route:
+      dashboard:
+        hostnames:
+          - hermes.dovis.me
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+        rules:
+          - backendRefs:
+              - identifier: dashboard
+                port: http
+    persistence:
+      config:
+        existingClaim: "{{ .Release.Name }}"
+        globalMounts:
+          - path: /opt/data
+      configmap:
+        type: configMap
+        name: "{{ .Release.Name }}-config"
+        globalMounts:
+          - path: /tmp/config.yaml
+            subPath: config.yaml

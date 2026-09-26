@@ -1,0 +1,39 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/kustomization-kustomize-v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app hermes
+  namespace: &namespace ai
+spec:
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  components:
+    - ../../../../components/kopiur
+  dependsOn:
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
+    # its LiteLLM virtual key (Secret litellm-key-hermes) and the aliases it talks to
+    - name: litellm
+      namespace: ai
+    # memory + tools: memini (memory provider) and the MCP gateway
+    - name: memini
+      namespace: ai
+    - name: toolhive-config
+      namespace: ai
+  interval: 1h
+  path: ./kubernetes/apps/ai/hermes/app
+  postBuild:
+    substitute:
+      APP: *app
+      KOPIUR_CAPACITY: 20Gi
+  prune: true
+  retryInterval: 2m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  targetNamespace: *namespace
+  timeout: 5m
+  wait: false

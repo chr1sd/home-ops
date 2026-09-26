@@ -12,3 +12,4 @@ resources:
   - ./open-webui/ks.yaml
   - ./toolhive/ks.yaml
   - ./memini/ks.yaml
+  - ./hermes/ks.yaml

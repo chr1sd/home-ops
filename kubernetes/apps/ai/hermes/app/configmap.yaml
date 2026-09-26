@@ -1,0 +1,87 @@
+---
+# Hermes gateway config. Copied to /opt/data/config.yaml by the init container on every
+# boot, so git is authoritative. Shape from joryirving/home-ops hermes/configmap.yaml,
+# cut down to the local-only stack: two lanes, one MCP gateway, memini memory.
+# Cron jobs are NOT config — Hermes keeps them in $HERMES_HOME/cron/jobs.json (on the
+# PVC); create them with `hermes cron create`, the dashboard, or by asking the agent.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hermes-config
+data:
+  config.yaml: |
+    model:
+      default: qwen3.8-27b
+      provider: litellm
+    fallback_providers:
+      - provider: litellm
+        model: gemma-4-12b-it-qat
+    providers:
+      litellm:
+        base_url: http://litellm.ai.svc.cluster.local:4000/v1
+        key_env: LITELLM_API_KEY
+        transport: chat_completions
+    toolsets:
+      - hermes-cli
+    terminal:
+      backend: local
+      cwd: /opt/data/workspace
+      timeout: 180
+      persistent_shell: true
+    memory:
+      provider: memini
+      auto_migrate: true
+    compression:
+      enabled: true
+      threshold: 0.50
+      target_ratio: 0.20
+      protect_last_n: 20
+    agent:
+      max_turns: 60
+      gateway_timeout: 1800
+      restart_drain_timeout: 60
+      api_max_retries: 2
+      reasoning_effort: medium
+    streaming:
+      enabled: false
+    delegation:
+      roles:
+        reviewer:
+          provider: litellm
+          model: gemma-4-12b-it-qat
+          max_concurrent_children: 2
+      max_iterations: 100
+    security:
+      redact_secrets: true
+    privacy:
+      redact_pii: true
+    platform_toolsets:
+      cli:
+        - hermes-cli
+    mcp_servers:
+      # ToolHive gateway: kubectl_* / flux_* (read-only) + memini_* tools. In-cluster,
+      # so no Envoy API key; the gateway's own incoming auth is anonymous (vault plan,
+      # phase 7 staged-auth notes: SA-token OIDC is the next step for in-cluster callers).
+      homelab:
+        url: http://vmcp-mcp-gateway.ai.svc.cluster.local:4483/mcp
+    auxiliary:
+      # Helper calls go to the non-thinking door: cheap and fast.
+      vision:
+        provider: litellm
+        model: qwen3.8-27b-chat
+      compression:
+        provider: litellm
+        model: qwen3.8-27b-chat
+        timeout: 180
+      web_extract:
+        provider: litellm
+        model: qwen3.8-27b-chat
+        timeout: 120
+      approval:
+        provider: litellm
+        model: qwen3.8-27b-chat
+        timeout: 60
+      session_search:
+        provider: litellm
+        model: qwen3.8-27b-chat
+        timeout: 120
