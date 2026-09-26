@@ -46,3 +46,14 @@ spec:
   keyAlias: memini
   secretName: litellm-key-memini
   secretKey: api-key
+---
+# Hermes agent (kubernetes/apps/ai/hermes): main model, fallbacks and auxiliary calls.
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMVirtualKey
+metadata:
+  name: hermes
+spec:
+  proxyRef: litellm
+  keyAlias: Hermes
+  secretName: litellm-key-hermes
+  secretKey: api-key
