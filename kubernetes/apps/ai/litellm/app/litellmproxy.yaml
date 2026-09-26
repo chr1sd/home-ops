@@ -67,12 +67,12 @@ spec:
     # Each lane fails over to the other card; the -chat doors stay non-thinking.
     fallbacks:
       - qwen3.8-27b:
-          - gemma-4-12b-it-qat
+          - gemma-4-31b-it-qat
       - qwen3.8-27b-chat:
-          - gemma-4-12b-it-qat-chat
-      - gemma-4-12b-it-qat:
+          - gemma-4-31b-it-qat-chat
+      - gemma-4-31b-it-qat:
           - qwen3.8-27b
-      - gemma-4-12b-it-qat-chat:
+      - gemma-4-31b-it-qat-chat:
           - qwen3.8-27b-chat
   litellmSettings:
     success_callback:

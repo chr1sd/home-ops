@@ -64,13 +64,13 @@ spec:
 apiVersion: litellm.home-operations.com/v1alpha1
 kind: LiteLLMModel
 metadata:
-  name: gemma-4-12b-it-qat
+  name: gemma-4-31b-it-qat
 spec:
-  modelName: gemma-4-12b-it-qat
+  modelName: gemma-4-31b-it-qat
   proxyRef: litellm
   params:
-    model: openai/gemma-4-12b-it-qat
-    apiBase: http://gemma-4-12b-it-qat.ai.svc.cluster.local:8080/v1
+    model: openai/gemma-4-31b-it-qat
+    apiBase: http://gemma-4-31b-it-qat.ai.svc.cluster.local:8080/v1
     apiKey: sk-llmkube-noauth
     additional:
       max_parallel_requests: 2
@@ -90,13 +90,13 @@ spec:
 apiVersion: litellm.home-operations.com/v1alpha1
 kind: LiteLLMModel
 metadata:
-  name: gemma-4-12b-it-qat-chat
+  name: gemma-4-31b-it-qat-chat
 spec:
-  modelName: gemma-4-12b-it-qat-chat
+  modelName: gemma-4-31b-it-qat-chat
   proxyRef: litellm
   params:
-    model: openai/gemma-4-12b-it-qat
-    apiBase: http://gemma-4-12b-it-qat.ai.svc.cluster.local:8080/v1
+    model: openai/gemma-4-31b-it-qat
+    apiBase: http://gemma-4-31b-it-qat.ai.svc.cluster.local:8080/v1
     apiKey: sk-llmkube-noauth
     additional:
       max_parallel_requests: 2

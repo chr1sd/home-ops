@@ -1,17 +1,19 @@
 ---
-# GPU 1 lane: reviewer model (jory's Foreman reviewer choice; he serves it from LM Studio,
-# so the llama.cpp settings below mirror the qwen3.8-27b lane with Google's recommended
-# Gemma sampling: temp 1.0, top-p 0.95, top-k 64). 6.7 GB of weights leaves plenty of
-# KV headroom; Gemma's sliding-window layers keep 131k affordable. Drop to 65536 if the
-# first start does not fit.
+# GPU 1 lane: reviewer / second opinion. jory's reviewer is Gemma-4-12B only because it
+# lives on a 16 GB 9070XT; on a 24 GB 3090 the like-for-like choice is the 31B QAT
+# (17.2 GB + 1.1 GB vision) — same family, same Google-recommended sampling (temp 1.0,
+# top-p 0.95, top-k 64), 2.5x the parameters, roughly half the tok/s. Context starts at
+# 65536 to leave KV room next to 18 GB of weights; raise toward 131072 once nvidia-smi
+# in the pod shows the headroom (vault plan, phase 9: compare PR reviews against the
+# 12B and the qwen fallback).
 apiVersion: inference.llmkube.dev/v1alpha1
 kind: Model
 metadata:
-  name: gemma-4-12b-it-qat
+  name: gemma-4-31b-it-qat
 spec:
-  source: hf://unsloth/gemma-4-12B-it-qat-GGUF
+  source: hf://unsloth/gemma-4-31B-it-qat-GGUF
   files:
-    - gemma-4-12B-it-qat-UD-Q4_K_XL.gguf
+    - gemma-4-31B-it-qat-UD-Q4_K_XL.gguf
     - mmproj-F16.gguf
   mmproj: mmproj-F16.gguf
   format: gguf
@@ -27,9 +29,9 @@ spec:
 apiVersion: inference.llmkube.dev/v1alpha1
 kind: InferenceService
 metadata:
-  name: gemma-4-12b-it-qat
+  name: gemma-4-31b-it-qat
 spec:
-  modelRef: gemma-4-12b-it-qat
+  modelRef: gemma-4-31b-it-qat
   runtime: llamacpp
   image: ghcr.io/ggml-org/llama.cpp:server-cuda@sha256:014f721265464f38ccb247c1338d07d852c4bae7509a4b4734d07a2bbadc765c
   rolloutPolicy:
@@ -45,7 +47,7 @@ spec:
   env:
     - name: NVIDIA_DRIVER_CAPABILITIES
       value: compute,utility
-  contextSize: 131072
+  contextSize: 65536
   flashAttention: true
   jinja: true
   parallelSlots: 2
@@ -59,7 +61,7 @@ spec:
     memory: 16Gi
   extraArgs:
     - --alias
-    - gemma-4-12b-it-qat
+    - gemma-4-31b-it-qat
     - --no-mmproj-offload
     - --image-min-tokens
     - "1024"
