@@ -19,7 +19,7 @@ data:
       provider: litellm
     fallback_providers:
       - provider: litellm
-        model: gemma-4-12b-it-qat
+        model: gemma-4-31b-it-qat
     providers:
       litellm:
         base_url: http://litellm.ai.svc.cluster.local:4000/v1
@@ -52,7 +52,7 @@ data:
       roles:
         reviewer:
           provider: litellm
-          model: gemma-4-12b-it-qat
+          model: gemma-4-31b-it-qat
           max_concurrent_children: 2
       max_iterations: 100
     security:

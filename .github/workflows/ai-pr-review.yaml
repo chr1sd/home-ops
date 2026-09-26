@@ -4,7 +4,7 @@ name: "AI PR Review"
 
 # A local model reviews every non-draft PR. Runs on the in-cluster ARC scale set so it
 # can reach LiteLLM privately (kubernetes/apps/actions-runner-system). Primary reviewer
-# is the GPU 1 lane (gemma-4-12b-it-qat), fallback the GPU 0 lane; both are thinking
+# is the GPU 1 lane (gemma-4-31b-it-qat), fallback the GPU 0 lane; both are thinking
 # models, so the token budget must leave room for reasoning AND the JSON verdict.
 # Add the `ai-review` label to force a fresh review. Vault: Project - AI Node and LLM
 # Stack, phase 6; pattern from joryirving/home-ops .github/workflows/ai-pr-review.yaml.
@@ -77,7 +77,7 @@ jobs:
           force_review: ${{ github.event_name == 'workflow_dispatch' && 'true' || 'false' }}
           ai_base_url: http://litellm.ai.svc.cluster.local:4000/v1
           ai_api_format: openai
-          ai_model: gemma-4-12b-it-qat
+          ai_model: gemma-4-31b-it-qat
           ai_api_key: ${{ secrets.LITELLM_API_KEY }}
           ai_response_format: json_object
           ai_max_tokens: "16000"
