@@ -27,7 +27,13 @@ spec:
               - |
                 set -euo pipefail
                 cp /tmp/config.yaml /opt/data/config.yaml
-                chown 10000:10000 /opt/data/config.yaml
+                chown 1000:1000 /opt/data/config.yaml
+                # Hermes runs as 1000:1000 here (HERMES_UID/GID below remap the image's
+                # hermes user from its build-time 10000) so kopiur's mover — 1000 like every
+                # other app — can read the volume. The image's boot hook chowns only a fixed
+                # list of subdirs on remap; this catches the rest (.local, .cache, plugins,
+                # files written under the old uid). Idempotent: touches only mismatches.
+                find /opt/data \( ! -user 1000 -o ! -group 1000 \) -exec chown -h 1000:1000 {} +
                 # memini MemoryProvider plugin from the standalone mirror
                 # eleboucher/memini-hermes (a release-synced copy of the plugin in
                 # eleboucher/memini). The mirror is untagged, so it is pinned to a commit
@@ -43,7 +49,7 @@ spec:
                     mv /tmp/memini-init.py "$PLUGIN_DIR/__init__.py"
                     mv /tmp/memini-plugin.yaml "$PLUGIN_DIR/plugin.yaml"
                     printf '%s' "$MEMINI_PLUGIN_REF" > "$PLUGIN_DIR/.ref"
-                    chown -R 10000:10000 "$PLUGIN_DIR"
+                    chown -R 1000:1000 "$PLUGIN_DIR"
                   else
                     echo "WARN: memini plugin fetch failed; starting with whatever is present"
                   fi
@@ -57,6 +63,8 @@ spec:
             env:
               HERMES_HOME: /opt/data
               HOME: /opt/data
+              HERMES_UID: "1000"
+              HERMES_GID: "1000"
               TZ: America/New_York
               HERMES_TIMEZONE: America/New_York
               # The memini plugin reads MEMINI_BASE_URL (jory's HR sets MEMINI_URL, which
@@ -90,6 +98,8 @@ spec:
               GATEWAY_HEALTH_URL: http://localhost:8642
               HERMES_HOME: /opt/data
               HOME: /opt/data
+              HERMES_UID: "1000"
+              HERMES_GID: "1000"
               TZ: America/New_York
               HERMES_TIMEZONE: America/New_York
             envFrom:
@@ -107,7 +117,7 @@ spec:
                 protocol: TCP
     defaultPodOptions:
       securityContext:
-        fsGroup: 10000
+        fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
         seccompProfile:
           type: RuntimeDefault
