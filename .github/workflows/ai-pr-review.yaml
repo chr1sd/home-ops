@@ -108,5 +108,9 @@ jobs:
           publish_mode: comment
           # Required for publish_mode=comment; without it the review is computed and dropped.
           publish_review_comment: "true"
+          # Repo conventions + what to flag, read from the PR's checkout (so a PR that
+          # edits the rules is reviewed under them). Pinned so a future root CLAUDE.md /
+          # AGENTS.md is never picked up as review policy by auto-discovery.
+          standards_file: .github/ai-review-rules.md
           context_limit_mode: normal
           tool_enable_for_forks: "false"
