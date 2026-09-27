@@ -1,0 +1,59 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/talos.dev/serviceaccount_v1alpha1.json
+# Talos mints a Secret named exactly `talos-mcp` holding a talosconfig for this
+# role. Works only because the control planes' KubeTalosAPIAccessConfig
+# (talos/controlplane.yaml.j2) allows role os:reader from namespace ai.
+apiVersion: talos.dev/v1alpha1
+kind: ServiceAccount
+metadata:
+  name: talos-mcp
+spec:
+  roles:
+    - os:reader
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/toolhive.stacklok.dev/mcpserver_v1alpha1.json
+# eleboucher/talos-mcp: read-only talosctl as MCP tools (version, health, services,
+# logs, dmesg, disks, etcd, `get <resource>`). Same image and shape as
+# joryirving/home-ops talos-mcp. Tools are allow-listed in virtualmcpserver.yaml.
+apiVersion: toolhive.stacklok.dev/v1alpha1
+kind: MCPServer
+metadata:
+  name: talos
+spec:
+  image: registry.erwanleboucher.dev/eleboucher/talos-mcp:0.0.2@sha256:ad1b388e20cbe171763ba0ff85ed32856f2573c9c40f5081a83c96b3b57f0d35
+  transport: streamable-http
+  proxyMode: streamable-http
+  proxyPort: 8080
+  mcpPort: 8000
+  # outbound to the Talos API (nodes :50000 via the control-plane endpoint)
+  permissionProfile:
+    type: builtin
+    name: network
+  env:
+    - name: TALOS_MCP_TRANSPORT
+      value: http
+    - name: TALOS_MCP_HTTP_ADDR
+      value: ":8000"
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+  podTemplateSpec:
+    spec:
+      containers:
+        - name: mcp
+          volumeMounts:
+            # the talosconfig path the server discovers last (after $TALOSCONFIG, ~/.talos)
+            - name: talosconfig
+              mountPath: /var/run/secrets/talos.dev
+              readOnly: true
+      volumes:
+        - name: talosconfig
+          secret:
+            secretName: talos-mcp
+            defaultMode: 0400
+  groupRef:
+    name: mcp-tools

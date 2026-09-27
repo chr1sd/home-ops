@@ -110,6 +110,34 @@ spec:
             - trace_kubernetes_resource
             - search_flux_docs
             - read_flux_doc
+        # talos-mcp: node-level diagnostics talosctl-style, role os:reader. Hidden on
+        # purpose: talos_read (arbitrary file contents, e.g. /system/state) and
+        # talos_kubeconfig (mints an admin kubeconfig) — os:reader may permit them and
+        # an agent has no business with either. talos_get is COSI resources only.
+        - workload: talos
+          filter:
+            - talos_version
+            - talos_time
+            - talos_health
+            - talos_memory
+            - talos_processes
+            - talos_mounts
+            - talos_netstat
+            - talos_dmesg
+            - talos_service_list
+            - talos_service_logs
+            - talos_logs_containers
+            - talos_containers
+            - talos_container_stats
+            - talos_image_list
+            - talos_disks
+            - talos_disk_stats
+            - talos_disk_usage
+            - talos_list
+            - talos_etcd_members
+            - talos_etcd_status
+            - talos_etcd_alarms
+            - talos_get
         # memini: all nine memory tools.
         - workload: memini
   incomingAuth:

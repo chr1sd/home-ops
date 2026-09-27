@@ -6,6 +6,7 @@ resources:
   - ./mcpgroup.yaml
   - ./kubectl-mcp.yaml
   - ./flux-mcp.yaml
+  - ./talos-mcp.yaml
   - ./memini-proxy.yaml
   - ./virtualmcpserver.yaml
   - ./externalsecret.yaml
