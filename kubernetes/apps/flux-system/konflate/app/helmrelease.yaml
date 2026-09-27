@@ -1,0 +1,63 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: konflate
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: konflate
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  # Renders the Flux cluster at a PR's merge-base and head with flate and diffs the
+  # rendered manifests: the real blast radius of a one-line chart bump. Feeds the AI
+  # PR review as evidence (.github/scripts/konflate_evidence.py over the in-cluster
+  # MCP endpoint) and posts its own Check Run + summary comment as kevernetes[bot].
+  # Shape from onedr0p/home-ops and joryirving/home-ops (vault: The AI Node Explained).
+  values:
+    config:
+      repo: github://chr1sd/home-ops
+      # write-back as the kevernetes App: Check Run "Konflate" (needs Checks R/W,
+      # which Renovate's token already proves the App holds) + one summary comment
+      # edited in place per PR
+      statusChecks: true
+      prComments: true
+      # links in the check/comment; internal hostname, reachable on the LAN/Twingate
+      publicUrl: https://konflate.dovis.me
+      # read-only MCP at /mcp for the review workflow (in-cluster URL, never exposed)
+      mcp: true
+      # HEAD every newly referenced image so a typo'd tag is a caution here, not an
+      # ImagePullBackOff in-cluster
+      verifyImages: true
+      # charts gated on .Capabilities.KubeVersion render as they would in this cluster
+      kubeVersion: "{{ .Capabilities.KubeVersion.Version }}"
+    secret:
+      existingSecret: konflate
+    podAnnotations:
+      reloader.stakater.com/auto: "true"
+    # git mirror, render caches and diffs survive restarts; reproducible, so no kopiur
+    persistence:
+      enabled: true
+      storageClass: ceph-block
+      size: 5Gi
+    # routes are hand-written in httproute.yaml (UI internal, /hooks external)
+    httpRoute:
+      enabled: false
+    monitoring:
+      serviceMonitor:
+        enabled: true
+    resources:
+      requests:
+        cpu: 50m
+        memory: 256Mi
+      limits:
+        memory: 2Gi

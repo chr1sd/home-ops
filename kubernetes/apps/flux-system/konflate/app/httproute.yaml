@@ -1,0 +1,49 @@
+---
+# yaml-language-server: $schema=https://github.com/datreeio/CRDs-catalog/raw/refs/heads/main/gateway.networking.k8s.io/httproute_v1.json
+# Review UI, API and MCP: internal only. The AI review reaches /mcp via the cluster
+# Service, not this route.
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: konflate
+  annotations:
+    gatus.home-operations.com/endpoint: |-
+      conditions: ["[STATUS] == 200"]
+spec:
+  hostnames: ["konflate.dovis.me"]
+  parentRefs:
+    - name: envoy-internal
+      namespace: network
+      sectionName: https
+  rules:
+    - backendRefs:
+        - name: konflate
+          namespace: flux-system
+          port: 8080
+---
+# yaml-language-server: $schema=https://github.com/datreeio/CRDs-catalog/raw/refs/heads/main/gateway.networking.k8s.io/httproute_v1.json
+# GitHub → konflate webhook, the only path exposed externally. Same shape as the Flux
+# receiver route (flux-instance/app/httproute.yaml); konflate verifies the HMAC
+# signature with KONFLATE_WEBHOOK_SECRET and everything else stays 404 at the edge.
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: konflate-webhook
+  annotations:
+    gatus.home-operations.com/endpoint: |-
+      conditions: ["[STATUS] == 404"]
+spec:
+  hostnames: ["konflate-webhook.dovis.me"]
+  parentRefs:
+    - name: envoy-external
+      namespace: network
+      sectionName: https
+  rules:
+    - backendRefs:
+        - name: konflate
+          namespace: flux-system
+          port: 8080
+      matches:
+        - path:
+            type: Exact
+            value: /hooks
