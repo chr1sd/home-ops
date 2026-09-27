@@ -19,7 +19,7 @@ spec:
             image:
               repository: ghcr.io/triliumnext/trilium
               tag: v0.106.0@sha256:be93e82699b12950ac4e2e7b565ce092fe215b8dd6ddfc47921e37b49e6a0e8b
-            command: ["node", "./main.cjs"]
+            command: ["node", "./main.mjs"]
             env:
               TZ: America/New_York
               TRILIUM_GENERAL_INSTANCE_NAME: k8s-notes
