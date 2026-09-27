@@ -1,14 +1,12 @@
 ---
 # yaml-language-server: $schema=https://github.com/datreeio/CRDs-catalog/raw/refs/heads/main/gateway.networking.k8s.io/httproute_v1.json
 # Review UI, API and MCP: internal only. The AI review reaches /mcp via the cluster
-# Service, not this route.
+# Service, not this route. No gatus annotation: internal routes inherit the
+# envoy-internal Gateway's guarded (public-DNS leak) probe, not an HTTP check.
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: konflate
-  annotations:
-    gatus.home-operations.com/endpoint: |-
-      conditions: ["[STATUS] == 200"]
 spec:
   hostnames: ["konflate.dovis.me"]
   parentRefs:
