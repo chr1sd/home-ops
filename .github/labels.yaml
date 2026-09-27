@@ -1,25 +1,4 @@
 ---
-# Areas
-- name: area/bootstrap
-  color: "0e8a16"
-- name: area/docs
-  color: "0e8a16"
-- name: area/github
-  color: "0e8a16"
-- name: area/kubernetes
-  color: "0e8a16"
-- name: area/mise
-  color: "0e8a16"
-- name: area/renovate
-  color: "0e8a16"
-- name: area/scripts
-  color: "0e8a16"
-- name: area/talos
-  color: "0e8a16"
-- name: area/templates
-  color: "0e8a16"
-- name: area/taskfile
-  color: "0e8a16"
 # Renovate Types
 - name: renovate/container
   color: "027fa0"
@@ -31,6 +10,8 @@
   color: "027fa0"
 - name: renovate/helm
   color: "027fa0"
+- name: renovate/talos
+  color: "027fa0"
 # Semantic Types
 - name: type/digest
   color: "ffeC19"
@@ -40,6 +21,10 @@
   color: "ff9800"
 - name: type/major
   color: "f6412d"
+# Workflow triggers
+# Add to a PR to force a fresh AI review (rereview_label default; the action removes it after)
+- name: ai-review
+  color: "5319e7"
 # Uncategorized
 - name: community
   color: "370fb2"
