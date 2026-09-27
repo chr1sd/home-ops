@@ -1,0 +1,19 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+# One Dragonfly (Redis-compatible cache) per app. Include from the app's Flux
+# Kustomization with `components: [../../../../components/dragonfly]`, substitute
+# `APP`, and add `dependsOn: dragonfly-operator` (namespace database) plus the
+# Dragonfly healthCheckExprs — see litellm/ks.yaml for the shape.
+#
+# What the app gets, all named `${APP}-dragonfly`:
+#   - Service `${APP}-dragonfly:6379` (1 master + 1 replica, memory-only, no snapshots)
+#   - Secret `${APP}-dragonfly` key `password`, generated in-cluster by external-secrets
+#     (no 1Password item to create); pass it to the client as REDIS_PASSWORD or
+#     redis://:<password>@${APP}-dragonfly:6379
+#   - PodMonitor for Prometheus
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+resources:
+  - ./password.yaml
+  - ./dragonfly.yaml
+  - ./podmonitor.yaml

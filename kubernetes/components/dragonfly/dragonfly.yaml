@@ -1,0 +1,40 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/dragonflydb.io/dragonfly_v1alpha1.json
+apiVersion: dragonflydb.io/v1alpha1
+kind: Dragonfly
+metadata:
+  name: ${APP}-dragonfly
+spec:
+  image: ghcr.io/dragonflydb/dragonfly:v2.0.0@sha256:7426fdb31ddcf7bd9499b4205f36ebaa83b26149ba1609a0d5f8f474b3631233
+  # total instances including the master: 1 master + 1 replica, spread across nodes
+  replicas: 2
+  authentication:
+    passwordFromSecret:
+      name: ${APP}-dragonfly
+      key: password
+  env:
+    # --maxmemory follows the container limit, so resizing the limit is the whole tuning knob
+    - name: MAX_MEMORY
+      valueFrom:
+        resourceFieldRef:
+          resource: limits.memory
+          divisor: 1Mi
+  args:
+    - --maxmemory=$(MAX_MEMORY)Mi
+    - --proactor_threads=2
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      memory: 1Gi
+  topologySpreadConstraints:
+    - maxSkew: 1
+      topologyKey: kubernetes.io/hostname
+      whenUnsatisfiable: DoNotSchedule
+      # ignore the tainted GPU node when counting hosts
+      nodeTaintsPolicy: Honor
+      # this app's master and replica on different hosts (the operator labels pods app=<name>)
+      labelSelector:
+        matchLabels:
+          app: ${APP}-dragonfly

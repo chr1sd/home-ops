@@ -1,0 +1,29 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: dragonfly-operator
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: dragonfly-operator
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  # Dragonfly operator: reconciles Dragonfly CRs into a StatefulSet + Service per app.
+  # Instances themselves live with their consumers via kubernetes/components/dragonfly
+  # (vault: Design - Database Components). Chart defaults install and keep the CRD and
+  # watch every namespace.
+  values:
+    manager:
+      image:
+        # chart default is docker.dragonflydb.io; GHCR is the release-notes location
+        repository: ghcr.io/dragonflydb/operator

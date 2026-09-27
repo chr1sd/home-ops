@@ -9,13 +9,32 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  components:
+    - ../../../../components/dragonfly
   dependsOn:
     - name: litellm-operator
       namespace: ai
     - name: cloudnative-pg-cluster
       namespace: database
+    - name: dragonfly-operator
+      namespace: database
+  # wait is false, so only the listed objects are health-checked; the exprs teach Flux
+  # how to read the Dragonfly CR (same shape as cert-manager/ks.yaml for ClusterIssuer)
+  healthChecks:
+    - apiVersion: dragonflydb.io/v1alpha1
+      kind: Dragonfly
+      name: litellm-dragonfly
+      namespace: *namespace
+  healthCheckExprs:
+    - apiVersion: dragonflydb.io/v1alpha1
+      kind: Dragonfly
+      failed: status.phase != 'ready'
+      current: status.phase == 'ready'
   interval: 1h
   path: ./kubernetes/apps/ai/litellm/app
+  postBuild:
+    substitute:
+      APP: *app
   prune: true
   retryInterval: 2m
   sourceRef:

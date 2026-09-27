@@ -11,3 +11,15 @@ resources:
   - ./externalsecret.yaml
   - ./httproute.yaml
   - ./securitypolicy.yaml
+patches:
+  # ToolHive's session-storage Lua scripts touch keys they do not declare, which
+  # Dragonfly rejects by default. Applies to the Dragonfly CR that components/dragonfly
+  # (ks.yaml) adds to this build.
+  - target:
+      group: dragonflydb.io
+      version: v1alpha1
+      kind: Dragonfly
+    patch: |-
+      - op: add
+        path: /spec/args/-
+        value: --default_lua_flags=allow-undeclared-keys
