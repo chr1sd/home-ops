@@ -25,11 +25,13 @@ spec:
       kind: Dragonfly
       name: litellm-dragonfly
       namespace: *namespace
+  # Operator v1.6.1 phases: ResourcesCreated → Configuring → Ready (capitalised; 'ready'
+  # is its pre-1.x value). No terminal failure phase exists, so no `failed` expression:
+  # anything else is in-progress until the Kustomization timeout.
   healthCheckExprs:
     - apiVersion: dragonflydb.io/v1alpha1
       kind: Dragonfly
-      failed: status.phase != 'ready'
-      current: status.phase == 'ready'
+      current: status.phase == 'Ready'
   interval: 1h
   path: ./kubernetes/apps/ai/litellm/app
   postBuild:

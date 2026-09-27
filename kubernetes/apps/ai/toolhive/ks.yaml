@@ -68,11 +68,11 @@ spec:
       kind: Dragonfly
       name: toolhive-config-dragonfly
       namespace: *namespace
+  # phase semantics: see litellm/ks.yaml
   healthCheckExprs:
     - apiVersion: dragonflydb.io/v1alpha1
       kind: Dragonfly
-      failed: status.phase != 'ready'
-      current: status.phase == 'ready'
+      current: status.phase == 'Ready'
   interval: 1h
   path: ./kubernetes/apps/ai/toolhive/config
   postBuild:
