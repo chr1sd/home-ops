@@ -37,16 +37,17 @@ Welcome to the (Kubernetes) Humble Home Lab repo. The source of truth for my bar
 
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f916/512.gif" alt="🤖" width="30" height="30"> Hardware
 
-| System                | Role                 | CPU             | RAM        | Graphics       | Disk (boot)                  | Disk (storage)                  |
-| --------------------- | -------------------- | --------------- | ---------- | -------------- | ---------------------------- | ------------------------------- |
-| Minisforum MS-01 (3x) | Control Plane/Worker | Intel i9-12900H | 96GB DDR5  | Intel Iris XE  | Samsung PM983 960GB M.2 NVME | Crucial 1TB M.2 NVME            |
-| HL15 2.0              | NAS                  | AMD Epyc 7452   | 256GB DDR4 | Intel ARC A310 | 512GB NVME Mirror            | ZFS RaidZ2 Pool (12x 8TB Disks) |
+| System                | Role                 | CPU             | RAM        | Graphics      | Disk (boot)                  | Disk (storage)                   |
+| --------------------- | -------------------- | --------------- | ---------- | ------------- | ---------------------------- | -------------------------------- |
+| Minisforum MS-01 (3x) | Control Plane/Worker | Intel i9-12900H | 96GB DDR5  | Intel Iris XE | Samsung PM983 960GB M.2 NVME | Crucial 1TB M.2 NVME             |
+| HL15 2.0              | NAS                  | AMD Epyc 7452   | 256GB DDR4 |               | 512GB NVME Mirror            | ZFS RaidZ2 Pool (12x 28TB Disks) |
+| Retired Gamer         | AI                   | Intel i7-6700K  | 64GB DDR4  | 2x RTX 3090   | Kingston 1TB NVME            |                                  |
 
 ---
 
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f512/512.gif" alt="🔒" width="30" height="30"> Operating System
 
-I'm running [Talos Linux](https://www.talos.dev), which is an immutable, API driven operating system designed specifically for Kubernetes. Talos is configured declaritively and is a great choice for a GitOps driven workflow.
+I'm running [Talos Linux](https://www.talos.dev), an immutable, API driven operating system designed specifically for Kubernetes. Talos is configured declaritively and is a great choice for a GitOps driven workflow.
 
 ---
 
@@ -132,7 +133,7 @@ I made a [Youtube video](https://youtu.be/aeUKOpeoiUs) that gives a general over
 
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f6a7/512.gif" alt="🚧" width="30" height="30"> Foundation: onedr0p's Cluster Template
 
-Special thanks to the most excellent [onedr0p/cluster-template](https://github.com/onedr0p/cluster-template). It provides a clean, modern foundation for Talos + Flux-based clusters — and taught me how to organize manifests properly, use SOPS, and implement GitOps the right way.
+Special thanks to the most excellent [onedr0p/cluster-template](https://github.com/onedr0p/cluster-template). It provides a clean, modern foundation for Talos + Flux-based clusters.
 
 [![Flux Cluster Template](https://img.shields.io/badge/Cluster%20Template-1f6feb?style=for-the-badge)](https://github.com/onedr0p/cluster-template)
 [![Flux Cluster Template Stars](https://img.shields.io/github/stars/onedr0p/cluster-template?style=for-the-badge&color=1f6feb)](https://github.com/onedr0p/cluster-template)
