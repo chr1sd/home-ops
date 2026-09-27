@@ -49,8 +49,13 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           PR_NUMBER: ${{ inputs.pr_number }}
+        # curl, not gh: gh is only installed two steps later (the runner image lacks it)
         run: |
-          sha="$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}" --jq '.head.sha')"
+          sha="$(curl -fsSL \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}" | jq -r '.head.sha')"
+          test -n "$sha" && test "$sha" != "null"
           echo "head_sha=$sha" >> "$GITHUB_OUTPUT"
 
       - name: Checkout
@@ -89,6 +94,11 @@ jobs:
 
       - name: Review with local models via LiteLLM
         uses: misospace/pr-reviewer-action@a962cdfc21c378a3b8cf2d8b194c787408e60e6b # v2.5.0
+        env:
+          # konflate's read-only MCP over the cluster Service (never exposed); the
+          # evidence provider below injects the rendered Flux diff for this PR.
+          KONFLATE_MCP_URL: http://konflate.flux-system.svc.cluster.local:8080/mcp
+          KONFLATE_PUBLIC_URL: https://konflate.dovis.me
         with:
           github_token: ${{ steps.app-token.outputs.token }}
           pr_number: ${{ github.event.pull_request.number || inputs.pr_number }}
@@ -112,5 +122,9 @@ jobs:
           # edits the rules is reviewed under them). Pinned so a future root CLAUDE.md /
           # AGENTS.md is never picked up as review policy by auto-discovery.
           standards_file: .github/ai-review-rules.md
+          # Rendered-manifest diff from konflate (kubernetes/apps/flux-system/konflate),
+          # advisory only: the provider emits nothing rather than fail when konflate
+          # is down or the PR is still rendering.
+          evidence_providers_file: .github/konflate-evidence-providers.json
           context_limit_mode: normal
           tool_enable_for_forks: "false"

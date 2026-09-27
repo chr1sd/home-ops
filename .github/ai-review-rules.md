@@ -36,6 +36,17 @@ a changelog excerpt — read them there. When the corpus does not contain the re
 notes for a bump, say so and treat the upgrade risk as **Unknown**; never infer
 release content from the version number alone, and never invent a changelog.
 
+When present, the **konflate rendered Flux diff** evidence is the post-kustomize,
+post-Helm Kubernetes YAML that Flux will actually apply, with konflate's own
+signals: blast radius, changed container images across every rendered workload,
+render failures, and danger cautions (data loss, privilege, RBAC, immutable-field
+changes, behaviour under `suspend`/`prune`). Prefer it over the raw template diff
+for judging impact: a one-line chart bump that renders as a changed StatefulSet
+`volumeClaimTemplates` or a swapped image is what matters. A konflate **render
+failure** for the PR head is a blocker on its own — Flux would fail the same way.
+When the evidence is absent, judge from the diff and say the rendered impact is
+Unknown.
+
 ## Conventions that are correct here (do not flag)
 
 - `metadata.namespace` is absent on HelmRelease, OCIRepository, ExternalSecret and

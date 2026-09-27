@@ -18,3 +18,7 @@ Thumbs.db
 .claude/
 /docs/
 *.iso
+
+# python bytecode (e.g. from checking .github/scripts locally)
+__pycache__/
+*.pyc
