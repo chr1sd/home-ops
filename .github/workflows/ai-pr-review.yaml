@@ -6,6 +6,11 @@ name: "AI PR Review"
 # can reach LiteLLM privately (kubernetes/apps/actions-runner-system). Primary reviewer
 # is the GPU 1 lane (gemma-4-31b-it-qat), fallback the GPU 0 lane; both are thinking
 # models, so the token budget must leave room for reasoning AND the JSON verdict.
+# The review is posted as kevernetes[bot] — the same GitHub App Renovate uses to open
+# PRs — via a short-lived, scoped app token; the workflow's own GITHUB_TOKEN only reads.
+# The verdict is advisory (sticky comment): an App cannot approve its own PRs, so
+# `publish_mode: review_verdict` is not an option with this identity, and nothing
+# gates merges on it yet (see fail_on_request_changes in the action's README).
 # Add the `ai-review` label to force a fresh review. Vault: Project - AI Node and LLM
 # Stack, phase 6; pattern from joryirving/home-ops .github/workflows/ai-pr-review.yaml.
 
@@ -24,11 +29,11 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || inputs.pr_number }}
   cancel-in-progress: false
 
+# GITHUB_TOKEN: checkout + reading the PR head on workflow_dispatch. Writes go through
+# the app token below.
 permissions:
   contents: read
-  pull-requests: write
-  issues: write
-  checks: read
+  pull-requests: read
 
 jobs:
   review-pr:
@@ -69,10 +74,23 @@ jobs:
           sudo install -m 0755 "/tmp/gh_${GH_VERSION}_linux_amd64/bin/gh" /usr/local/bin/gh
           gh --version
 
+      # Same App and secrets as renovate.yaml, but only the permissions a review needs:
+      # no contents/workflows write, so a leaked run token cannot push or edit CI.
+      - name: Generate kevernetes token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        id: app-token
+        with:
+          client-id: ${{ secrets.BOT_APP_CLIENT_ID }}
+          private-key: ${{ secrets.BOT_APP_PRIVATE_KEY }}
+          permission-contents: read
+          permission-pull-requests: write
+          permission-issues: write
+          permission-checks: read
+
       - name: Review with local models via LiteLLM
         uses: misospace/pr-reviewer-action@a962cdfc21c378a3b8cf2d8b194c787408e60e6b # v2.5.0
         with:
-          github_token: ${{ github.token }}
+          github_token: ${{ steps.app-token.outputs.token }}
           pr_number: ${{ github.event.pull_request.number || inputs.pr_number }}
           force_review: ${{ github.event_name == 'workflow_dispatch' && 'true' || 'false' }}
           ai_base_url: http://litellm.ai.svc.cluster.local:4000/v1
