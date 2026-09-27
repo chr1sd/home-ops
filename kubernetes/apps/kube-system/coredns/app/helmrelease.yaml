@@ -40,6 +40,15 @@ spec:
             configBlock: |-
               lameduck 5s
           - name: ready
+          # IPv4-only cluster (nodes and pods have no routable IPv6): answer every AAAA
+          # with an empty NOERROR so clients go straight to the A record instead of
+          # racing an unreachable IPv6 first. That race broke apt in the ARC runners
+          # and konflate's chart fetch from GitHub's CDN. Remove if pods ever get
+          # dual-stack (Cilium + Talos config first).
+          - name: template
+            parameters: ANY AAAA
+            configBlock: |-
+              rcode NOERROR
           - name: kubernetes
             parameters: cluster.local in-addr.arpa ip6.arpa
             configBlock: |-
