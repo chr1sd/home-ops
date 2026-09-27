@@ -10,10 +10,12 @@
 #   - Secret `${APP}-dragonfly` key `password`, generated in-cluster by external-secrets
 #     (no 1Password item to create); pass it to the client as REDIS_PASSWORD or
 #     redis://:<password>@${APP}-dragonfly:6379
-#   - PodMonitor for Prometheus
+#   - PodMonitor for Prometheus, plus the NetworkPolicy that lets it past the
+#     operator's own per-instance policy (6379 is open to this namespace only)
 apiVersion: kustomize.config.k8s.io/v1alpha1
 kind: Component
 resources:
   - ./password.yaml
   - ./dragonfly.yaml
   - ./podmonitor.yaml
+  - ./networkpolicy.yaml
