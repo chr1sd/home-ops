@@ -81,14 +81,17 @@ labels:
   node-role.kubernetes.io/control-plane: ""
   node.kubernetes.io/exclude-from-external-load-balancers: ""
 ---
-# was: machine.features.kubernetesTalosAPIAccess (used by ARC runners and tuppr)
+# was: machine.features.kubernetesTalosAPIAccess. Consumers: ARC runners and tuppr
+# (os:admin), talos-mcp in ai (os:reader; kubernetes/apps/ai/toolhive/config/talos-mcp.yaml)
 apiVersion: v1alpha1
 kind: KubeTalosAPIAccessConfig
 allowedRoles:
   - os:admin
+  - os:reader
 allowedKubernetesNamespaces:
   - actions-runner-system
   - system-upgrade
+  - ai
 ---
 # Layer 2 VIP for the control-plane endpoint (floats across control-plane nodes)
 apiVersion: v1alpha1
