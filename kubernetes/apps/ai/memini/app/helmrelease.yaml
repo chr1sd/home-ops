@@ -38,15 +38,7 @@ spec:
               MEMINI_EMBED_MODEL: embed # Qwen3-Embedding-0.6B, 1024-dim, 32k ctx
               MEMINI_EMBED_DIMS: "1024"
               MEMINI_EMBED_QUERY_PREFIX: "Instruct: Given a user message, retrieve relevant past memories\nQuery: "
-              # 2, not jory's 8: the CPU embed lane serialises large requests. uBatchSize
-              # is 2048, so any passage of that order fills the whole compute batch on its
-              # own and --parallel 8 / --cont-batching buy nothing. Measured 8 concurrent
-              # 2k-token embeds: 10/21/32/44/55/66/78/88s — a strict staircase, with a
-              # starved slot logging 18.84 tok/s against ~200 tok/s solo. Extra concurrency
-              # is therefore pure queue depth, and queue depth is what turns a slow embed
-              # into MEMINI_WRITE_EMBED_TIMEOUT. Throughput is unchanged (the server was
-              # already serial); only the tail latency that manufactures timeouts drops.
-              MEMINI_EMBED_MAX_CONCURRENCY: 2
+              MEMINI_EMBED_MAX_CONCURRENCY: 8
               MEMINI_RECALL_EMBED_TIMEOUT: 15s
               MEMINI_WRITE_EMBED_TIMEOUT: 30s
               MEMINI_WRITE_DEDUP_SCORE: "0.80"
