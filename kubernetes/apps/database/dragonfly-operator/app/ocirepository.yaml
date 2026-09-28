@@ -11,5 +11,5 @@ spec:
     operation: copy
   ref:
     # Chart tags are v-prefixed and equal the operator release (chart version == appVersion)
-    tag: v1.6.1
+    tag: v1.7.0
   url: oci://ghcr.io/dragonflydb/dragonfly-operator/helm/dragonfly-operator
