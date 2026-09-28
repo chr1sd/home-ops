@@ -8,7 +8,7 @@ evidence-provider JSON contract on stdout:
 
   {"severity": "info", "findings": [{"severity", "message", "source"}]}
 
-Advisory, never a gate: on any failure, an untracked PR, or a render that is
+Advisory, never a gate: on any failure, a render that already failed, or a render
 still pending after the wait budget, it emits an empty findings list and exits 0.
 Adapted from joryirving/home-ops .github/scripts/konflate_evidence.py.
 """
@@ -23,18 +23,27 @@ import urllib.request
 URL = os.environ.get("KONFLATE_MCP_URL", "http://konflate.flux-system.svc.cluster.local:8080/mcp")
 PUBLIC_URL = os.environ.get("KONFLATE_PUBLIC_URL", "https://konflate.dovis.me").rstrip("/")
 PR = os.environ.get("PR_NUMBER", "").strip()
-# konflate renders on the PR webhook; the review usually starts while that render
-# is still running, so poll briefly instead of giving up on the first "still
-# rendering". Keep the total under the provider timeout in the providers file.
-WAIT_SEC = int(os.environ.get("KONFLATE_WAIT_SEC", "90"))
+# konflate renders on the same pull_request webhook that starts this review, so the
+# first get_pr_diff often lands before konflate has even listed the PR. Poll until
+# the render appears rather than giving up on that first answer. The loop spends at
+# most WAIT_SEC waiting plus one more round trip, which must stay under the
+# provider's timeout_sec in .github/konflate-evidence-providers.json (150s) — past
+# that the action kills the provider and the review loses the evidence entirely.
+WAIT_SEC = int(os.environ.get("KONFLATE_WAIT_SEC", "120"))
 POLL_SEC = 10
 SID = None
 
-# konflate answers with a plain sentinel when there is no usable diff: PR not
-# tracked ("No pull request #N is tracked."), render pending ("has no rendered
-# diff yet", "Still rendering"). Never present those as evidence.
-_NO_DIFF = ("no pull request", "is tracked", "no rendered diff", "still rendering", "has no rendered")
-_PENDING = ("still rendering", "no rendered diff", "has no rendered")
+# konflate flags every "no usable diff" answer with MCP's isError and puts a short
+# plain sentence in the content (konflate internal/server/mcp.go); a real diff comes
+# back without the flag. Trusting the flag beats substring-matching the response:
+# phrases like "is tracked" occur in ordinary manifest YAML, and scanning the diff
+# body for them threw real evidence away.
+#
+# Only a failed render is terminal — it will not succeed on a retry. The other two
+# answers resolve on their own and are what the poll loop waits for:
+#   "No pull request #N is tracked."                     konflate has not listed it yet
+#   "PR #N has no rendered diff yet (status "pending")"  queued, or a worker is on it
+_TERMINAL = ("failed to render", 'status "error"')
 
 
 def emit(findings, severity="info"):
@@ -81,14 +90,13 @@ def text(resp):
     return "\n".join(out).strip()
 
 
-def is_no_diff(t):
-    low = (t or "").lower()
-    return (not t) or any(s in low for s in _NO_DIFF)
+def is_error(resp):
+    return bool((resp or {}).get("result", {}).get("isError"))
 
 
-def is_pending(t):
+def is_terminal(t):
     low = (t or "").lower()
-    return any(s in low for s in _PENDING)
+    return any(s in low for s in _TERMINAL)
 
 
 def main():
@@ -100,17 +108,25 @@ def main():
         call("notifications/initialized", notif=True)
         deadline = time.monotonic() + WAIT_SEC
         while True:
-            diff = text(call("tools/call", {"name": "get_pr_diff", "arguments": {"number": int(PR)}}))
-            if not (is_pending(diff) and time.monotonic() < deadline):
+            resp = call("tools/call", {"name": "get_pr_diff", "arguments": {"number": int(PR)}})
+            if not is_error(resp):
                 break
-            time.sleep(POLL_SEC)
-        summary = text(call("tools/call", {"name": "get_pr_summary", "arguments": {"number": int(PR)}}))
+            note = text(resp)
+            remaining = deadline - time.monotonic()
+            if is_terminal(note) or remaining <= 0:
+                print(f"konflate evidence provider: no rendered diff for PR {PR} ({note[:120]!r})",
+                      file=sys.stderr)
+                emit([])
+            # clamped so the last wait cannot overshoot the budget by a whole POLL_SEC
+            time.sleep(min(POLL_SEC, remaining))
+        diff = text(resp)
+        summary_resp = call("tools/call", {"name": "get_pr_summary", "arguments": {"number": int(PR)}})
     except Exception as exc:  # advisory: never fail the review
         print(f"konflate evidence provider: {exc}", file=sys.stderr)
         emit([])
 
-    if is_no_diff(diff):
-        print(f"konflate evidence provider: no rendered diff for PR {PR} ({(diff or '')[:80]!r})", file=sys.stderr)
+    if not diff:
+        print(f"konflate evidence provider: empty diff for PR {PR}", file=sys.stderr)
         emit([])
 
     src = f"{PUBLIC_URL}/#/pr/{PR}"
@@ -120,7 +136,8 @@ def main():
                    "resources Flux will actually apply, not the raw template diff):\n\n" + diff,
         "source": src,
     }]
-    if summary and not is_no_diff(summary):
+    summary = "" if is_error(summary_resp) else text(summary_resp)
+    if summary:
         findings.append({"severity": "info", "message": summary, "source": src})
     emit(findings)
 
