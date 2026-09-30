@@ -14,7 +14,7 @@ spec:
     fullnameOverride: *app
     image:
       repository: ghcr.io/itzg/minecraft-server
-      tag: java25@sha256:783d2712019a3996b4168752517a08d3448ef8995879b200316c3888f98dc394
+      tag: java25@sha256:0c09bc50031ef5d9cf1e9a57e6afc77750a2cc0f7f3d34de02f524fddf1f849e
     resources:
       requests:
         cpu: 100m
