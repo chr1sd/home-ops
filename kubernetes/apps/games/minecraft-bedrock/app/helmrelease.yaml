@@ -14,7 +14,7 @@ spec:
     fullnameOverride: *app
     image:
       repository: itzg/minecraft-bedrock-server
-      tag: 2026.9.1@sha256:83bdd41fd0574eb71368a58b2c0b9ecfe305559056d65e83878c20aae86a0015
+      tag: 2026.9.2@sha256:244e72a36a3e3d69c588cbeefe6d8f6f97c48869b801718a4023570654e3b3d9
     resources:
       requests:
         cpu: 100m
