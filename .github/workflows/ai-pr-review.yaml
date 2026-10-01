@@ -102,31 +102,31 @@ jobs:
           KONFLATE_MCP_URL: http://konflate.flux-system.svc.cluster.local:8080/mcp
           KONFLATE_PUBLIC_URL: https://konflate.dovis.me
         with:
-          github_token: ${{ steps.app-token.outputs.token }}
-          pr_number: ${{ github.event.pull_request.number || inputs.pr_number }}
-          force_review: ${{ github.event_name == 'workflow_dispatch' && 'true' || 'false' }}
+          github-token: ${{ steps.app-token.outputs.token }}
+          pr-number: ${{ github.event.pull_request.number || inputs.pr_number }}
+          force-review: ${{ github.event_name == 'workflow_dispatch' && 'true' || 'false' }}
           ai_base_url: http://litellm.ai.svc.cluster.local:4000/v1
-          ai_api_format: openai
-          ai_model: gemma-4-31b-it-qat
-          ai_api_key: ${{ secrets.LITELLM_API_KEY }}
-          ai_response_format: json_object
-          ai_max_tokens: "16000"
-          ai_primary_retries: "3"
-          ai_primary_retry_delay_sec: "15"
-          ai_fallback_base_url: http://litellm.ai.svc.cluster.local:4000/v1
-          ai_fallback_api_format: openai
-          ai_fallback_model: qwen3.8-27b
-          ai_fallback_api_key: ${{ secrets.LITELLM_API_KEY }}
-          publish_mode: comment
-          # Required for publish_mode=comment; without it the review is computed and dropped.
-          publish_review_comment: "true"
+          ai-api-format: openai
+          ai-model: gemma-4-31b-it-qat
+          ai-api-key: ${{ secrets.LITELLM_API_KEY }}
+          ai-response-format: json_object
+          ai-max-tokens: "16000"
+          ai-primary-retries: "3"
+          ai-primary-retry-delay-sec: "15"
+          ai-fallback-base-url: http://litellm.ai.svc.cluster.local:4000/v1
+          ai-fallback-api-format: openai
+          ai-fallback-model: qwen3.8-27b
+          ai-fallback-api-key: ${{ secrets.LITELLM_API_KEY }}
+          publish-mode: comment
+          # Required for publish-mode=comment; without it the review is computed and dropped.
+          publish-review-comment: "true"
           # Repo conventions + what to flag, read from the PR's checkout (so a PR that
           # edits the rules is reviewed under them). Pinned so a future root CLAUDE.md /
           # AGENTS.md is never picked up as review policy by auto-discovery.
-          standards_file: .github/ai-review-rules.md
+          standards-file: .github/ai-review-rules.md
           # Rendered-manifest diff from konflate (kubernetes/apps/flux-system/konflate),
           # advisory only: the provider emits nothing rather than fail when konflate
           # is down or the PR is still rendering.
-          evidence_providers_file: .github/konflate-evidence-providers.json
-          context_limit_mode: normal
-          tool_enable_for_forks: "false"
+          evidence-providers-file: .github/konflate-evidence-providers.json
+          context-limit-mode: normal
+          tool-enable-for-forks: "false"
