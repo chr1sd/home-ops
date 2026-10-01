@@ -105,7 +105,7 @@ jobs:
           github-token: ${{ steps.app-token.outputs.token }}
           pr-number: ${{ github.event.pull_request.number || inputs.pr_number }}
           force-review: ${{ github.event_name == 'workflow_dispatch' && 'true' || 'false' }}
-          ai_base_url: http://litellm.ai.svc.cluster.local:4000/v1
+          ai-base-url: http://litellm.ai.svc.cluster.local:4000/v1
           ai-api-format: openai
           ai-model: gemma-4-31b-it-qat
           ai-api-key: ${{ secrets.LITELLM_API_KEY }}
