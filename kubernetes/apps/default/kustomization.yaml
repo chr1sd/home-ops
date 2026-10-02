@@ -20,7 +20,6 @@ resources:
   - ./autobrr/ks.yaml
   - ./prowlarr/ks.yaml
   - ./flaresolverr/ks.yaml
-  - ./jellyfin/ks.yaml
   - ./plex/ks.yaml
   - ./trilium/ks.yaml
   - ./vikunja/ks.yaml
