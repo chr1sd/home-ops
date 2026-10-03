@@ -8,7 +8,7 @@ set shell := ['bash', '-euo', 'pipefail', '-c']
 # No talhelper, no SOPS. Requires: minijinja-cli, op (signed in), talosctl, yq, jq, curl.
 
 # renovate: datasource=custom.talos-factory depName=siderolabs/talos
-talos_version := "v1.14.2"
+talos_version := "v1.14.1"
 # renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
 kubernetes_version := "v1.37.1"
 
