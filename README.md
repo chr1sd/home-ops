@@ -65,7 +65,7 @@ My homelab network stack consists of [Ubiquiti](https://ui.com) equipment with V
 
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f4c8/512.gif" alt="📈" width="30" height="30"> Observability Stack
 
-To keep a pulse on the cluster, I'm using: [Prometheus](https://prometheus.io), [Grafana](https://grafana.com), [VictoriaLogs](https://victoriametrics.com/products/victorialogs/), [Alertmanager](https://github.com/prometheus/alertmanager), [Gatus](https://github.com/TwiN/gatus), and [Fluentbit](https://fluentbit.io).
+To keep a pulse on the cluster, I'm using: [Prometheus](https://prometheus.io), [Grafana](https://grafana.com), [VictoriaLogs](https://victoriametrics.com/products/victorialogs/), [Alertmanager](https://github.com/prometheus/alertmanager), [Gatus](https://github.com/TwiN/gatus), and [vlagent](https://docs.victoriametrics.com/victorialogs/vlagent/).
 
 ---
 
