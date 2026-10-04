@@ -3,7 +3,7 @@
 apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDashboard
 metadata:
-  name: fluent-bit
+  name: victoria-logs-collector
 spec:
   allowCrossNamespaceImport: true
   instanceSelector:
@@ -12,6 +12,4 @@ spec:
   datasources:
     - datasourceName: prometheus
       inputName: DS_PROMETHEUS
-  configMapRef:
-    name: fluent-bit-dashboard-fluent-bit
-    key: fluent-bit-fluent-bit.json
+  url: https://grafana.com/api/dashboards/24513/revisions/2/download

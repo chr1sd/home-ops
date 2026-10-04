@@ -1,0 +1,70 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: victoria-logs-collector-rules
+spec:
+  groups:
+    - name: victoria-logs-collector.rules
+      rules:
+        # Every node runs pods that log continuously (cilium agent at minimum),
+        # so a collector reading nothing for 30m has stopped, or cannot be scraped.
+        # The `and on(pod) up` guard drops pods that no longer exist, whose old
+        # samples would otherwise linger in the 30m window after a rollout.
+        - alert: VictoriaLogsCollectorStalled
+          annotations:
+            summary: |
+              Log collector pod {{ $labels.pod }} has stopped reading container logs.
+              Restart the pod to resume log shipping from its node.
+          expr: |
+            (
+              sum by (pod) (rate(vl_rows_ingested_total{job="observability/victoria-logs-collector", type="kubernetes_logs"}[30m])) == 0
+                and on(pod)
+              up{job="observability/victoria-logs-collector"} == 1
+            )
+              or
+            up{job="observability/victoria-logs-collector"} == 0
+          for: 15m
+          labels:
+            severity: critical
+        - alert: VictoriaLogsCollectorMissingNodes
+          annotations:
+            summary: |
+              The log collector is scheduled on {{ $value }} nodes, fewer than the
+              cluster has. Logs from the remaining nodes are not collected.
+          expr: |
+            kube_daemonset_status_desired_number_scheduled{daemonset="victoria-logs-collector"}
+              < on() group_left() count(kube_node_info)
+          for: 30m
+          labels:
+            severity: warning
+        #
+        # Ref: https://github.com/VictoriaMetrics/VictoriaLogs/blob/master/deployment/docker/rules/alerts-vlagent.yml
+        #
+        - alert: VictoriaLogsCollectorDroppingBufferedLogs
+          annotations:
+            summary: |
+              Log collector {{ $labels.pod }} is dropping logs from its on-disk
+              buffer because VictoriaLogs has been unreachable for too long.
+          expr: sum(increase(vm_persistentqueue_bytes_dropped_total{job="observability/victoria-logs-collector"}[5m])) without (path) > 0
+          for: 10m
+          labels:
+            severity: critical
+        - alert: VictoriaLogsCollectorRejectedLogs
+          annotations:
+            summary: |
+              Log collector {{ $labels.pod }} is dropping log blocks that
+              VictoriaLogs rejected. Check the collector logs for the reason.
+          expr: sum(increase(vlagent_remotewrite_packets_dropped_total{job="observability/victoria-logs-collector"}[5m])) without (url) > 0
+          for: 15m
+          labels:
+            severity: warning
+        - alert: VictoriaLogsCollectorRemoteWriteErrors
+          annotations:
+            summary: |
+              Log collector {{ $labels.pod }} is failing to push logs to
+              {{ $labels.url }}. Check that VictoriaLogs is up and reachable.
+          expr: rate(vlagent_remotewrite_retries_count_total{job="observability/victoria-logs-collector"}[5m]) > 0
+          for: 15m
+          labels:
+            severity: warning

@@ -10,7 +10,6 @@ resources:
   - ./kube-prometheus-stack/ks.yaml
   - ./gatus/ks.yaml
   - ./victoria-logs/ks.yaml
-  - ./fluent-bit/ks.yaml
   - ./prometheus-adapter/ks.yaml
   - ./smartctl-exporter/ks.yaml
   - ./snmp-exporter/ks.yaml
