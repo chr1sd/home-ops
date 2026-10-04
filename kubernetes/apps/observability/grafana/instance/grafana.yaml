@@ -10,7 +10,7 @@ spec:
   # Pinned so Renovate can bump it. Left empty, the operator writes its default
   # into the live object once and never updates it again.
   # renovate: datasource=docker depName=docker.io/grafana/grafana
-  version: 13.0.10
+  version: 13.2.3
   config:
     analytics:
       check_for_updates: "false"
