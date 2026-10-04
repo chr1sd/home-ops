@@ -19,7 +19,7 @@ spec:
             image:
               repository: docker.io/electh/nextflux
               # renovate: no semver tags upstream, tracks the rolling "latest" tag
-              tag: latest@sha256:02a686c8c9356aeead11d6f3bde7fbca1f1026ca67930c770d93e8fbae61d63b
+              tag: latest@sha256:160cc80f2e86f73082968de0fa7558153993f4f8ddb56236dae93dde3bfe0e32
             probes:
               liveness:
                 enabled: true
