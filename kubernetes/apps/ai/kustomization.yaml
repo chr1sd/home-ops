@@ -13,3 +13,4 @@ resources:
   - ./toolhive/ks.yaml
   - ./memini/ks.yaml
   - ./hermes/ks.yaml
+  - ./whisper/ks.yaml

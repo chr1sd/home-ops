@@ -1,0 +1,143 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: whisper
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: whisper
+  interval: 1h
+  # Speech-to-text on CPU, on the MS01s (no llm-workload toleration): both 3090s are
+  # full with the chat lanes and the device plugin cannot share a card. Shape from
+  # joryirving/home-ops llm/whisper, but on the upstream CPU image instead of his Strix
+  # Halo Vulkan toolbox. The image is built for AVX2/FMA with no AVX-512, so it runs on
+  # the i9-12900H (checked by disassembling libggml-cpu.so from this digest).
+  # Clients reach it through LiteLLM (`whisper` alias, litellm/app/models.yaml); the
+  # inference path is moved to the OpenAI route so LiteLLM's openai/ provider can call it.
+  values:
+    controllers:
+      whisper:
+        strategy: Recreate
+        annotations:
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          # Fetches the weights into the PVC once and checks them against the Hugging
+          # Face LFS sha256 on every start; a bad or partial file is downloaded again.
+          fetch:
+            image: &image
+              repository: ghcr.io/ggml-org/whisper.cpp
+              # v1.9.4 (release commit 927cfce); upstream only publishes per-commit tags
+              tag: main-927cfce34f31707e17f2bff35c349632fb9e2c3a@sha256:09f8f3bace5bcd98b9c7406f78c36bd98bdcc084438ce36f660ead1b776541d9
+            command: ["bash", "-c"]
+            args:
+              - |
+                set -euo pipefail
+                cd /models
+                fetch() {
+                  if ! echo "$3  $1" | sha256sum --check --status 2>/dev/null; then
+                    curl -fsSL -o "$1.part" "$2"
+                    echo "$3  $1.part" | sha256sum --check --quiet
+                    mv "$1.part" "$1"
+                  fi
+                }
+                fetch ggml-large-v3-turbo-q8_0.bin \
+                  https://huggingface.co/ggerganov/whisper.cpp/resolve/5359861c739e955e79d9a303bcbc70fb988958b1/ggml-large-v3-turbo-q8_0.bin \
+                  317eb69c11673c9de1e1f0d459b253999804ec71ac4c23c17ecf5fbe24e259a1
+                fetch ggml-silero-v6.2.0.bin \
+                  https://huggingface.co/ggml-org/whisper-vad/resolve/9ffd54a1e1ee413ddf265af9913beaf518d1639b/ggml-silero-v6.2.0.bin \
+                  2aa269b785eeb53a82983a20501ddf7c1d9c48e33ab63a41391ac6c9f7fb6987
+                ls -l /models
+            securityContext: &securityContext
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+        containers:
+          app:
+            image: *image
+            command: ["/app/build/bin/whisper-server"]
+            args:
+              - --model
+              - /models/ggml-large-v3-turbo-q8_0.bin
+              - --host
+              - 0.0.0.0
+              - --port
+              - "8080"
+              # 8 of the 12900H's 20 threads; requests are served one at a time
+              - --threads
+              - "8"
+              - --language
+              - en
+              - --inference-path
+              - /v1/audio/transcriptions
+              # browsers record webm/ogg and Open WebUI may send mp3; ffmpeg (in the
+              # image) turns them into the 16 kHz WAV whisper needs
+              - --convert
+              - --tmp-dir
+              - /tmp
+              # Silero VAD skips silence: faster on mic clips and fewer hallucinated
+              # "Thank you." lines on quiet audio
+              - --vad
+              - --vad-model
+              - /models/ggml-silero-v6.2.0.bin
+            env:
+              TZ: America/New_York
+            probes:
+              # /health answers 503 until the model is loaded
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: 8080
+                  periodSeconds: 5
+                  failureThreshold: 60
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: 8080
+                  periodSeconds: 30
+                  failureThreshold: 6
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: 8080
+                  periodSeconds: 10
+                  failureThreshold: 6
+            securityContext: *securityContext
+            resources:
+              requests:
+                cpu: "1"
+                memory: 2Gi
+              limits:
+                memory: 4Gi
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile: { type: RuntimeDefault }
+    service:
+      app:
+        ports:
+          http:
+            port: 8080
+    persistence:
+      models:
+        existingClaim: whisper-models
+        globalMounts:
+          - path: /models
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp

@@ -1,0 +1,14 @@
+---
+# Model cache only (~0.9 GB of GGML weights re-downloadable from Hugging Face), so no
+# kopiur backup: losing it costs one download on the next pod start.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: whisper-models
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: ceph-block
