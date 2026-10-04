@@ -149,3 +149,22 @@ spec:
       max_parallel_requests: 4
   info:
     mode: rerank
+---
+# Speech-to-text: whisper.cpp large-v3-turbo on CPU (kubernetes/apps/ai/whisper). The
+# server serves /v1/audio/transcriptions, so the openai/ provider calls it directly;
+# it handles one request at a time behind a mutex, hence max_parallel_requests 1.
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMModel
+metadata:
+  name: whisper
+spec:
+  modelName: whisper
+  proxyRef: litellm
+  params:
+    model: openai/whisper-large-v3-turbo
+    apiBase: http://whisper.ai.svc.cluster.local:8080/v1
+    apiKey: sk-whisper-noauth
+    additional:
+      max_parallel_requests: 1
+  info:
+    mode: audio_transcription
