@@ -33,10 +33,14 @@ spec:
           skip_empty_lines on
           skip_long_lines on
 
+      # buffer_size 0: the default 32k is smaller than the API response for the
+      # rook-ceph OSD (~43k) and cilium agent (~32-35k) pods, so their logs
+      # shipped with no namespace/pod/app metadata.
       filters: |-
         [FILTER]
           name kubernetes
           match kubernetes.*
+          buffer_size 0
           merge_log on
           kube_tag_prefix kubernetes.var.log.containers.
           k8s-logging.parser on
@@ -85,6 +89,11 @@ spec:
           compress gzip
           log_response_payload false
           http.read_idle_timeout 55
+    # Ship logs from the tainted GPU worker (kvrnts-4) too.
+    tolerations:
+      - key: llm-workload
+        operator: Exists
+        effect: NoSchedule
     dashboards:
       enabled: true
     serviceMonitor:

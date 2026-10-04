@@ -1,0 +1,32 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: fluent-bit-rules
+spec:
+  groups:
+    - name: fluent-bit.rules
+      rules:
+        # The engine can hang while the HTTP server keeps answering, so the pod
+        # stays Ready and its probes pass (fluent/fluent-bit#9927). A hung engine
+        # stops updating its own metrics, including uptime.
+        - alert: FluentBitStalled
+          annotations:
+            summary: |
+              Fluent Bit pod {{ $labels.pod }} has stopped processing logs.
+              Restart the pod to resume log shipping from its node.
+          expr: changes(fluentbit_uptime[15m]) == 0
+          for: 15m
+          labels:
+            severity: critical
+        - alert: FluentBitMissingNodes
+          annotations:
+            summary: |
+              Fluent Bit is scheduled on {{ $value }} nodes, fewer than the
+              cluster has. Logs from the remaining nodes are not collected.
+          expr: |
+            kube_daemonset_status_desired_number_scheduled{daemonset="fluent-bit"}
+              < on() group_left() count(kube_node_info)
+          for: 30m
+          labels:
+            severity: warning
