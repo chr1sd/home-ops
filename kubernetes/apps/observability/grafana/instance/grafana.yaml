@@ -29,6 +29,12 @@ spec:
       news_feed_enabled: "false"
     plugins:
       plugin_admin_enabled: "false"
+      # Grafana 13.2 ships the core datasources (prometheus, loki, ...) as bundled
+      # plugins under /usr/share/grafana and auto-updates them at startup. With a
+      # read-only root filesystem the update fails after the plugin is unregistered,
+      # leaving every Prometheus panel on "No data" (plugin.notRegistered). Keep the
+      # versions bundled with the image; Renovate bumps them with Grafana itself.
+      preinstall_auto_update: "false"
     security:
       angular_support_enabled: "true"
       allow_embedding: "true"
