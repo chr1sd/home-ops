@@ -1,15 +1,16 @@
 ---
 # Model weights only (diffusion models, text encoders, VAEs), all re-downloadable from
-# Hugging Face, so no kopiur backup. CephFS rather than ceph-block so the volume can
-# grow without a resize dance as video models arrive.
+# Hugging Face, so no kopiur backup. ceph-block, not ceph-filesystem: the CephFS CSI
+# driver has fsGroupPolicy None, so its volume root stays root-owned and the fetch
+# init container (uid 1000) cannot write to it. Thin-provisioned and expandable.
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: comfyui-models
+  name: comfyui-weights
 spec:
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   resources:
     requests:
       storage: 100Gi
-  storageClassName: ceph-filesystem
+  storageClassName: ceph-block

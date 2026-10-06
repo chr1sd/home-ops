@@ -9,6 +9,8 @@ spec:
     kind: OCIRepository
     name: comfyui
   interval: 1h
+  # the first start downloads ~16 GB of weights before the pod is Ready
+  timeout: 15m
   values:
     controllers:
       comfyui:
@@ -163,7 +165,7 @@ spec:
         globalMounts:
           - path: /tmp
       models:
-        existingClaim: comfyui-models
+        existingClaim: comfyui-weights
         advancedMounts:
           comfyui:
             fetch:
