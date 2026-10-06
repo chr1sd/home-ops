@@ -20,9 +20,8 @@ spec:
     # Talos 1.14 ships the NVIDIA userspace under /usr/local (bin/nvidia-smi,
     # lib64/libnvidia-ml.so.1); siderolabs/docs dynamic-resource-allocation guide.
     nvidiaDriverRoot: /usr/local
-    # Acknowledges that GPUs are handed out by ResourceClaim, not nvidia.com/gpu.
-    # nvidia-device-plugin runs alongside until the llama.cpp lanes move to claims;
-    # until then nothing should claim a GPU here except throwaway test pods.
+    # Acknowledges that GPUs are handed out by ResourceClaim, not nvidia.com/gpu;
+    # this driver replaced nvidia-device-plugin.
     gpuResourcesEnabledOverride: true
     resources:
       computeDomains:
