@@ -22,8 +22,11 @@ spec:
     gpu:
       enabled: true
       vendor: nvidia
-      count: 1
       layers: 99
+      # DRA: the card comes from this claim (resourceclaims.yaml), not nvidia.com/gpu
+      resourceClaims:
+        - name: gpu
+          resourceClaimName: gpu-general
 ---
 apiVersion: inference.llmkube.dev/v1alpha1
 kind: InferenceService
@@ -36,16 +39,12 @@ spec:
   rolloutPolicy:
     waitForIdle: false # https://github.com/defilantech/LLMKube/pull/1794
     idleTimeoutSeconds: 86400
-  runtimeClassName: nvidia
   nodeSelector:
     nvidia.com/gpu.present: "true"
   tolerations:
     - key: llm-workload
       operator: Exists
       effect: NoSchedule
-  env:
-    - name: NVIDIA_DRIVER_CAPABILITIES
-      value: compute,utility
   contextSize: 131072
   flashAttention: true
   jinja: true
@@ -57,7 +56,6 @@ spec:
   reasoningBudget: 32768
   reasoningBudgetMessage: "Stop reasoning and produce the implementation, tool call, or final answer."
   resources:
-    gpu: 1
     cpu: "500m"
     memory: 32Gi
   # The UD-Q4_K_XL file carries the model's MTP head; no separate draft model.

@@ -9,10 +9,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    # provides the `nvidia` RuntimeClass this DaemonSet runs under
-    - name: nvidia-device-plugin
-      namespace: kube-system
   interval: 1h
   path: ./kubernetes/apps/kube-system/nvidia-power-limit/app
   prune: true

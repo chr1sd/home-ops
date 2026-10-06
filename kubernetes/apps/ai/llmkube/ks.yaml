@@ -34,6 +34,9 @@ spec:
   dependsOn:
     - name: llmkube
       namespace: ai
+    # the gpu.nvidia.com DeviceClass the ResourceClaims allocate from
+    - name: dra-driver-nvidia-gpu
+      namespace: kube-system
   interval: 1h
   path: ./kubernetes/apps/ai/llmkube/models
   prune: true

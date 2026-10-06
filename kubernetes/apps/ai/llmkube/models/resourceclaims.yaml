@@ -1,0 +1,29 @@
+---
+# One ResourceClaim per 3090 (dra-driver-nvidia-gpu, kube-system). A claim is
+# allocated to a card once and keeps it while anything references it, so each lane
+# stays on the same card across restarts. gpu-shared is referenced by more than one
+# pod (the Gemma reviewer and ComfyUI): sharing a claim guarantees the same card but
+# isolates nothing; the pods split its 24 GB of VRAM by convention, not by limit.
+apiVersion: resource.k8s.io/v1
+kind: ResourceClaim
+metadata:
+  name: gpu-general
+spec:
+  devices:
+    requests:
+      - name: gpu
+        exactly:
+          deviceClassName: gpu.nvidia.com
+          count: 1
+---
+apiVersion: resource.k8s.io/v1
+kind: ResourceClaim
+metadata:
+  name: gpu-shared
+spec:
+  devices:
+    requests:
+      - name: gpu
+        exactly:
+          deviceClassName: gpu.nvidia.com
+          count: 1
