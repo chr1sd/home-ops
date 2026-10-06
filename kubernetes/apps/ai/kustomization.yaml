@@ -14,3 +14,4 @@ resources:
   - ./memini/ks.yaml
   - ./hermes/ks.yaml
   - ./whisper/ks.yaml
+  - ./comfyui/ks.yaml

@@ -1,0 +1,199 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: comfyui
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: comfyui
+  interval: 1h
+  values:
+    controllers:
+      comfyui:
+        strategy: Recreate
+        initContainers:
+          # Fetches the starter weights once (Qwen-Image 2.1 uncensored, fp8, loads with
+          # the built-in loaders, no GGUF custom node) from a pinned Hugging Face
+          # revision. A marker holding the verified sha256 skips the 16 GB re-hash on
+          # later starts; a bad or partial file is downloaded again.
+          fetch:
+            image: &image
+              repository: docker.io/yanwk/comfyui-boot
+              tag: cu130-slim-v2-20261006@sha256:8c72cb7f983741f19c896dcb869f8aaa7e1d6d8785a28183367291eb91754d3b
+            command: ["bash", "-c"]
+            args:
+              - |
+                set -euo pipefail
+                mkdir -p /nas/comfyui/input /nas/comfyui/output
+                HF=https://huggingface.co/abenzerps/Qwen-Image-2.1-Uncensored-GGUF/resolve/6b34e59458d3eb7ba6a6f86a116aed5253dc02c3
+                fetch() {
+                  dest="/models/$1/$(basename "$2")"
+                  marker="/models/$1/.$(basename "$2").sha256"
+                  [ "$(cat "$marker" 2>/dev/null)" = "$3" ] && return 0
+                  mkdir -p "/models/$1"
+                  curl -fsSL --retry 3 -o "$dest.part" "$HF/$2"
+                  echo "$3  $dest.part" | sha256sum --check --quiet
+                  mv "$dest.part" "$dest"
+                  echo "$3" > "$marker"
+                }
+                fetch diffusion_models qwen-image-2.1-UC-fp8.safetensors \
+                  877b77290339986bca8f771aead381c7a5777347c27d252bbaa915f76667ab0b
+                fetch text_encoders text_encoders/qwen3vl_8b_int8_convrot.safetensors \
+                  8bfd0f6e12abf2d2d697ecc888e5e90b0d6741d6708f05799f53afa560452e8f
+                fetch vae vae/qwen_image_2.1_vae_bf16.safetensors \
+                  bb21f7473051e1ac368515dd3f2e15cd44d7a11748ee8823e1ddca3e4876b7c9
+                ls -lR /models/diffusion_models /models/text_encoders /models/vae
+            securityContext: &securityContext
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 100m
+                memory: 256Mi
+              limits:
+                memory: 1Gi
+        containers:
+          app:
+            image: *image
+            # The entrypoint's own `cp --archive` fails as 1000 (it cannot set times on
+            # the root-owned mount points), so copy the bundle without preserving
+            # attributes first; the entrypoint then finds main.py and skips its copy.
+            command: ["bash", "-c"]
+            args:
+              - cp -r --update=none /default-comfyui-bundle/ComfyUI/. /root/ComfyUI/ && exec bash /runner-scripts/entrypoint.sh
+            env:
+              TZ: America/New_York
+              # uid 1000 has no passwd entry in the image; its paths all assume /root
+              HOME: /root
+              # --disable-smart-memory: offload models to RAM after each run instead of
+              #   keeping them in VRAM, so a Gemma restart (every llama.cpp bump) always
+              #   finds its ~9 GB free on the shared card.
+              # --reserve-vram 1: keep 1 GB of headroom for Gemma's compute buffers.
+              # No --fast: its fp8 matmul needs Ada; the 3090 (Ampere) upcasts fp8.
+              CLI_ARGS: --disable-smart-memory --reserve-vram 1
+            probes:
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: &port 8188
+                  periodSeconds: 5
+                  failureThreshold: 120
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: *port
+                  periodSeconds: 30
+                  failureThreshold: 6
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: *port
+                  periodSeconds: 10
+                  failureThreshold: 6
+            securityContext: *securityContext
+            resources:
+              # the card, shared with Gemma (defaultPodOptions.resourceClaims)
+              claims:
+                - name: gpu
+              requests:
+                cpu: "1"
+                # holds the 8.7 GB text encoder and offloaded models between runs
+                memory: 16Gi
+              limits:
+                memory: 16Gi
+    defaultPodOptions:
+      nodeSelector:
+        nvidia.com/gpu.present: "true"
+      tolerations:
+        - key: llm-workload
+          operator: Exists
+          effect: NoSchedule
+      resourceClaims:
+        - name: gpu
+          resourceClaimName: gpu-shared
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile: { type: RuntimeDefault }
+    service:
+      app:
+        ports:
+          http:
+            port: *port
+    route:
+      app:
+        hostnames:
+          - "{{ .Release.Name }}.dovis.me"
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+    persistence:
+      # /root and /root/ComfyUI are both emptyDirs: a directory the runtime creates
+      # to hold nested mounts is root-owned 0755, and the entrypoint must write into
+      # /root/ComfyUI as 1000 to copy the bundled ComfyUI there.
+      root:
+        type: emptyDir
+        advancedMounts:
+          comfyui:
+            app:
+              - path: /root
+      workdir:
+        type: emptyDir
+        advancedMounts:
+          comfyui:
+            app:
+              - path: /root/ComfyUI
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
+      models:
+        existingClaim: comfyui-models
+        advancedMounts:
+          comfyui:
+            fetch:
+              - path: /models
+            app:
+              - path: /root/ComfyUI/models
+      # kopiur-backed: what you build by hand lives here
+      data:
+        existingClaim: "{{ .Release.Name }}"
+        advancedMounts:
+          comfyui:
+            app:
+              - path: /root/ComfyUI/custom_nodes
+                subPath: custom_nodes
+              - path: /root/ComfyUI/user
+                subPath: user
+              - path: /root/.local
+                subPath: local
+              - path: /root/user-scripts
+                subPath: user-scripts
+      nas:
+        type: nfs
+        server: lil-nas.dovis.me
+        path: /mnt/seagate-data/data
+        advancedMounts:
+          comfyui:
+            fetch:
+              - path: /nas
+            app:
+              - path: /root/ComfyUI/output
+                subPath: comfyui/output
+              - path: /root/ComfyUI/input
+                subPath: comfyui/input
