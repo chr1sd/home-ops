@@ -17,5 +17,6 @@ resources:
   - ./gateway-api-crds/ks.yaml
   - ./multus/ks.yaml
   - ./node-feature-discovery/ks.yaml
+  - ./dra-driver-nvidia-gpu/ks.yaml
   - ./nvidia-device-plugin/ks.yaml
   - ./nvidia-power-limit/ks.yaml

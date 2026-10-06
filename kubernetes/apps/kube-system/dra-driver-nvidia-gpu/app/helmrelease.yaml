@@ -1,0 +1,34 @@
+---
+# yaml-language-server: $schema=https://datreeio.github.io/CRDs-catalog/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: dra-driver-nvidia-gpu
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: dra-driver-nvidia-gpu
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    # Talos 1.14 ships the NVIDIA userspace under /usr/local (bin/nvidia-smi,
+    # lib64/libnvidia-ml.so.1); siderolabs/docs dynamic-resource-allocation guide.
+    nvidiaDriverRoot: /usr/local
+    # Acknowledges that GPUs are handed out by ResourceClaim, not nvidia.com/gpu.
+    # nvidia-device-plugin runs alongside until the llama.cpp lanes move to claims;
+    # until then nothing should claim a GPU here except throwaway test pods.
+    gpuResourcesEnabledOverride: true
+    resources:
+      computeDomains:
+        enabled: false
+    kubeletPlugin:
+      tolerations:
+        - key: llm-workload
+          operator: Exists
+          effect: NoSchedule
