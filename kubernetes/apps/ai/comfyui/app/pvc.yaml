@@ -1,0 +1,15 @@
+---
+# Model weights only (diffusion models, text encoders, VAEs), all re-downloadable from
+# Hugging Face, so no kopiur backup. CephFS rather than ceph-block so the volume can
+# grow without a resize dance as video models arrive.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: comfyui-models
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Gi
+  storageClassName: ceph-filesystem
