@@ -38,7 +38,10 @@ permissions:
 jobs:
   review-pr:
     name: AI PR Review
-    if: ${{ (github.event_name == 'pull_request' && !github.event.pull_request.draft) || github.event_name == 'workflow_dispatch' }}
+    # `labeled` is only a trigger for the ai-review label: Renovate labels every PR it
+    # opens (type/*, renovate/*), and each label event would otherwise queue a full
+    # second review on the GPU.
+    if: ${{ (github.event_name == 'pull_request' && !github.event.pull_request.draft && (github.event.action != 'labeled' || github.event.label.name == 'ai-review')) || github.event_name == 'workflow_dispatch' }}
     runs-on: home-ops-runners
     timeout-minutes: 30
 
