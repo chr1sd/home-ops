@@ -57,3 +57,13 @@ spec:
   keyAlias: Hermes
   secretName: litellm-key-hermes
   secretKey: api-key
+---
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMVirtualKey
+metadata:
+  name: n8n
+spec:
+  proxyRef: litellm
+  keyAlias: n8n
+  secretName: litellm-key-n8n
+  secretKey: api-key
