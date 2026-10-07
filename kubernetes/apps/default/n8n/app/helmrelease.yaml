@@ -30,6 +30,7 @@ spec:
               N8N_PROTOCOL: "https"
               N8N_PORT: &port 8080
               N8N_HOST: n8n.dovis.me
+              N8N_WEBHOOK_URL: https://n8n.dovis.me/
               N8N_LOG_LEVEL: info
               N8N_LOG_OUTPUT: console
             envFrom:
