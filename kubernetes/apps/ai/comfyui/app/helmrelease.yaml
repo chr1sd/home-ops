@@ -120,10 +120,11 @@ spec:
                 - name: gpu
               requests:
                 cpu: "1"
-                # holds the 8.7 GB text encoder and offloaded models between runs
-                memory: 16Gi
+                # holds the 8.7 GB text encoder and offloaded models between runs;
+                # Qwen-Image's encoder + model (~16 GB) fit without evictions at 20Gi
+                memory: 20Gi
               limits:
-                memory: 16Gi
+                memory: 20Gi
     defaultPodOptions:
       nodeSelector:
         nvidia.com/gpu.present: "true"
