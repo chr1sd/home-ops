@@ -57,7 +57,9 @@ spec:
   reasoningBudgetMessage: "Stop reasoning and produce the implementation, tool call, or final answer."
   resources:
     cpu: "500m"
-    memory: 32Gi
+    # Measured over 7 days: ~2 GiB for the server and CPU-side parts + the 16 GiB
+    # --cache-ram prompt cache once full; plateaus at 18-19 GiB, peak 20.0 GiB.
+    memory: 24Gi
   # The UD-Q4_K_XL file carries the model's MTP head; no separate draft model.
   speculativeDecoding:
     type: draft-mtp

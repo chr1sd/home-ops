@@ -53,7 +53,10 @@ spec:
   cacheTypeV: q8_0
   resources:
     cpu: "500m"
-    # ~5 GiB resident + the 8 GiB --cache-ram prompt cache; frees 4 GiB for ComfyUI
+    # Measured: ~0.7 GiB for the server + the --cache-ram prompt cache once it fills, plus
+    # 1-3 GiB transient per request (a new cache entry is built before the oldest is
+    # evicted). An 8 GiB cache sat at 8.7 GiB and was OOM-killed in a review burst; a
+    # 4 GiB cache leaves ~7 GiB of burst headroom.
     memory: 12Gi
   extraArgs:
     - --alias
@@ -64,7 +67,7 @@ spec:
     - --cont-batching
     - --cache-prompt
     - --cache-ram
-    - "8192"
+    - "4096"
     - --kv-unified
     - --temp
     - "1"
