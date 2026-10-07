@@ -29,23 +29,32 @@ spec:
               - |
                 set -euo pipefail
                 mkdir -p /nas/comfyui/input /nas/comfyui/output
-                HF=https://huggingface.co/abenzerps/Qwen-Image-2.1-Uncensored-GGUF/resolve/6b34e59458d3eb7ba6a6f86a116aed5253dc02c3
+                QWEN=https://huggingface.co/abenzerps/Qwen-Image-2.1-Uncensored-GGUF/resolve/6b34e59458d3eb7ba6a6f86a116aed5253dc02c3
+                WAN=https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/ee6f4a40737a995bf5818954cfce6d59443b0f04/split_files
                 fetch() {
                   dest="/models/$1/$(basename "$2")"
                   marker="/models/$1/.$(basename "$2").sha256"
                   [ "$(cat "$marker" 2>/dev/null)" = "$3" ] && return 0
                   mkdir -p "/models/$1"
-                  curl -fsSL --retry 3 -o "$dest.part" "$HF/$2"
+                  curl -fsSL --retry 3 -o "$dest.part" "$2"
                   echo "$3  $dest.part" | sha256sum --check --quiet
                   mv "$dest.part" "$dest"
                   echo "$3" > "$marker"
                 }
-                fetch diffusion_models qwen-image-2.1-UC-fp8.safetensors \
+                # images: Qwen-Image 2.1 uncensored
+                fetch diffusion_models "$QWEN/qwen-image-2.1-UC-fp8.safetensors" \
                   877b77290339986bca8f771aead381c7a5777347c27d252bbaa915f76667ab0b
-                fetch text_encoders text_encoders/qwen3vl_8b_int8_convrot.safetensors \
+                fetch text_encoders "$QWEN/text_encoders/qwen3vl_8b_int8_convrot.safetensors" \
                   8bfd0f6e12abf2d2d697ecc888e5e90b0d6741d6708f05799f53afa560452e8f
-                fetch vae vae/qwen_image_2.1_vae_bf16.safetensors \
+                fetch vae "$QWEN/vae/qwen_image_2.1_vae_bf16.safetensors" \
                   bb21f7473051e1ac368515dd3f2e15cd44d7a11748ee8823e1ddca3e4876b7c9
+                # video: Wan 2.2 TI2V-5B (text/image to 720p), Comfy-Org repackage
+                fetch diffusion_models "$WAN/diffusion_models/wan2.2_ti2v_5B_fp16.safetensors" \
+                  456f901338bd9eadbded3828b819109a9b68e8a525ca5cf8d0049a69fcfeca1e
+                fetch text_encoders "$WAN/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors" \
+                  c3355d30191f1f066b26d93fba017ae9809dce6c627dda5f6a66eaa651204f68
+                fetch vae "$WAN/vae/wan2.2_vae.safetensors" \
+                  e40321bd36b9709991dae2530eb4ac303dd168276980d3e9bc4b6e2b75fed156
                 ls -lR /models/diffusion_models /models/text_encoders /models/vae
             securityContext: &securityContext
               allowPrivilegeEscalation: false
