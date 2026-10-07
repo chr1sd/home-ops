@@ -44,6 +44,18 @@
       minimumGroupSize: 2,
     },
     {
+      description: "llama.cpp Group",
+      // server (CPU: embed, rerank) and server-cuda (GPU: qwen, gemma) are built from
+      // the same upstream commit; one PR means one model reload instead of two
+      groupName: "llama.cpp",
+      matchDatasources: ["docker"],
+      matchPackageNames: ["ghcr.io/ggml-org/llama.cpp"],
+      group: {
+        commitMessageTopic: "{{{groupName}}} group",
+      },
+      minimumGroupSize: 2,
+    },
+    {
       description: "Auto-merge GitHub Actions",
       matchManagers: ["github-actions"],
       automerge: true,
