@@ -15,5 +15,6 @@ resources:
   - ./snmp-exporter/ks.yaml
   - ./kromgo/ks.yaml
   - ./blackbox-exporter/ks.yaml
+  - ./dcgm-exporter/ks.yaml
   - ./unpoller/ks.yaml
   - ./radar/ks.yaml
