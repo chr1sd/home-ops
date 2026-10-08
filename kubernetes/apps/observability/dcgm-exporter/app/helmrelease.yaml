@@ -1,0 +1,131 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: dcgm-exporter
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: dcgm-exporter
+  interval: 1h
+  values:
+    controllers:
+      dcgm-exporter:
+        # Per-GPU fan, power, temperature, utilisation and VRAM for the AI node.
+        # KUBERNETES_ENABLE_DRA maps each card to the pods holding its ResourceClaim
+        # (pod/namespace/container labels), so a card shared by two pods (gpu-shared:
+        # Gemma + ComfyUI) emits one series per pod - aggregate by gpu for card totals.
+        type: daemonset
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: nvcr.io/nvidia/k8s/dcgm-exporter
+              tag: 4.6.1-4.8.4-distroless@sha256:148b0c025e5f2850256816fa33754fbf4733b7a086697a95613fc0ba3db5b003
+            args:
+              - -f
+              - /etc/dcgm-exporter/default-counters.csv
+            env:
+              # nvidia-container-runtime injects every card and the driver libs
+              NVIDIA_VISIBLE_DEVICES: all
+              NVIDIA_DRIVER_CAPABILITIES: utility
+              DCGM_EXPORTER_LISTEN: ":9400"
+              DCGM_EXPORTER_KUBERNETES: "true"
+              KUBERNETES_ENABLE_DRA: "true"
+              NODE_NAME:
+                valueFrom:
+                  fieldRef:
+                    fieldPath: spec.nodeName
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: &port 9400
+                  initialDelaySeconds: 45
+                  periodSeconds: 15
+                  timeoutSeconds: 5
+              readiness: *probes
+            securityContext:
+              # the kubelet pod-resources socket is root-only
+              allowPrivilegeEscalation: false
+              capabilities: { drop: ["ALL"] }
+              runAsNonRoot: false
+              runAsUser: 0
+              runAsGroup: 0
+            resources:
+              requests:
+                cpu: 50m
+                memory: 128Mi
+              limits:
+                memory: 512Mi
+    defaultPodOptions:
+      runtimeClassName: nvidia
+      nodeSelector:
+        nvidia.com/gpu.present: "true"
+      tolerations:
+        - key: llm-workload
+          operator: Exists
+          effect: NoSchedule
+    rbac:
+      roles:
+        dcgm-exporter:
+          type: ClusterRole
+          rules:
+            # pod labels + DRA ResourceSlices (GPU UUID per device) for the pod mapping
+            - apiGroups:
+                - ""
+                - resource.k8s.io
+              resources:
+                - pods
+                - resourceslices
+              verbs:
+                - get
+                - list
+                - watch
+      bindings:
+        dcgm-exporter:
+          type: ClusterRoleBinding
+          roleRef:
+            identifier: dcgm-exporter
+          subjects:
+            - identifier: dcgm-exporter
+    serviceAccount:
+      dcgm-exporter: {}
+    persistence:
+      exporter-metrics:
+        type: configMap
+        name: dcgm-exporter-metrics
+        globalMounts:
+          - path: /etc/dcgm-exporter/default-counters.csv
+            subPath: default-counters.csv
+            readOnly: true
+      pod-resources:
+        type: hostPath
+        hostPath: /var/lib/kubelet/pod-resources
+        globalMounts:
+          - path: /var/lib/kubelet/pod-resources
+            readOnly: true
+    service:
+      app:
+        ports:
+          metrics:
+            port: *port
+    serviceMonitor:
+      app:
+        endpoints:
+          - port: metrics
+            interval: 30s
+            scrapeTimeout: 10s
+            # keep the exporter's pod/namespace/container labels (the GPU workload),
+            # not the exporter pod's own
+            honorLabels: true
+            relabelings:
+              - action: replace
+                sourceLabels:
+                  - __meta_kubernetes_pod_node_name
+                targetLabel: instance
