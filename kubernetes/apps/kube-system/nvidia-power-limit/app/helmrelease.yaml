@@ -21,7 +21,8 @@ spec:
       nvidia-power-limit:
         # One pod per GPU node: caps every card's power limit at boot, then sleeps so
         # the DaemonSet re-applies on every node restart. The RTX 3090 defaults to 350 W;
-        # 300 W costs a few percent of tok/s and cuts heat and PSU load noticeably.
+        # 220 W is the efficiency sweet spot: most of the tok/s for far less heat and PSU
+        # load. Keep the AI Node dashboard's Power stat (dcgm-exporter) in step.
         # Pattern from joryirving/home-ops kube-system/nvidia-power-limit.
         type: daemonset
         containers:
@@ -33,7 +34,7 @@ spec:
               # nvidia-container-runtime injects nvidia-smi and the driver libs for `all`
               NVIDIA_VISIBLE_DEVICES: all
               NVIDIA_DRIVER_CAPABILITIES: utility
-              POWER_LIMIT_WATTS: "300"
+              POWER_LIMIT_WATTS: "220"
             command:
               - /bin/bash
               - -c
