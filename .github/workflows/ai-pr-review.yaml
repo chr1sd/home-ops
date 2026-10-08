@@ -17,7 +17,9 @@ name: "AI PR Review"
 on:
   pull_request:
     branches: ["main"]
-    types: [opened, reopened, synchronize, ready_for_review, labeled]
+    # `closed` never reviews (job `if` below); it only exists to cancel this PR's
+    # running/queued review through the concurrency group.
+    types: [opened, reopened, synchronize, ready_for_review, labeled, closed]
   workflow_dispatch:
     inputs:
       pr_number:
@@ -27,7 +29,9 @@ on:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || inputs.pr_number }}
-  cancel-in-progress: false
+  # A new push queues behind the running review (one run, one pending), but a merged or
+  # closed PR cancels both: reviewing a PR that is already in main burns the GPU for nothing.
+  cancel-in-progress: ${{ github.event.action == 'closed' }}
 
 # GITHUB_TOKEN: checkout + reading the PR head on workflow_dispatch. Writes go through
 # the app token below.
@@ -40,8 +44,8 @@ jobs:
     name: AI PR Review
     # `labeled` is only a trigger for the ai-review label: Renovate labels every PR it
     # opens (type/*, renovate/*), and each label event would otherwise queue a full
-    # second review on the GPU.
-    if: ${{ (github.event_name == 'pull_request' && !github.event.pull_request.draft && (github.event.action != 'labeled' || github.event.label.name == 'ai-review')) || github.event_name == 'workflow_dispatch' }}
+    # second review on the GPU. `closed` only cancels (see concurrency).
+    if: ${{ (github.event_name == 'pull_request' && github.event.action != 'closed' && !github.event.pull_request.draft && (github.event.action != 'labeled' || github.event.label.name == 'ai-review')) || github.event_name == 'workflow_dispatch' }}
     runs-on: home-ops-runners
     timeout-minutes: 30
 
