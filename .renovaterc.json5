@@ -190,6 +190,9 @@
       ],
       datasourceTemplate: "custom.grafana-dashboards",
       versioningTemplate: "regex:^(?<major>\\d+)$",
+      // default autoReplace swaps currentValue inside the whole match, so a revision
+      // whose digits also appear in the dashboard id (24987 rev 7) corrupts the id
+      autoReplaceStringTemplate: "https://grafana.com/api/dashboards/{{{depName}}}/revisions/{{{newValue}}}/download",
     },
     {
       description: "Process annotated dependencies",
