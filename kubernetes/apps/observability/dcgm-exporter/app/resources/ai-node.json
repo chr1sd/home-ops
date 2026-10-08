@@ -134,7 +134,7 @@
     {
       "type": "stat",
       "title": "Power",
-      "description": "Cards are capped at 300 W by nvidia-power-limit.",
+      "description": "Cards are capped at 220 W by nvidia-power-limit.",
       "id": 3,
       "datasource": {
         "type": "prometheus",
@@ -158,11 +158,11 @@
               },
               {
                 "color": "yellow",
-                "value": 150
+                "value": 110
               },
               {
                 "color": "red",
-                "value": 270
+                "value": 200
               }
             ]
           },
@@ -170,7 +170,7 @@
             "mode": "thresholds"
           },
           "min": 0,
-          "max": 300
+          "max": 220
         },
         "overrides": []
       },
