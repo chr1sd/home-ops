@@ -102,7 +102,7 @@ jobs:
           permission-checks: read
 
       - name: Review with local models via LiteLLM
-        uses: misospace/pr-reviewer-action@e78e531cee6c7b10279be68454f3f7051fd85048 # v3.4.0
+        uses: misospace/pr-reviewer-action@768a1320d67f14b99737633a5f8ba58449c3caeb # v3.4.1
         env:
           # konflate's read-only MCP over the cluster Service (never exposed); the
           # evidence provider below injects the rendered Flux diff for this PR.
