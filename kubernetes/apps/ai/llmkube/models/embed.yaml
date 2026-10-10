@@ -23,7 +23,7 @@ metadata:
 spec:
   modelRef: embed
   runtime: llamacpp
-  image: ghcr.io/ggml-org/llama.cpp:server@sha256:33868c035b21dc63f7c60b7438774283fd99215bc319114eb03de5df4ce7cd6b
+  image: ghcr.io/ggml-org/llama.cpp:server@sha256:bf3da52e92c083472b3d1c9f9da081f423ab9def95a87ec4bba51940382d75fd
   rolloutPolicy:
     waitForIdle: true
     idleTimeoutSeconds: 86400
