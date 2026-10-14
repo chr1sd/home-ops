@@ -76,6 +76,17 @@
       minimumGroupSize: 2,
     },
     {
+      description: "radar Group",
+      // chart and image are released in lockstep by skyhook-io
+      groupName: "radar",
+      matchDatasources: ["docker", "helm"],
+      matchPackageNames: ["ghcr.io/skyhook-io/radar", "radar"],
+      group: {
+        commitMessageTopic: "{{{groupName}}} group",
+      },
+      minimumGroupSize: 2,
+    },
+    {
       description: "Auto-merge GitHub Actions",
       matchManagers: ["github-actions"],
       automerge: true,
