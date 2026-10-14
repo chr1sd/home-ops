@@ -132,13 +132,18 @@ params:
   sunrpc.tcp_slot_table_entries: "128"
   user.max_user_namespaces: "11255"
 ---
-# NFS client readahead. The kernel default is 128 KiB per mount; measured on kvrnts-3
-# against lil-nas (CUBIC, 2x10G LACP) 1024 KiB gives 700-750 MB/s per stream for
-# Plex-style 64 KiB reads vs ~640 at the default, with 1-4 MiB and 16 MiB both worse.
+# NFS client readahead (KiB), applied by the siderolabs/nfsrahead extension when a
+# mount is created; the kernel default is 128. The extension reads /etc/nfs.conf only
+# from the Talos 1.15 build (siderolabs/extensions#1255); 1.14 builds ignore this file
+# and apply their baked-in nfs4=16000.
 apiVersion: v1alpha1
-kind: UdevRulesConfig
-rules:
-  - SUBSYSTEM=="bdi", ACTION=="add", KERNEL=="0:*", ATTR{read_ahead_kb}="1024"
+kind: EtcFileConfig
+name: nfs.conf
+mode: 0o644
+contents: |
+  [nfsrahead]
+  nfs4=16384
+  default=128
 ---
 # was: machine.features.kubePrism (omit the document to disable KubePrism)
 apiVersion: v1alpha1
