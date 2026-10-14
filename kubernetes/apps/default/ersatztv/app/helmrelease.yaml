@@ -22,7 +22,7 @@ spec:
             image:
               # Unified image: the ffmpeg base ships libva + Intel oneVPL, so no -vaapi tag exists any more
               repository: ghcr.io/ersatztv/legacy
-              tag: v26.11.1@sha256:51882de2022420da21654ceeed2cda50af418e5ad165d050bc393e99a06d02ca
+              tag: v26.11.3@sha256:cb0383fdb22050bdaff19e94974e86151d289e56355ca77cde8f15c3b49895d7
             env:
               TZ: America/New_York
               # Image defaults: ETV_CONFIG_FOLDER=/config, ETV_TRANSCODE_FOLDER=/transcode
