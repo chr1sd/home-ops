@@ -540,7 +540,7 @@ url = "https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_
 provenance = "github-attestations"
 
 [[tools."aqua:siderolabs/talos"]]
-version = "1.14.3"
+version = "1.14.4"
 backend = "aqua:siderolabs/talos"
 
 [tools."aqua:siderolabs/talos"."platforms.linux-arm64"]
