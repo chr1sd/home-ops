@@ -35,7 +35,7 @@ metadata:
 spec:
   modelRef: qwen3.8-27b
   runtime: llamacpp
-  image: ghcr.io/ggml-org/llama.cpp:server-cuda@sha256:c4348afb91499b10fad12f92626c7a8ca8b69d6475d10c793b810cb61237ce00
+  image: ghcr.io/ggml-org/llama.cpp:server-cuda@sha256:53bec65a6120e8ab8cb76af725c3b05a7f098b5308c96e5d9f8dad98f1f1f639
   rolloutPolicy:
     waitForIdle: false # https://github.com/defilantech/LLMKube/pull/1794
     idleTimeoutSeconds: 86400
