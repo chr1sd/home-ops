@@ -18,3 +18,4 @@ resources:
   - ./dcgm-exporter/ks.yaml
   - ./unpoller/ks.yaml
   - ./radar/ks.yaml
+  - ./silence-operator/ks.yaml
