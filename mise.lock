@@ -660,7 +660,6 @@ url = "https://nodejs.org/dist/v24.22.0/node-v24.22.0-linux-arm64.tar.gz"
 [tools.node."platforms.linux-arm64-musl"]
 checksum = "sha256:9010e34b40beb69ee5eb8c0ee22e08da6a6c7bff16c6f8be7904638970a66c91"
 url = "https://nodejs.org/dist/v24.22.0/node-v24.22.0.tar.gz"
-install = "source"
 
 [tools.node."platforms.linux-x64"]
 checksum = "sha256:28ea0a438de9a13bd7891fd758eee6c7819ee8af5442dfd8d45bd65e56d4228c"
@@ -669,7 +668,6 @@ url = "https://nodejs.org/dist/v24.22.0/node-v24.22.0-linux-x64.tar.gz"
 [tools.node."platforms.linux-x64-musl"]
 checksum = "sha256:9010e34b40beb69ee5eb8c0ee22e08da6a6c7bff16c6f8be7904638970a66c91"
 url = "https://nodejs.org/dist/v24.22.0/node-v24.22.0.tar.gz"
-install = "source"
 
 [tools.node."platforms.macos-arm64"]
 checksum = "sha256:6a9724d9b50a5f22b4816cded441b5a8d9ddae546191a5e5b7efa5a5e2ee26d5"
