@@ -37,11 +37,11 @@ Welcome to the (Kubernetes) Humble Home Lab repo. The source of truth for my bar
 
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f916/512.gif" alt="🤖" width="30" height="30"> Hardware
 
-| System                | Role                 | CPU             | RAM        | Graphics      | Disk (boot)                  | Disk (storage)                   |
-| --------------------- | -------------------- | --------------- | ---------- | ------------- | ---------------------------- | -------------------------------- |
-| Minisforum MS-01 (3x) | Control Plane/Worker | Intel i9-12900H | 96GB DDR5  | Intel Iris XE | Samsung PM983 960GB M.2 NVME | Crucial 1TB M.2 NVME             |
-| HL15 2.0              | NAS                  | AMD Epyc 7452   | 256GB DDR4 |               | 512GB NVME Mirror            | ZFS RaidZ2 Pool (12x 28TB Disks) |
-| Retired Gamer         | AI                   | Intel i7-6700K  | 64GB DDR4  | 2x RTX 3090   | Kingston 1TB NVME            |                                  |
+| System                | Role | CPU             | RAM        | Graphics      | Disk (boot)                  | Disk (storage)                   |
+| --------------------- | ---- | --------------- | ---------- | ------------- | ---------------------------- | -------------------------------- |
+| Minisforum MS-01 (3x) | K8S  | Intel i9-12900H | 96GB DDR5  | Intel Iris XE | Samsung PM983 960GB M.2 NVME | Crucial 1TB M.2 NVME             |
+| HL15 2.0              | NAS  | AMD Epyc 7452   | 256GB DDR4 |               | 512GB NVME Mirror            | ZFS RaidZ2 Pool (12x 28TB Disks) |
+| Retired Gamer         | AI   | Intel i7-6700K  | 64GB DDR4  | 2x RTX 3090   | Kingston 1TB NVME            |                                  |
 
 ---
 
