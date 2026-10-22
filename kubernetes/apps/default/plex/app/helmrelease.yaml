@@ -24,7 +24,7 @@ spec:
               tag: 1.43.5.11029@sha256:87fb3af36b1df3fc195651da4cd2ef1393cde2f432e75fb1ec1a32ace6bbef55
             env:
               TZ: America/New_York
-              PLEX_ADVERTISE_URL: https://plex.dovis.me:443,http://10.13.17.56:32400,http://plex.default.svc.cluster.local:32400
+              PLEX_ADVERTISE_URL: http://10.13.17.56:32400,http://plex.default.svc.cluster.local:32400
               PLEX_NO_AUTH_NETWORKS: 10.13.17.0/24,10.13.37.0/24
               PLEX_PREFERENCE_LAN_NETWORKS: "LanNetworksBandwidth=10.13.17.0/24,10.13.37.0/24"
             probes:
