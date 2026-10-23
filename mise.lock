@@ -125,49 +125,49 @@ url = "https://github.com/cilium/cilium-cli/releases/download/v0.20.1/cilium-win
 url_api = "https://api.github.com/repos/cilium/cilium-cli/releases/assets/585358777"
 
 [[tools."aqua:cli/cli"]]
-version = "2.103.1"
+version = "2.103.2"
 backend = "aqua:cli/cli"
 
 [tools."aqua:cli/cli"."platforms.linux-arm64"]
-checksum = "sha256:25b1287471a73a3cca32e5d2d2798ae26abea0243db1b9e4a8c1be506fad1bfe"
-url = "https://github.com/cli/cli/releases/download/v2.103.1/gh_2.103.1_linux_arm64.tar.gz"
-url_api = "https://api.github.com/repos/cli/cli/releases/assets/669692610"
+checksum = "sha256:4c3e99a50bd8b181a3fe9d69b25dd978bac768148d88f01507c6b4d1ef61a443"
+url = "https://github.com/cli/cli/releases/download/v2.103.2/gh_2.103.2_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/cli/cli/releases/assets/670305069"
 provenance = "github-attestations"
 
 [tools."aqua:cli/cli"."platforms.linux-arm64-musl"]
-checksum = "sha256:25b1287471a73a3cca32e5d2d2798ae26abea0243db1b9e4a8c1be506fad1bfe"
-url = "https://github.com/cli/cli/releases/download/v2.103.1/gh_2.103.1_linux_arm64.tar.gz"
-url_api = "https://api.github.com/repos/cli/cli/releases/assets/669692610"
+checksum = "sha256:4c3e99a50bd8b181a3fe9d69b25dd978bac768148d88f01507c6b4d1ef61a443"
+url = "https://github.com/cli/cli/releases/download/v2.103.2/gh_2.103.2_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/cli/cli/releases/assets/670305069"
 provenance = "github-attestations"
 
 [tools."aqua:cli/cli"."platforms.linux-x64"]
-checksum = "sha256:57500f347b5e84efb6578c9b644eeb3b4e54046762635a939dd0ee2cca1c1add"
-url = "https://github.com/cli/cli/releases/download/v2.103.1/gh_2.103.1_linux_amd64.tar.gz"
-url_api = "https://api.github.com/repos/cli/cli/releases/assets/669692567"
+checksum = "sha256:62ccf747115ddc61237efffdde66a3c8f70ba249433dc64f70801089b59c59c8"
+url = "https://github.com/cli/cli/releases/download/v2.103.2/gh_2.103.2_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/cli/cli/releases/assets/670305062"
 provenance = "github-attestations"
 
 [tools."aqua:cli/cli"."platforms.linux-x64-musl"]
-checksum = "sha256:57500f347b5e84efb6578c9b644eeb3b4e54046762635a939dd0ee2cca1c1add"
-url = "https://github.com/cli/cli/releases/download/v2.103.1/gh_2.103.1_linux_amd64.tar.gz"
-url_api = "https://api.github.com/repos/cli/cli/releases/assets/669692567"
+checksum = "sha256:62ccf747115ddc61237efffdde66a3c8f70ba249433dc64f70801089b59c59c8"
+url = "https://github.com/cli/cli/releases/download/v2.103.2/gh_2.103.2_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/cli/cli/releases/assets/670305062"
 provenance = "github-attestations"
 
 [tools."aqua:cli/cli"."platforms.macos-arm64"]
-checksum = "sha256:71b5ffc74bb69cdb72ca397d9b486d78755019be33ca927288299197ad7f6807"
-url = "https://github.com/cli/cli/releases/download/v2.103.1/gh_2.103.1_macOS_arm64.zip"
-url_api = "https://api.github.com/repos/cli/cli/releases/assets/669692717"
+checksum = "sha256:5416000f5d17580a187339e0c4068a01ca5c87f7d4fe6ca64933696f967bc418"
+url = "https://github.com/cli/cli/releases/download/v2.103.2/gh_2.103.2_macOS_arm64.zip"
+url_api = "https://api.github.com/repos/cli/cli/releases/assets/670305145"
 provenance = "github-attestations"
 
 [tools."aqua:cli/cli"."platforms.macos-x64"]
-checksum = "sha256:9adb0d23fe3c463e8600ea5288b5ac0ba9438a49678db0b3e955471be1df42c3"
-url = "https://github.com/cli/cli/releases/download/v2.103.1/gh_2.103.1_macOS_amd64.zip"
-url_api = "https://api.github.com/repos/cli/cli/releases/assets/669692675"
+checksum = "sha256:2dc7f1fc4761f96732995f6e4f4c6b4d705f2635da4126620c8b30eaa67b9c98"
+url = "https://github.com/cli/cli/releases/download/v2.103.2/gh_2.103.2_macOS_amd64.zip"
+url_api = "https://api.github.com/repos/cli/cli/releases/assets/670305131"
 provenance = "github-attestations"
 
 [tools."aqua:cli/cli"."platforms.windows-x64"]
-checksum = "sha256:a1d22e6f0dea586cf69478aaccbc6e3370dbc954c383cd412b9959635591dc5f"
-url = "https://github.com/cli/cli/releases/download/v2.103.1/gh_2.103.1_windows_amd64.zip"
-url_api = "https://api.github.com/repos/cli/cli/releases/assets/669692783"
+checksum = "sha256:fef9fcdd8fdabd0501ab8b3d99eac976f504ab55d01bef9e8ef428a5d900ddda"
+url = "https://github.com/cli/cli/releases/download/v2.103.2/gh_2.103.2_windows_amd64.zip"
+url_api = "https://api.github.com/repos/cli/cli/releases/assets/670305204"
 provenance = "github-attestations"
 
 [[tools."aqua:evilmartians/lefthook"]]
