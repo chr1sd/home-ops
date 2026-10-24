@@ -11,7 +11,7 @@ metadata:
   name: litellm
 spec:
   applyMode: file
-  image: ghcr.io/berriai/litellm-database:v1.106.0@sha256:80a12a210e6626e39daaa31fb6ce70f4c4d97ee10e21d4584a9e87f45bf3a2f1
+  image: ghcr.io/berriai/litellm-database:v1.106.3@sha256:f631537bfc317970ceda5fac99b436161cb7a78d515d7037226de396a71b9bf9
   replicas: 1
   service:
     port: 4000
