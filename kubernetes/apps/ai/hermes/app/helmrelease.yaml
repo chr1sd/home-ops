@@ -20,7 +20,7 @@ spec:
           init:
             image:
               repository: docker.io/library/alpine
-              tag: 3.24@sha256:c6b073f8e9e58d881f6ffba6ebf3b9ebd60b9e7d6e8337018c0e68bb5c356873
+              tag: 3.24@sha256:be2656061b536c1883c4034790e21d0a09c5aaaf51968b89368a3c0371ea2c9a
             command:
               - sh
               - -c
