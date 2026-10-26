@@ -21,7 +21,7 @@ spec:
           app:
             image:
               repository: ghcr.io/home-operations/plex-next
-              tag: 1.43.5.11029@sha256:87fb3af36b1df3fc195651da4cd2ef1393cde2f432e75fb1ec1a32ace6bbef55
+              tag: 1.43.5.11079@sha256:4f9aa7fd981d03eca29a98e29159b5273ed411f4a61ec8c70a57c11343355d04
             env:
               TZ: America/New_York
               PLEX_ADVERTISE_URL: https://plex.dovis.me:443,http://10.13.17.56:32400,http://plex.default.svc.cluster.local:32400
