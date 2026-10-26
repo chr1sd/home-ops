@@ -22,7 +22,7 @@ metadata:
 spec:
   modelRef: rerank
   runtime: llamacpp
-  image: ghcr.io/ggml-org/llama.cpp:server@sha256:c7b03e45cff9c4e984acd39032a6f3a82c811075b72bf176e329f84b8598c135
+  image: ghcr.io/ggml-org/llama.cpp:server@sha256:5741ab30aae42af23ca57d9b98a6d4544cb09c21f372f92c5ee55312fa8b8b0c
   rolloutPolicy:
     waitForIdle: true
     idleTimeoutSeconds: 86400
