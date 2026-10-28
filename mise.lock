@@ -535,43 +535,36 @@ backend = "github:mitsuhiko/minijinja"
 
 [tools."github:mitsuhiko/minijinja"."platforms.linux-arm64"]
 checksum = "sha256:3deb041ea4d304654da6097ba30ec096362ac568a36fea6a84d9d3c455eed04b"
-checksum_source = "mise-versions"
 url = "https://github.com/mitsuhiko/minijinja/releases/download/3.0.4/minijinja-cli-aarch64-unknown-linux-gnu.tar.xz"
 url_api = "https://api.github.com/repos/mitsuhiko/minijinja/releases/assets/679698134"
 
 [tools."github:mitsuhiko/minijinja"."platforms.linux-arm64-musl"]
 checksum = "sha256:060a4a192e0dd2a15009eb13cf1128516cead753adc5a694d913c72ab8d54c6f"
-checksum_source = "mise-versions"
 url = "https://github.com/mitsuhiko/minijinja/releases/download/3.0.4/minijinja-cli-aarch64-unknown-linux-musl.tar.xz"
 url_api = "https://api.github.com/repos/mitsuhiko/minijinja/releases/assets/679698136"
 
 [tools."github:mitsuhiko/minijinja"."platforms.linux-x64"]
 checksum = "sha256:f103f5b53156bbcf94f82427979a476497d85de50158a3598996962722bab6d6"
-checksum_source = "mise-versions"
 url = "https://github.com/mitsuhiko/minijinja/releases/download/3.0.4/minijinja-cli-x86_64-unknown-linux-gnu.tar.xz"
 url_api = "https://api.github.com/repos/mitsuhiko/minijinja/releases/assets/679698186"
 
 [tools."github:mitsuhiko/minijinja"."platforms.linux-x64-musl"]
 checksum = "sha256:d39c681066da5175ec94fd245f2bb3ccca46ded18457e3bfe27d2daa59c6dfce"
-checksum_source = "mise-versions"
 url = "https://github.com/mitsuhiko/minijinja/releases/download/3.0.4/minijinja-cli-x86_64-unknown-linux-musl.tar.xz"
 url_api = "https://api.github.com/repos/mitsuhiko/minijinja/releases/assets/679698216"
 
 [tools."github:mitsuhiko/minijinja"."platforms.macos-arm64"]
 checksum = "sha256:0ae08cce1d8ecea4c1d059e7540609c6dfce1b7a76689ba2f2e5a5e0fbd9c9fb"
-checksum_source = "mise-versions"
 url = "https://github.com/mitsuhiko/minijinja/releases/download/3.0.4/minijinja-cli-aarch64-apple-darwin.tar.xz"
 url_api = "https://api.github.com/repos/mitsuhiko/minijinja/releases/assets/679698108"
 
 [tools."github:mitsuhiko/minijinja"."platforms.macos-x64"]
 checksum = "sha256:3afc01480feae0f0592f6d91c2fe1bf2b71fb0f84dd9aa3aa41b77ed8fbd0cdb"
-checksum_source = "mise-versions"
 url = "https://github.com/mitsuhiko/minijinja/releases/download/3.0.4/minijinja-cli-x86_64-apple-darwin.tar.xz"
 url_api = "https://api.github.com/repos/mitsuhiko/minijinja/releases/assets/679698171"
 
 [tools."github:mitsuhiko/minijinja"."platforms.windows-x64"]
 checksum = "sha256:9171ae4dc6e8578fea8749df968cded903dfb7c5809b61da5693c11216fb8f22"
-checksum_source = "mise-versions"
 url = "https://github.com/mitsuhiko/minijinja/releases/download/3.0.4/minijinja-cli-x86_64-pc-windows-msvc.zip"
 url_api = "https://api.github.com/repos/mitsuhiko/minijinja/releases/assets/679698183"
 
