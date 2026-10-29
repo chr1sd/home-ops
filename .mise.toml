@@ -9,7 +9,7 @@ FLATE_PATH = '{{config_root}}/kubernetes/flux/cluster'
 postinstall = "lefthook install"
 
 [tools]
-"aqua:cilium/cilium-cli" = "0.20.1"
+"aqua:cilium/cilium-cli" = "0.20.2"
 "aqua:cli/cli" = "2.103.3"
 "aqua:fluxcd/flux2" = "2.10.0"
 "vfox:mise-plugins/vfox-1password" = "2.34.0"
