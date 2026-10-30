@@ -11,4 +11,4 @@ spec:
     operation: copy
   ref:
     tag: 0.34.1
-  url: oci://ghcr.io/home-operations/charts-mirror/intel-device-plugins-operator
+  url: oci://ghcr.io/intel/helm-charts/intel-device-plugins-operator
