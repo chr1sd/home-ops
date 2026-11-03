@@ -661,7 +661,7 @@ checksum = "sha256:dcc60d59a0746999f99064a01c020445d54d84228c691cdbf25b49ac3b591
 url = "https://nodejs.org/dist/v26.13.0/node-v26.13.0-win-x64.zip"
 
 [[tools."npm:oxfmt"]]
-version = "0.75.0"
+version = "0.76.0"
 backend = "npm:oxfmt"
 
 [[tools."vfox:mise-plugins/vfox-1password"]]
