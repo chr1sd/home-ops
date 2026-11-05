@@ -26,7 +26,9 @@ spec:
         # kubectl-mcp-server 2.x: per-kind tools (get_pods, get_logs...) are replaced by
         # generic kubectl_get/logs/top, and only toolsets enabled via --toolsets in
         # kubectl-mcp.yaml are registered. Write/exec tools are hidden by --read-only.
-        # Keep the read + diagnose set only.
+        # Keep the read + diagnose set only. Hidden because they always fail here:
+        # node_logs/node_stats_summary need nodes/proxy (exec-escalatable, not granted)
+        # and get_hubble_flows needs the hubble CLI, which the image does not ship.
         - workload: kubectl
           filter:
             # core: inventory, describe, logs, metrics (any kind, including CRDs)
@@ -44,8 +46,6 @@ spec:
             - get_evicted_pods
             - trace_service_chain
             - get_nodes_summary
-            - node_logs
-            - node_stats_summary
             # cost
             - get_resource_quotas_usage
             - get_resource_trends
@@ -60,8 +60,6 @@ spec:
             - get_pod_security_info
             - analyze_network_policies
             - audit_rbac_permissions
-            # cilium
-            - get_hubble_flows
         # flux-operator-mcp: reads and docs. reconcile/suspend/resume/apply/patch/delete/
         # install are refused by RBAC today and hidden here; add them back with a Cedar
         # policy when an agent is trusted to act.
