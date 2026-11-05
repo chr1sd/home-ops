@@ -190,7 +190,7 @@ spec:
             # 2.x loads only core+helm by default. helm is left out: release storage is
             # Secrets, which this SA cannot read, and flux-mcp covers releases.
             - --toolsets
-            - core,diagnostics,security,cost,cilium
+            - core,diagnostics,security,cost
           env:
             - name: MCP_K8S_PROVIDER
               value: in-cluster
