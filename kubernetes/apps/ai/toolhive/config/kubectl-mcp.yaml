@@ -164,8 +164,18 @@ spec:
   serviceAccount: kubectl-mcp-readonly
   podTemplateSpec:
     spec:
+      # 2.x image runs as mcp (10001) with WORKDIR/HOME /home/mcp. Under ToolHive's
+      # default UID 1000 FastMCP's import-time .env lookup there hits EACCES and the
+      # server crashes before startup.
+      securityContext:
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
       containers:
         - name: mcp
+          securityContext:
+            runAsUser: 10001
+            runAsGroup: 10001
           args:
             - --transport
             - streamable-http
