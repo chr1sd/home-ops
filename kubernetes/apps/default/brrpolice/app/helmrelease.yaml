@@ -64,6 +64,10 @@ spec:
     persistence:
       data:
         existingClaim: "{{ .Release.Name }}"
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
     service:
       app:
         ports:
