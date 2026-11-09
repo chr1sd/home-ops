@@ -118,15 +118,16 @@ jobs:
           ai-api-key: ${{ secrets.LITELLM_API_KEY }}
           ai-response-format: json_object
           ai-max-tokens: "16000"
-          ai-primary-retries: "3"
-          ai-primary-retry-delay-sec: "15"
+          # Total attempts, not extra retries. When gemma times out it is a runaway
+          # thinking loop (~14k tokens vs a normal 0.5-4.5k), which repeats on the same
+          # prompt: each retry burned another 5 min (ai-request-timeout-sec 300) before
+          # qwen answered in ~1 min. One attempt, then straight to the fallback.
+          ai-primary-retries: "1"
           ai-fallback-base-url: http://litellm.ai.svc.cluster.local:4000/v1
           ai-fallback-api-format: openai
           ai-fallback-model: qwen3.8-27b
           ai-fallback-api-key: ${{ secrets.LITELLM_API_KEY }}
           publish-mode: comment
-          # Required for publish-mode=comment; without it the review is computed and dropped.
-          publish-review-comment: "true"
           # Repo conventions + what to flag, read from the PR's checkout (so a PR that
           # edits the rules is reviewed under them). Pinned so a future root CLAUDE.md /
           # AGENTS.md is never picked up as review policy by auto-discovery.
