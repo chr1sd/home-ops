@@ -89,6 +89,34 @@ provenance = "cosign"
 version = "0.20.2"
 backend = "aqua:cilium/cilium-cli"
 
+[tools."aqua:cilium/cilium-cli"."platforms.linux-arm64"]
+checksum = "sha256:922af9c977e781500eb96c51137e495409b1cdd248c9e1b7fffb863e6b6efdf8"
+url = "https://github.com/cilium/cilium-cli/releases/download/v0.20.2/cilium-linux-arm64.tar.gz"
+
+[tools."aqua:cilium/cilium-cli"."platforms.linux-arm64-musl"]
+checksum = "sha256:922af9c977e781500eb96c51137e495409b1cdd248c9e1b7fffb863e6b6efdf8"
+url = "https://github.com/cilium/cilium-cli/releases/download/v0.20.2/cilium-linux-arm64.tar.gz"
+
+[tools."aqua:cilium/cilium-cli"."platforms.linux-x64"]
+checksum = "sha256:b7224a62bfed0e84f1a84567d274fefc5017df76a936e067c42012bb7fc30856"
+url = "https://github.com/cilium/cilium-cli/releases/download/v0.20.2/cilium-linux-amd64.tar.gz"
+
+[tools."aqua:cilium/cilium-cli"."platforms.linux-x64-musl"]
+checksum = "sha256:b7224a62bfed0e84f1a84567d274fefc5017df76a936e067c42012bb7fc30856"
+url = "https://github.com/cilium/cilium-cli/releases/download/v0.20.2/cilium-linux-amd64.tar.gz"
+
+[tools."aqua:cilium/cilium-cli"."platforms.macos-arm64"]
+checksum = "sha256:944c388f71b939e0befa405422c93d5fcbd574e4dd12c4bf01244858961d79de"
+url = "https://github.com/cilium/cilium-cli/releases/download/v0.20.2/cilium-darwin-arm64.tar.gz"
+
+[tools."aqua:cilium/cilium-cli"."platforms.macos-x64"]
+checksum = "sha256:64ab3dd2b37f99319e2e85342725fd66caf7701b9be735704dace3c4ff3bb9ea"
+url = "https://github.com/cilium/cilium-cli/releases/download/v0.20.2/cilium-darwin-amd64.tar.gz"
+
+[tools."aqua:cilium/cilium-cli"."platforms.windows-x64"]
+checksum = "sha256:b72fe6bbef143d2ab5c308a3384c0e97a5e82242b209626721ee0a1e72dddd5d"
+url = "https://github.com/cilium/cilium-cli/releases/download/v0.20.2/cilium-windows-amd64.zip"
+
 [[tools."aqua:cli/cli"]]
 version = "2.103.3"
 backend = "aqua:cli/cli"
@@ -272,43 +300,36 @@ backend = "aqua:helmfile/helmfile"
 
 [tools."aqua:helmfile/helmfile"."platforms.linux-arm64"]
 checksum = "sha256:e035c0338e31e0a8054ae798280532d32edcfbb7d6c4993e3b2efa2dc40647ce"
-checksum_source = "mise-versions"
 url = "https://github.com/helmfile/helmfile/releases/download/v1.8.3/helmfile_1.8.3_linux_arm64.tar.gz"
 url_api = "https://api.github.com/repos/helmfile/helmfile/releases/assets/717197834"
 
 [tools."aqua:helmfile/helmfile"."platforms.linux-arm64-musl"]
 checksum = "sha256:e035c0338e31e0a8054ae798280532d32edcfbb7d6c4993e3b2efa2dc40647ce"
-checksum_source = "mise-versions"
 url = "https://github.com/helmfile/helmfile/releases/download/v1.8.3/helmfile_1.8.3_linux_arm64.tar.gz"
 url_api = "https://api.github.com/repos/helmfile/helmfile/releases/assets/717197834"
 
 [tools."aqua:helmfile/helmfile"."platforms.linux-x64"]
 checksum = "sha256:7d79c6d2099a4819213873164eda23bdbd32f1404fec7a7104d934e5d102596f"
-checksum_source = "mise-versions"
 url = "https://github.com/helmfile/helmfile/releases/download/v1.8.3/helmfile_1.8.3_linux_amd64.tar.gz"
 url_api = "https://api.github.com/repos/helmfile/helmfile/releases/assets/717197960"
 
 [tools."aqua:helmfile/helmfile"."platforms.linux-x64-musl"]
 checksum = "sha256:7d79c6d2099a4819213873164eda23bdbd32f1404fec7a7104d934e5d102596f"
-checksum_source = "mise-versions"
 url = "https://github.com/helmfile/helmfile/releases/download/v1.8.3/helmfile_1.8.3_linux_amd64.tar.gz"
 url_api = "https://api.github.com/repos/helmfile/helmfile/releases/assets/717197960"
 
 [tools."aqua:helmfile/helmfile"."platforms.macos-arm64"]
 checksum = "sha256:a80eda044f1b73adc9ca051d34c787444203f31c3b9d5328a6b27c3ff02520ff"
-checksum_source = "mise-versions"
 url = "https://github.com/helmfile/helmfile/releases/download/v1.8.3/helmfile_1.8.3_darwin_arm64.tar.gz"
 url_api = "https://api.github.com/repos/helmfile/helmfile/releases/assets/717197830"
 
 [tools."aqua:helmfile/helmfile"."platforms.macos-x64"]
 checksum = "sha256:043c4139987ad0009416575a0d52480af45b651f4dc85a90133199e8f9d6a71c"
-checksum_source = "mise-versions"
 url = "https://github.com/helmfile/helmfile/releases/download/v1.8.3/helmfile_1.8.3_darwin_amd64.tar.gz"
 url_api = "https://api.github.com/repos/helmfile/helmfile/releases/assets/717197983"
 
 [tools."aqua:helmfile/helmfile"."platforms.windows-x64"]
 checksum = "sha256:1f4209a22437596fafade7809b4d223e6f1aca41437f4511e45b7c2d3c97b5d3"
-checksum_source = "mise-versions"
 url = "https://github.com/helmfile/helmfile/releases/download/v1.8.3/helmfile_1.8.3_windows_amd64.tar.gz"
 url_api = "https://api.github.com/repos/helmfile/helmfile/releases/assets/717197953"
 
@@ -445,24 +466,38 @@ version = "4.54.3"
 backend = "aqua:mikefarah/yq"
 
 [tools."aqua:mikefarah/yq"."platforms.linux-arm64"]
+checksum = "sha256:89f69310b61b68d1245065a1241d1fc843f7a36cd6103ffd77ad987613bd1b67"
+url = "https://github.com/mikefarah/yq/releases/download/v4.54.3/yq_linux_arm64"
 provenance = "cosign"
 
 [tools."aqua:mikefarah/yq"."platforms.linux-arm64-musl"]
+checksum = "sha256:89f69310b61b68d1245065a1241d1fc843f7a36cd6103ffd77ad987613bd1b67"
+url = "https://github.com/mikefarah/yq/releases/download/v4.54.3/yq_linux_arm64"
 provenance = "cosign"
 
 [tools."aqua:mikefarah/yq"."platforms.linux-x64"]
+checksum = "sha256:129534601871538efe0ba4c5e62a34fb1d5f469bcb975c4fddeb467d82974973"
+url = "https://github.com/mikefarah/yq/releases/download/v4.54.3/yq_linux_amd64"
 provenance = "cosign"
 
 [tools."aqua:mikefarah/yq"."platforms.linux-x64-musl"]
+checksum = "sha256:129534601871538efe0ba4c5e62a34fb1d5f469bcb975c4fddeb467d82974973"
+url = "https://github.com/mikefarah/yq/releases/download/v4.54.3/yq_linux_amd64"
 provenance = "cosign"
 
 [tools."aqua:mikefarah/yq"."platforms.macos-arm64"]
+checksum = "sha256:a2aebb93b5bdcb61bb76f630e42a0ef6a3ee10842a6516cd7b9e4080786ec593"
+url = "https://github.com/mikefarah/yq/releases/download/v4.54.3/yq_darwin_arm64"
 provenance = "cosign"
 
 [tools."aqua:mikefarah/yq"."platforms.macos-x64"]
+checksum = "sha256:96d5105ffd693d6845c54fbd825b2d1bbdb8619e0a2ce6af95e5654e841e0984"
+url = "https://github.com/mikefarah/yq/releases/download/v4.54.3/yq_darwin_amd64"
 provenance = "cosign"
 
 [tools."aqua:mikefarah/yq"."platforms.windows-x64"]
+checksum = "sha256:066ea0a09a282e47588ec1e1867280ff5ede458f7183617a2d99012e4e34f18a"
+url = "https://github.com/mikefarah/yq/releases/download/v4.54.3/yq_windows_amd64.exe"
 provenance = "cosign"
 
 [[tools."aqua:rhysd/actionlint"]]
@@ -509,24 +544,38 @@ version = "1.14.5"
 backend = "aqua:siderolabs/talos"
 
 [tools."aqua:siderolabs/talos"."platforms.linux-arm64"]
+checksum = "sha256:dfd3aa33c3159810e216fc39afb685d4d120c8f2728e017d8c7f7635d3139382"
+url = "https://github.com/siderolabs/talos/releases/download/v1.14.5/talosctl-linux-arm64"
 provenance = "cosign"
 
 [tools."aqua:siderolabs/talos"."platforms.linux-arm64-musl"]
+checksum = "sha256:dfd3aa33c3159810e216fc39afb685d4d120c8f2728e017d8c7f7635d3139382"
+url = "https://github.com/siderolabs/talos/releases/download/v1.14.5/talosctl-linux-arm64"
 provenance = "cosign"
 
 [tools."aqua:siderolabs/talos"."platforms.linux-x64"]
+checksum = "sha256:ff432b68986709e6b69c563a08a2ced4232d5196b0dccd6d2e783e9d714d7d7d"
+url = "https://github.com/siderolabs/talos/releases/download/v1.14.5/talosctl-linux-amd64"
 provenance = "cosign"
 
 [tools."aqua:siderolabs/talos"."platforms.linux-x64-musl"]
+checksum = "sha256:ff432b68986709e6b69c563a08a2ced4232d5196b0dccd6d2e783e9d714d7d7d"
+url = "https://github.com/siderolabs/talos/releases/download/v1.14.5/talosctl-linux-amd64"
 provenance = "cosign"
 
 [tools."aqua:siderolabs/talos"."platforms.macos-arm64"]
+checksum = "sha256:c865077bdfc99c38d70b377708682eec1a8febab987f0623206e7139d9013096"
+url = "https://github.com/siderolabs/talos/releases/download/v1.14.5/talosctl-darwin-arm64"
 provenance = "cosign"
 
 [tools."aqua:siderolabs/talos"."platforms.macos-x64"]
+checksum = "sha256:cf994f2f9b3b24941f331124bade278eb6bd84e9f2c2b1bb0cfb5f7cb49db13c"
+url = "https://github.com/siderolabs/talos/releases/download/v1.14.5/talosctl-darwin-amd64"
 provenance = "cosign"
 
 [tools."aqua:siderolabs/talos"."platforms.windows-x64"]
+checksum = "sha256:45b25be0ceef02b55110a2858f2fcc4e2f711f8b3dcd64bbc3c842d45adfd696"
+url = "https://github.com/siderolabs/talos/releases/download/v1.14.5/talosctl-windows-amd64.exe"
 provenance = "cosign"
 
 [[tools."github:mitsuhiko/minijinja"]]
@@ -535,43 +584,36 @@ backend = "github:mitsuhiko/minijinja"
 
 [tools."github:mitsuhiko/minijinja"."platforms.linux-arm64"]
 checksum = "sha256:d863547c6256887fcb3299413072134af8fef389254ed948f0a1a4e2f9ffb823"
-checksum_source = "mise-versions"
 url = "https://github.com/mitsuhiko/minijinja/releases/download/3.1.0/minijinja-cli-aarch64-unknown-linux-gnu.tar.xz"
 url_api = "https://api.github.com/repos/mitsuhiko/minijinja/releases/assets/721736738"
 
 [tools."github:mitsuhiko/minijinja"."platforms.linux-arm64-musl"]
 checksum = "sha256:c4c297180bc73ccac86afd63f39de9b06a89d6bb53527b515eec0f48d52a2580"
-checksum_source = "mise-versions"
 url = "https://github.com/mitsuhiko/minijinja/releases/download/3.1.0/minijinja-cli-aarch64-unknown-linux-musl.tar.xz"
 url_api = "https://api.github.com/repos/mitsuhiko/minijinja/releases/assets/721736743"
 
 [tools."github:mitsuhiko/minijinja"."platforms.linux-x64"]
 checksum = "sha256:a888c04a302c90ab63e0c1fd676a7e198771c15930a9e27730276589a8e4a141"
-checksum_source = "mise-versions"
 url = "https://github.com/mitsuhiko/minijinja/releases/download/3.1.0/minijinja-cli-x86_64-unknown-linux-gnu.tar.xz"
 url_api = "https://api.github.com/repos/mitsuhiko/minijinja/releases/assets/721736803"
 
 [tools."github:mitsuhiko/minijinja"."platforms.linux-x64-musl"]
 checksum = "sha256:94b815a17dc3b7a4e11e348c62a916c85fc1728bc7a9b731edd905af2a818324"
-checksum_source = "mise-versions"
 url = "https://github.com/mitsuhiko/minijinja/releases/download/3.1.0/minijinja-cli-x86_64-unknown-linux-musl.tar.xz"
 url_api = "https://api.github.com/repos/mitsuhiko/minijinja/releases/assets/721736816"
 
 [tools."github:mitsuhiko/minijinja"."platforms.macos-arm64"]
 checksum = "sha256:a6635d71a21b89ce5276b66ce7795ff32d988a61afc38cc63e6bc5e900d3ee02"
-checksum_source = "mise-versions"
 url = "https://github.com/mitsuhiko/minijinja/releases/download/3.1.0/minijinja-cli-aarch64-apple-darwin.tar.xz"
 url_api = "https://api.github.com/repos/mitsuhiko/minijinja/releases/assets/721736720"
 
 [tools."github:mitsuhiko/minijinja"."platforms.macos-x64"]
 checksum = "sha256:6de53750a1d58bdfcbef300ddd48cfa771a7627b63904f202f4702474e512e5c"
-checksum_source = "mise-versions"
 url = "https://github.com/mitsuhiko/minijinja/releases/download/3.1.0/minijinja-cli-x86_64-apple-darwin.tar.xz"
 url_api = "https://api.github.com/repos/mitsuhiko/minijinja/releases/assets/721736777"
 
 [tools."github:mitsuhiko/minijinja"."platforms.windows-x64"]
 checksum = "sha256:1a75929c8ca9408a663ce4cb45992518868862ce69a9f28b19ec0822547341c0"
-checksum_source = "mise-versions"
 url = "https://github.com/mitsuhiko/minijinja/releases/download/3.1.0/minijinja-cli-x86_64-pc-windows-msvc.zip"
 url_api = "https://api.github.com/repos/mitsuhiko/minijinja/releases/assets/721736790"
 
