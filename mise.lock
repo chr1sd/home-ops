@@ -86,36 +86,8 @@ url_api = "https://api.github.com/repos/charmbracelet/gum/releases/assets/585508
 provenance = "cosign"
 
 [[tools."aqua:cilium/cilium-cli"]]
-version = "0.20.2"
+version = "0.20.3"
 backend = "aqua:cilium/cilium-cli"
-
-[tools."aqua:cilium/cilium-cli"."platforms.linux-arm64"]
-checksum = "sha256:922af9c977e781500eb96c51137e495409b1cdd248c9e1b7fffb863e6b6efdf8"
-url = "https://github.com/cilium/cilium-cli/releases/download/v0.20.2/cilium-linux-arm64.tar.gz"
-
-[tools."aqua:cilium/cilium-cli"."platforms.linux-arm64-musl"]
-checksum = "sha256:922af9c977e781500eb96c51137e495409b1cdd248c9e1b7fffb863e6b6efdf8"
-url = "https://github.com/cilium/cilium-cli/releases/download/v0.20.2/cilium-linux-arm64.tar.gz"
-
-[tools."aqua:cilium/cilium-cli"."platforms.linux-x64"]
-checksum = "sha256:b7224a62bfed0e84f1a84567d274fefc5017df76a936e067c42012bb7fc30856"
-url = "https://github.com/cilium/cilium-cli/releases/download/v0.20.2/cilium-linux-amd64.tar.gz"
-
-[tools."aqua:cilium/cilium-cli"."platforms.linux-x64-musl"]
-checksum = "sha256:b7224a62bfed0e84f1a84567d274fefc5017df76a936e067c42012bb7fc30856"
-url = "https://github.com/cilium/cilium-cli/releases/download/v0.20.2/cilium-linux-amd64.tar.gz"
-
-[tools."aqua:cilium/cilium-cli"."platforms.macos-arm64"]
-checksum = "sha256:944c388f71b939e0befa405422c93d5fcbd574e4dd12c4bf01244858961d79de"
-url = "https://github.com/cilium/cilium-cli/releases/download/v0.20.2/cilium-darwin-arm64.tar.gz"
-
-[tools."aqua:cilium/cilium-cli"."platforms.macos-x64"]
-checksum = "sha256:64ab3dd2b37f99319e2e85342725fd66caf7701b9be735704dace3c4ff3bb9ea"
-url = "https://github.com/cilium/cilium-cli/releases/download/v0.20.2/cilium-darwin-amd64.tar.gz"
-
-[tools."aqua:cilium/cilium-cli"."platforms.windows-x64"]
-checksum = "sha256:b72fe6bbef143d2ab5c308a3384c0e97a5e82242b209626721ee0a1e72dddd5d"
-url = "https://github.com/cilium/cilium-cli/releases/download/v0.20.2/cilium-windows-amd64.zip"
 
 [[tools."aqua:cli/cli"]]
 version = "2.103.3"
