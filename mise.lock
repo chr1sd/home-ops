@@ -541,49 +541,49 @@ url = "https://github.com/mitsuhiko/minijinja/releases/download/3.1.0/minijinja-
 url_api = "https://api.github.com/repos/mitsuhiko/minijinja/releases/assets/721736790"
 
 [[tools."github:woodruffw/zizmor"]]
-version = "1.33.0"
+version = "1.33.1"
 backend = "github:woodruffw/zizmor"
 
 [tools."github:woodruffw/zizmor"."platforms.linux-arm64"]
-checksum = "sha256:8a0577fc0da395febe1f37194280b6169818eb8f6924318d0e941de277dbe8f5"
-url = "https://github.com/woodruffw/zizmor/releases/download/v1.33.0/zizmor-aarch64-unknown-linux-gnu.tar.gz"
-url_api = "https://api.github.com/repos/woodruffw/zizmor/releases/assets/779717761"
+checksum = "sha256:aa487c792a7cbbe86e4f8dccd3b66de33b3b51813c090aaa0842d7ea08a3fc35"
+url = "https://github.com/woodruffw/zizmor/releases/download/v1.33.1/zizmor-aarch64-unknown-linux-gnu.tar.gz"
+url_api = "https://api.github.com/repos/woodruffw/zizmor/releases/assets/780655950"
 provenance = "github-attestations"
 
 [tools."github:woodruffw/zizmor"."platforms.linux-arm64-musl"]
-checksum = "sha256:8a0577fc0da395febe1f37194280b6169818eb8f6924318d0e941de277dbe8f5"
-url = "https://github.com/woodruffw/zizmor/releases/download/v1.33.0/zizmor-aarch64-unknown-linux-gnu.tar.gz"
-url_api = "https://api.github.com/repos/woodruffw/zizmor/releases/assets/779717761"
+checksum = "sha256:aa487c792a7cbbe86e4f8dccd3b66de33b3b51813c090aaa0842d7ea08a3fc35"
+url = "https://github.com/woodruffw/zizmor/releases/download/v1.33.1/zizmor-aarch64-unknown-linux-gnu.tar.gz"
+url_api = "https://api.github.com/repos/woodruffw/zizmor/releases/assets/780655950"
 provenance = "github-attestations"
 
 [tools."github:woodruffw/zizmor"."platforms.linux-x64"]
-checksum = "sha256:d38ea7058985610f989e1798dba346962dbec479858d14306e1f2202116563ad"
-url = "https://github.com/woodruffw/zizmor/releases/download/v1.33.0/zizmor-x86_64-unknown-linux-gnu.tar.gz"
-url_api = "https://api.github.com/repos/woodruffw/zizmor/releases/assets/779717757"
+checksum = "sha256:3e6a301c7a820a2501915f5a9de8c0486da82bdec7965f068477538a98743d43"
+url = "https://github.com/woodruffw/zizmor/releases/download/v1.33.1/zizmor-x86_64-unknown-linux-gnu.tar.gz"
+url_api = "https://api.github.com/repos/woodruffw/zizmor/releases/assets/780655958"
 provenance = "github-attestations"
 
 [tools."github:woodruffw/zizmor"."platforms.linux-x64-musl"]
-checksum = "sha256:d38ea7058985610f989e1798dba346962dbec479858d14306e1f2202116563ad"
-url = "https://github.com/woodruffw/zizmor/releases/download/v1.33.0/zizmor-x86_64-unknown-linux-gnu.tar.gz"
-url_api = "https://api.github.com/repos/woodruffw/zizmor/releases/assets/779717757"
+checksum = "sha256:3e6a301c7a820a2501915f5a9de8c0486da82bdec7965f068477538a98743d43"
+url = "https://github.com/woodruffw/zizmor/releases/download/v1.33.1/zizmor-x86_64-unknown-linux-gnu.tar.gz"
+url_api = "https://api.github.com/repos/woodruffw/zizmor/releases/assets/780655958"
 provenance = "github-attestations"
 
 [tools."github:woodruffw/zizmor"."platforms.macos-arm64"]
-checksum = "sha256:c04e784f78cc9c4d5fa751603e6abc1b32eae32233ca088688f40031fd31642b"
-url = "https://github.com/woodruffw/zizmor/releases/download/v1.33.0/zizmor-aarch64-apple-darwin.tar.gz"
-url_api = "https://api.github.com/repos/woodruffw/zizmor/releases/assets/779717768"
+checksum = "sha256:68516d45723aac36e9c87c47d56e8418009fcb919c6ceb44514d85b9d0c1c011"
+url = "https://github.com/woodruffw/zizmor/releases/download/v1.33.1/zizmor-aarch64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/woodruffw/zizmor/releases/assets/780655957"
 provenance = "github-attestations"
 
 [tools."github:woodruffw/zizmor"."platforms.macos-x64"]
-checksum = "sha256:673d33ee55c9cf7ebebbd17bce91ffc8cd6b2faace2281f7a4f1585dec6dce9d"
-url = "https://github.com/woodruffw/zizmor/releases/download/v1.33.0/zizmor-x86_64-apple-darwin.tar.gz"
-url_api = "https://api.github.com/repos/woodruffw/zizmor/releases/assets/779717759"
+checksum = "sha256:8b609d38243c6dd6ddd29bf93d02d886eb507383fe4735b1cde73e66e4de4f29"
+url = "https://github.com/woodruffw/zizmor/releases/download/v1.33.1/zizmor-x86_64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/woodruffw/zizmor/releases/assets/780655956"
 provenance = "github-attestations"
 
 [tools."github:woodruffw/zizmor"."platforms.windows-x64"]
-checksum = "sha256:21477ab13f1f0c9511e0c8ee49e8e20b7beb44c4af5f493f88c2bce8144f6485"
-url = "https://github.com/woodruffw/zizmor/releases/download/v1.33.0/zizmor-x86_64-pc-windows-msvc.zip"
-url_api = "https://api.github.com/repos/woodruffw/zizmor/releases/assets/779717767"
+checksum = "sha256:f02ebeedf651da468b4de19d31f0609050af74e11be41dc46d82e355cf44f68b"
+url = "https://github.com/woodruffw/zizmor/releases/download/v1.33.1/zizmor-x86_64-pc-windows-msvc.zip"
+url_api = "https://api.github.com/repos/woodruffw/zizmor/releases/assets/780655954"
 provenance = "github-attestations"
 
 [[tools.node]]
