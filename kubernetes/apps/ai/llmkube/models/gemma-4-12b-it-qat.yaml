@@ -33,7 +33,7 @@ metadata:
 spec:
   modelRef: gemma-4-12b-it-qat
   runtime: llamacpp
-  image: ghcr.io/ggml-org/llama.cpp:server-cuda@sha256:ae96e52f8b2106ea82bad786ee2d08bb9b0a8c93403df9c27ae1bf065a118089
+  image: ghcr.io/ggml-org/llama.cpp:server-cuda@sha256:a328222479b6f95db0ffc1a3c2410d0f9cfaf86303b0966beb3e0a29daad5e9c
   rolloutPolicy:
     waitForIdle: false # https://github.com/defilantech/LLMKube/pull/1794
     idleTimeoutSeconds: 86400
