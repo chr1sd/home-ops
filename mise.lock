@@ -267,49 +267,28 @@ checksum = "sha256:03af0db72f7ba1108065365a21e2a9e581a6fdf9fd8191156373e17aab75e
 url = "https://get.helm.sh/helm-v4.3.2-windows-amd64.tar.gz"
 
 [[tools."aqua:helmfile/helmfile"]]
-version = "1.8.5"
+version = "1.8.6"
 backend = "aqua:helmfile/helmfile"
 
 [tools."aqua:helmfile/helmfile"."platforms.linux-arm64"]
-checksum = "sha256:023b28a0630b60b392407f107b336502d11fec7e901dc631cfff7d2cc86a80c2"
-url = "https://github.com/helmfile/helmfile/releases/download/v1.8.5/helmfile_1.8.5_linux_arm64.tar.gz"
-url_api = "https://api.github.com/repos/helmfile/helmfile/releases/assets/780886000"
 provenance = "github-attestations"
 
 [tools."aqua:helmfile/helmfile"."platforms.linux-arm64-musl"]
-checksum = "sha256:023b28a0630b60b392407f107b336502d11fec7e901dc631cfff7d2cc86a80c2"
-url = "https://github.com/helmfile/helmfile/releases/download/v1.8.5/helmfile_1.8.5_linux_arm64.tar.gz"
-url_api = "https://api.github.com/repos/helmfile/helmfile/releases/assets/780886000"
 provenance = "github-attestations"
 
 [tools."aqua:helmfile/helmfile"."platforms.linux-x64"]
-checksum = "sha256:e10344a4e6121689265c8fbe8ce96977b4722a9f953db862014a08b99938c333"
-url = "https://github.com/helmfile/helmfile/releases/download/v1.8.5/helmfile_1.8.5_linux_amd64.tar.gz"
-url_api = "https://api.github.com/repos/helmfile/helmfile/releases/assets/780885994"
 provenance = "github-attestations"
 
 [tools."aqua:helmfile/helmfile"."platforms.linux-x64-musl"]
-checksum = "sha256:e10344a4e6121689265c8fbe8ce96977b4722a9f953db862014a08b99938c333"
-url = "https://github.com/helmfile/helmfile/releases/download/v1.8.5/helmfile_1.8.5_linux_amd64.tar.gz"
-url_api = "https://api.github.com/repos/helmfile/helmfile/releases/assets/780885994"
 provenance = "github-attestations"
 
 [tools."aqua:helmfile/helmfile"."platforms.macos-arm64"]
-checksum = "sha256:aa8c5e0c0ebb331e5a3eacbe3ee4bacd45f8a0c6ef361a79dea23b7bf4c4a76f"
-url = "https://github.com/helmfile/helmfile/releases/download/v1.8.5/helmfile_1.8.5_darwin_arm64.tar.gz"
-url_api = "https://api.github.com/repos/helmfile/helmfile/releases/assets/780885934"
 provenance = "github-attestations"
 
 [tools."aqua:helmfile/helmfile"."platforms.macos-x64"]
-checksum = "sha256:4a3919de8d4401a0e3ab751a4f15806c0b72561c1045eebe0c9ad91d90f90021"
-url = "https://github.com/helmfile/helmfile/releases/download/v1.8.5/helmfile_1.8.5_darwin_amd64.tar.gz"
-url_api = "https://api.github.com/repos/helmfile/helmfile/releases/assets/780886003"
 provenance = "github-attestations"
 
 [tools."aqua:helmfile/helmfile"."platforms.windows-x64"]
-checksum = "sha256:37b7014bbcd2abc5bd8508b39812f7125d3bd0f70717fe578ae99cee7cc36b4e"
-url = "https://github.com/helmfile/helmfile/releases/download/v1.8.5/helmfile_1.8.5_windows_amd64.tar.gz"
-url_api = "https://api.github.com/repos/helmfile/helmfile/releases/assets/780885938"
 provenance = "github-attestations"
 
 [[tools."aqua:jqlang/jq"]]
